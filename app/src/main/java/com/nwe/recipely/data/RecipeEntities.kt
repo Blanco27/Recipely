@@ -18,6 +18,7 @@ data class Recipe(
     val carbsGrams: Double? = null,   // carbohydrates in grams, total
     val proteinGrams: Double? = null, // protein in grams, total
     val fatGrams: Double? = null,     // fat in grams, total
+    val category: String? = null,     // RecipeCategory.key, null = uncategorized
 )
 
 @Entity(

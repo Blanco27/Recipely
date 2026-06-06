@@ -13,6 +13,7 @@ import com.nwe.recipely.ui.edit.toUiState
 import java.util.Locale
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -154,5 +155,37 @@ class RecipeMappingTest {
         val de = details.toUiState(Locale.GERMANY)
         assertEquals("160", de.carbs)    // whole number -> no separator
         assertEquals("15,5", de.protein) // comma on DE
+    }
+
+    @Test
+    fun toEntities_carriesCategory() {
+        val (recipe, _, _) = EditUiState(name = "X", category = "MAIN").toEntities()
+        assertEquals("MAIN", recipe.category)
+    }
+
+    @Test
+    fun toUiState_readsCategory() {
+        val details = RecipeWithDetails(
+            recipe = Recipe(id = 1, name = "X", category = "DESSERT"),
+            ingredients = emptyList(),
+            steps = emptyList(),
+        )
+        assertEquals("DESSERT", details.toUiState().category)
+    }
+
+    @Test
+    fun toUiState_nullCategoryStaysNull() {
+        val details = RecipeWithDetails(
+            recipe = Recipe(id = 1, name = "X", category = null),
+            ingredients = emptyList(),
+            steps = emptyList(),
+        )
+        assertNull(details.toUiState().category)
+    }
+
+    @Test
+    fun toEntities_nullCategoryStaysNull() {
+        val (recipe, _, _) = EditUiState(name = "X", category = null).toEntities()
+        assertNull(recipe.category)
     }
 }
