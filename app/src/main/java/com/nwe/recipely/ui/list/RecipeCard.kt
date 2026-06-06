@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,6 +36,8 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.nwe.recipely.R
 import com.nwe.recipely.data.Recipe
+import com.nwe.recipely.data.RecipeCategory
+import com.nwe.recipely.ui.theme.ForestPrimary
 import com.nwe.recipely.ui.theme.Fraunces
 import com.nwe.recipely.ui.theme.KcalChipBgDark
 import com.nwe.recipely.ui.theme.KcalChipBgLight
@@ -90,6 +93,16 @@ fun RecipeCard(recipe: Recipe, onClick: () -> Unit, modifier: Modifier = Modifie
                             modifier = Modifier.size(40.dp),
                         )
                     }
+                }
+                val category = RecipeCategory.fromKey(recipe.category)
+                if (category != null) {
+                    CategoryBadge(
+                        emoji = category.emoji,
+                        label = stringResource(category.labelRes),
+                        modifier = Modifier
+                            .align(Alignment.BottomStart)
+                            .padding(12.dp),
+                    )
                 }
             }
             Column(modifier = Modifier.padding(16.dp)) {
@@ -168,6 +181,29 @@ fun MetaChip(emoji: String, text: String, kcal: Boolean = false, modifier: Modif
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold,
             )
+        }
+    }
+}
+
+/**
+ * Category pill overlaid on a card image (mockup `.tag`): translucent dark-forest background
+ * with light text, so it reads over both a photo and the placeholder, in light and dark themes.
+ */
+@Composable
+private fun CategoryBadge(emoji: String, label: String, modifier: Modifier = Modifier) {
+    Surface(
+        color = ForestPrimary.copy(alpha = 0.82f),
+        contentColor = Color.White,
+        shape = RoundedCornerShape(100.dp),
+        modifier = modifier,
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 11.dp, vertical = 5.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+        ) {
+            Text(emoji, style = MaterialTheme.typography.labelSmall)
+            Text(label, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold)
         }
     }
 }
