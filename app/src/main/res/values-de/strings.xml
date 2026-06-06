@@ -46,6 +46,7 @@
     <string name="add_step_image">Bild zum Schritt</string>
     <string name="remove_step_image">Schritt-Bild entfernen</string>
     <string name="title_image_hint">Titelbild · Galerie / Kamera</string>
+    <string name="title_image_label">Titelbild</string>
     <string name="remove_image">Bild entfernen</string>
     <string name="add_image_dialog_title">Bild hinzufügen</string>
     <string name="add_image_dialog_text">Woher soll das Bild kommen?</string>

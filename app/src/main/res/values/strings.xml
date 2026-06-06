@@ -48,6 +48,7 @@
     <string name="add_step_image">Add step image</string>
     <string name="remove_step_image">Remove step image</string>
     <string name="title_image_hint">Title image · Gallery / Camera</string>
+    <string name="title_image_label">Title image</string>
     <string name="remove_image">Remove image</string>
     <string name="add_image_dialog_title">Add image</string>
     <string name="add_image_dialog_text">Where should the image come from?</string>

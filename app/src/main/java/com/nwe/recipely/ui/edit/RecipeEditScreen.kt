@@ -4,9 +4,10 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,7 +40,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -72,10 +72,17 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.compose.AsyncImage
 import com.nwe.recipely.R
-import com.nwe.recipely.data.RecipeCategory
 import com.nwe.recipely.RecipelyApp
 import com.nwe.recipely.data.ImageStore
+import com.nwe.recipely.data.RecipeCategory
+import com.nwe.recipely.ui.components.BoxedIconButton
+import com.nwe.recipely.ui.components.FrostedIconButton
+import com.nwe.recipely.ui.components.RecipelyTextField
+import com.nwe.recipely.ui.theme.Forest2
 import com.nwe.recipely.ui.theme.Fraunces
+import com.nwe.recipely.ui.theme.Moss
+import com.nwe.recipely.ui.theme.Paper
+import com.nwe.recipely.ui.theme.PaperDark
 import java.io.File
 
 private sealed interface ImageTarget {
@@ -135,12 +142,18 @@ fun RecipeEditScreen(
                     )
                 },
                 navigationIcon = {
-                    IconButton(onClick = {
-                        vm.discardChanges()
-                        onClose()
-                    }) {
-                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cancel))
-                    }
+                    BoxedIconButton(
+                        icon = Icons.Default.Close,
+                        contentDescription = stringResource(R.string.cancel),
+                        onClick = {
+                            vm.discardChanges()
+                            onClose()
+                        },
+                        modifier = Modifier.padding(start = 8.dp),
+                        circle = true,
+                        size = 38.dp,
+                        tint = MaterialTheme.colorScheme.onSurface,
+                    )
                 },
                 actions = {
                     Button(
@@ -168,32 +181,29 @@ fun RecipeEditScreen(
                 )
             }
             item {
-                OutlinedTextField(
+                RecipelyTextField(
                     value = state.name,
                     onValueChange = vm::setName,
-                    label = { Text(stringResource(R.string.label_name)) },
+                    label = stringResource(R.string.label_name),
                     singleLine = true,
-                    shape = RoundedCornerShape(16.dp),
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    OutlinedTextField(
+                    RecipelyTextField(
                         value = state.prepTime,
                         onValueChange = vm::setPrepTime,
-                        label = { Text(stringResource(R.string.label_time)) },
+                        label = stringResource(R.string.label_time),
                         singleLine = true,
-                        shape = RoundedCornerShape(16.dp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.weight(1f),
                     )
-                    OutlinedTextField(
+                    RecipelyTextField(
                         value = state.servings,
                         onValueChange = vm::setServings,
-                        label = { Text(stringResource(R.string.label_servings)) },
+                        label = stringResource(R.string.label_servings),
                         singleLine = true,
-                        shape = RoundedCornerShape(16.dp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.weight(1f),
                     )
@@ -204,21 +214,19 @@ fun RecipeEditScreen(
             item { EditHint(stringResource(R.string.nutrition_hint)) }
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    OutlinedTextField(
+                    RecipelyTextField(
                         value = state.calories,
                         onValueChange = vm::setCalories,
-                        label = { Text(stringResource(R.string.label_calories_input)) },
+                        label = stringResource(R.string.label_calories_input),
                         singleLine = true,
-                        shape = RoundedCornerShape(16.dp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.weight(1f),
                     )
-                    OutlinedTextField(
+                    RecipelyTextField(
                         value = state.carbs,
                         onValueChange = vm::setCarbs,
-                        label = { Text(stringResource(R.string.label_carbs_input)) },
+                        label = stringResource(R.string.label_carbs_input),
                         singleLine = true,
-                        shape = RoundedCornerShape(16.dp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         modifier = Modifier.weight(1f),
                     )
@@ -226,21 +234,19 @@ fun RecipeEditScreen(
             }
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                    OutlinedTextField(
+                    RecipelyTextField(
                         value = state.protein,
                         onValueChange = vm::setProtein,
-                        label = { Text(stringResource(R.string.label_protein_input)) },
+                        label = stringResource(R.string.label_protein_input),
                         singleLine = true,
-                        shape = RoundedCornerShape(16.dp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         modifier = Modifier.weight(1f),
                     )
-                    OutlinedTextField(
+                    RecipelyTextField(
                         value = state.fat,
                         onValueChange = vm::setFat,
-                        label = { Text(stringResource(R.string.label_fat_input)) },
+                        label = stringResource(R.string.label_fat_input),
                         singleLine = true,
-                        shape = RoundedCornerShape(16.dp),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                         modifier = Modifier.weight(1f),
                     )
@@ -255,23 +261,20 @@ fun RecipeEditScreen(
             items(state.ingredients.size) { index ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(9.dp),
                 ) {
-                    OutlinedTextField(
+                    RecipelyTextField(
                         value = state.ingredients[index].text,
                         onValueChange = { vm.setIngredient(index, it) },
-                        label = { Text(stringResource(R.string.ingredient_n, index + 1)) },
+                        label = stringResource(R.string.ingredient_n, index + 1),
                         singleLine = true,
-                        shape = RoundedCornerShape(16.dp),
                         modifier = Modifier.weight(1f),
                     )
-                    IconButton(onClick = { vm.removeIngredient(index) }) {
-                        Icon(
-                            Icons.Default.Close,
-                            contentDescription = stringResource(R.string.remove_ingredient),
-                            tint = MaterialTheme.colorScheme.secondary,
-                        )
-                    }
+                    BoxedIconButton(
+                        icon = Icons.Default.Close,
+                        contentDescription = stringResource(R.string.remove_ingredient),
+                        onClick = { vm.removeIngredient(index) },
+                    )
                 }
             }
             item { AddButton(stringResource(R.string.add_ingredient), onClick = vm::addIngredient) }
@@ -335,21 +338,20 @@ private fun Modifier.dashedBorder(color: Color, cornerRadius: Dp, strokeWidth: D
 
 @Composable
 private fun AddButton(text: String, onClick: () -> Unit) {
-    val tint = MaterialTheme.colorScheme.primary
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(tint.copy(alpha = 0.06f))
-            .dashedBorder(tint.copy(alpha = 0.6f), 16.dp)
+            .background(Moss.copy(alpha = 0.07f))
+            .dashedBorder(Moss.copy(alpha = 0.6f), 16.dp)
             .clickable(onClick = onClick)
             .padding(vertical = 14.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(Icons.Default.Add, contentDescription = null, tint = tint)
+        Icon(Icons.Default.Add, contentDescription = null, tint = Moss)
         Spacer(Modifier.width(8.dp))
-        Text(text, color = tint, fontWeight = FontWeight.Medium)
+        Text(text, color = Forest2, fontWeight = FontWeight.Medium)
     }
 }
 
@@ -371,26 +373,46 @@ private fun TitleImagePicker(imagePath: String?, onPick: () -> Unit, onRemove: (
                 contentScale = ContentScale.Crop,
                 modifier = Modifier.fillMaxSize(),
             )
+            // Bottom scrim for label legibility (mockup .scrim2).
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(
+                        androidx.compose.ui.graphics.Brush.verticalGradient(
+                            0.45f to Color.Transparent,
+                            1f to Color(0x8C141E16),
+                        )
+                    )
+            )
+            Text(
+                text = "📷 " + stringResource(R.string.title_image_label),
+                color = Color.White,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(14.dp),
+            )
             Row(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                FilledIconButton(
+                FrostedIconButton(
+                    icon = Icons.Default.Edit,
+                    contentDescription = stringResource(R.string.add_image_dialog_title),
                     onClick = onPick,
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = Color(0x66000000),
-                        contentColor = Color.White,
-                    ),
-                ) { Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.add_image_dialog_title)) }
-                FilledIconButton(
+                    size = 34.dp,
+                    solid = true,
+                )
+                FrostedIconButton(
+                    icon = Icons.Default.Close,
+                    contentDescription = stringResource(R.string.remove_image),
                     onClick = onRemove,
-                    colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = Color(0x66000000),
-                        contentColor = Color.White,
-                    ),
-                ) { Icon(Icons.Default.Close, contentDescription = stringResource(R.string.remove_image)) }
+                    size = 34.dp,
+                    solid = true,
+                )
             }
         } else {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -421,11 +443,12 @@ private fun StepEditor(
     onAddImage: () -> Unit,
     onRemoveImage: () -> Unit,
 ) {
+    val dark = isSystemInDarkTheme()
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(20.dp))
-            .background(MaterialTheme.colorScheme.surface)
+            .background(if (dark) PaperDark else Paper)
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
@@ -445,28 +468,27 @@ private fun StepEditor(
                     fontWeight = FontWeight.SemiBold,
                 )
             }
-            OutlinedTextField(
+            RecipelyTextField(
                 value = text,
                 onValueChange = onTextChange,
-                label = { Text(stringResource(R.string.step_n, number)) },
-                shape = RoundedCornerShape(16.dp),
+                label = stringResource(R.string.step_n, number),
                 modifier = Modifier.weight(1f),
             )
-            IconButton(onClick = onRemove) {
-                Icon(
-                    Icons.Default.Close,
-                    contentDescription = stringResource(R.string.remove_step),
-                    tint = MaterialTheme.colorScheme.secondary,
-                )
-            }
+            BoxedIconButton(
+                icon = Icons.Default.Close,
+                contentDescription = stringResource(R.string.remove_step),
+                onClick = onRemove,
+                size = 34.dp,
+            )
         }
+        // Image / add-image are inset by 45dp to line up under the text field (past the number badge).
         if (imagePath != null) {
-            Box(modifier = Modifier.fillMaxWidth()) {
+            Box(modifier = Modifier.fillMaxWidth().padding(start = 45.dp)) {
                 AsyncImage(
                     model = File(imagePath),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxWidth().height(150.dp).clip(RoundedCornerShape(14.dp)),
+                    modifier = Modifier.fillMaxWidth().height(120.dp).clip(RoundedCornerShape(14.dp)),
                 )
                 FilledIconButton(
                     onClick = onRemoveImage,
@@ -478,16 +500,16 @@ private fun StepEditor(
                 ) { Icon(Icons.Default.Close, contentDescription = stringResource(R.string.remove_step_image)) }
             }
         } else {
-            AddImageButton(onClick = onAddImage)
+            AddImageButton(onClick = onAddImage, modifier = Modifier.padding(start = 45.dp))
         }
     }
 }
 
 @Composable
-private fun AddImageButton(onClick: () -> Unit) {
+private fun AddImageButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     val tint = MaterialTheme.colorScheme.onSurfaceVariant
     Row(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(14.dp))
             .dashedBorder(tint.copy(alpha = 0.5f), 14.dp)
@@ -559,15 +581,15 @@ private fun CategoryPicker(selected: String?, onSelect: (String?) -> Unit) {
 
 @Composable
 private fun CategoryChip(emoji: String, label: String, selected: Boolean, onClick: () -> Unit) {
-    val bg = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
+    val dark = isSystemInDarkTheme()
+    val bg = if (selected) MaterialTheme.colorScheme.primary else (if (dark) PaperDark else Paper)
     val fg = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
-    // When selected the border matches the fill (invisible) so the chip doesn't change size on toggle.
     val border = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
     Surface(
         color = bg,
         contentColor = fg,
-        shape = RoundedCornerShape(12.dp),
-        border = BorderStroke(1.dp, border),
+        shape = RoundedCornerShape(100.dp),
+        border = BorderStroke(1.5.dp, border),
         modifier = Modifier.toggleable(
             value = selected,
             role = Role.Checkbox,
