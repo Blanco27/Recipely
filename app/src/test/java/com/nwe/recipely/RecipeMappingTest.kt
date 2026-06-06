@@ -174,6 +174,16 @@ class RecipeMappingTest {
     }
 
     @Test
+    fun toUiState_nullCategoryStaysNull() {
+        val details = RecipeWithDetails(
+            recipe = Recipe(id = 1, name = "X", category = null),
+            ingredients = emptyList(),
+            steps = emptyList(),
+        )
+        assertNull(details.toUiState().category)
+    }
+
+    @Test
     fun toEntities_nullCategoryStaysNull() {
         val (recipe, _, _) = EditUiState(name = "X", category = null).toEntities()
         assertNull(recipe.category)
