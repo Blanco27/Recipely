@@ -2,6 +2,11 @@ package com.nwe.recipely.ui.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.selection.toggleable
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.ui.semantics.Role
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,10 +30,7 @@ import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -63,9 +65,15 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.compose.AsyncImage
 import com.nwe.recipely.R
 import com.nwe.recipely.RecipelyApp
+import com.nwe.recipely.data.RecipeCategory
 import com.nwe.recipely.data.RecipeWithDetails
 import com.nwe.recipely.data.Step
+import com.nwe.recipely.ui.components.FrostedIconButton
 import com.nwe.recipely.ui.theme.Fraunces
+import com.nwe.recipely.ui.theme.Honey
+import com.nwe.recipely.ui.theme.Moss
+import com.nwe.recipely.ui.theme.Paper
+import com.nwe.recipely.ui.theme.PaperDark
 import java.io.File
 import kotlin.math.roundToInt
 
@@ -137,15 +145,7 @@ private fun OverlayIcon(
     contentDescription: String,
     onClick: () -> Unit,
 ) {
-    FilledIconButton(
-        onClick = onClick,
-        colors = IconButtonDefaults.filledIconButtonColors(
-            containerColor = Color(0x55000000),
-            contentColor = Color.White,
-        ),
-    ) {
-        Icon(icon, contentDescription = contentDescription)
-    }
+    FrostedIconButton(icon = icon, contentDescription = contentDescription, onClick = onClick)
 }
 
 @Composable
@@ -154,54 +154,88 @@ private fun DetailContent(details: RecipeWithDetails, modifier: Modifier = Modif
     val sortedSteps = details.steps.sortedBy { it.position }
     // Ephemeral check state (not persisted) — resets when leaving the screen.
     val checked = remember { mutableStateMapOf<Long, Boolean>() }
+    val category = RecipeCategory.fromKey(details.recipe.category)
 
     LazyColumn(modifier = modifier.fillMaxSize()) {
-        item { Hero(name = details.recipe.name, imageUri = details.recipe.imageUri) }
-
-        item { Spacer(Modifier.height(18.dp)) }
-
         item {
-            StatGrid(
-                prepTime = details.recipe.prepTimeMinutes,
-                servings = details.recipe.servings,
-                calories = details.recipe.calories,
-                protein = details.recipe.proteinGrams,
+            Hero(
+                name = details.recipe.name,
+                imageUri = details.recipe.imageUri,
+                categoryLabel = category?.let { stringResource(it.labelRes) },
             )
         }
+        item {
+            DetailSheet(
+                details = details,
+                ingredients = sortedIngredients,
+                steps = sortedSteps,
+                checked = checked,
+            )
+        }
+    }
+}
+
+/** Rounded content sheet pulled up over the hero (mockup .sheet) with a grabber handle. */
+@Composable
+private fun DetailSheet(
+    details: RecipeWithDetails,
+    ingredients: List<com.nwe.recipely.data.Ingredient>,
+    steps: List<Step>,
+    checked: SnapshotStateMap<Long, Boolean>,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .offset(y = (-26).dp)
+            .clip(RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp))
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(top = 14.dp, bottom = 8.dp),
+    ) {
+        Box(
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .padding(bottom = 16.dp)
+                .size(width = 42.dp, height = 5.dp)
+                .clip(RoundedCornerShape(3.dp))
+                .background(MaterialTheme.colorScheme.outlineVariant),
+        )
+
+        StatGrid(
+            prepTime = details.recipe.prepTimeMinutes,
+            servings = details.recipe.servings,
+            calories = details.recipe.calories,
+            protein = details.recipe.proteinGrams,
+        )
 
         val facts = details.recipe.nutritionFacts()
         if (facts.hasAny) {
-            item { SectionHeader(stringResource(R.string.section_nutrition)) }
-            item { NutritionCard(facts = facts, servings = details.recipe.servings) }
+            SectionHeader(stringResource(R.string.section_nutrition))
+            NutritionCard(facts = facts, servings = details.recipe.servings)
         }
 
-        if (sortedIngredients.isNotEmpty()) {
-            item {
-                val done = sortedIngredients.count { checked[it.id] == true }
-                SectionHeader(
-                    text = stringResource(R.string.section_ingredients),
-                    meta = stringResource(R.string.ingredients_done, done, sortedIngredients.size),
-                )
-            }
-            item { IngredientsCard(items = sortedIngredients.map { it.id to it.text }, checked = checked) }
+        if (ingredients.isNotEmpty()) {
+            val done = ingredients.count { checked[it.id] == true }
+            SectionHeader(
+                text = stringResource(R.string.section_ingredients),
+                meta = stringResource(R.string.ingredients_done, done, ingredients.size),
+            )
+            IngredientsCard(items = ingredients.map { it.id to it.text }, checked = checked)
         }
 
-        if (sortedSteps.isNotEmpty()) {
-            item {
-                SectionHeader(
-                    text = stringResource(R.string.section_steps),
-                    meta = pluralStringResource(R.plurals.steps_count, sortedSteps.size, sortedSteps.size),
-                )
-            }
-            item { StepsColumn(sortedSteps) }
+        if (steps.isNotEmpty()) {
+            SectionHeader(
+                text = stringResource(R.string.section_steps),
+                meta = pluralStringResource(R.plurals.steps_count, steps.size, steps.size),
+            )
+            StepsColumn(steps)
         }
 
-        item { Spacer(Modifier.height(32.dp)) }
+        Spacer(Modifier.height(24.dp))
     }
 }
 
 @Composable
-private fun Hero(name: String, imageUri: String?) {
+private fun Hero(name: String, imageUri: String?, categoryLabel: String?) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -234,22 +268,36 @@ private fun Hero(name: String, imageUri: String?) {
                 .fillMaxSize()
                 .background(
                     Brush.verticalGradient(
-                        0.0f to Color.Transparent,
+                        0.0f to Color(0x66101610), // top scrim for status/nav icon legibility
+                        0.25f to Color.Transparent,
                         0.55f to Color.Transparent,
                         1.0f to Color(0xCC101610),
                     )
                 ),
         )
-        Text(
-            text = name,
-            style = MaterialTheme.typography.headlineMedium,
-            fontFamily = Fraunces,
-            fontWeight = FontWeight.SemiBold,
-            color = Color.White,
+        Column(
             modifier = Modifier
                 .align(Alignment.BottomStart)
                 .padding(SidePadding),
-        )
+        ) {
+            if (categoryLabel != null) {
+                Text(
+                    text = categoryLabel.uppercase(),
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Bold,
+                    letterSpacing = 1.5.sp,
+                    color = Honey,
+                    modifier = Modifier.padding(bottom = 6.dp),
+                )
+            }
+            Text(
+                text = name,
+                style = MaterialTheme.typography.headlineMedium.copy(fontSize = 32.sp),
+                fontFamily = Fraunces,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White,
+            )
+        }
     }
 }
 
@@ -295,7 +343,7 @@ private fun StatGrid(prepTime: Int?, servings: Int?, calories: Int?, protein: Do
 @Composable
 private fun StatCard(stat: StatData, modifier: Modifier = Modifier) {
     val cs = MaterialTheme.colorScheme
-    val bg = if (stat.accent) cs.primary else cs.surface
+    val bg = if (stat.accent) cs.primary else (if (isSystemInDarkTheme()) PaperDark else Paper)
     val valueColor = if (stat.accent) cs.onPrimary else cs.primary
     val labelColor = if (stat.accent) cs.onPrimary.copy(alpha = 0.75f) else cs.onSurfaceVariant
     val borderColor = if (stat.accent) cs.primary else cs.outlineVariant
@@ -461,16 +509,40 @@ private fun IngredientRow(text: String, checked: Boolean, onToggle: () -> Unit) 
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 8.dp, vertical = 2.dp),
+            .toggleable(value = checked, role = Role.Checkbox, onValueChange = { onToggle() })
+            .padding(horizontal = 14.dp, vertical = 11.dp),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(13.dp),
     ) {
-        Checkbox(checked = checked, onCheckedChange = { onToggle() })
+        MossCheckBox(checked = checked)
         Text(
             text = text,
             style = MaterialTheme.typography.bodyLarge,
             color = if (checked) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface,
             textDecoration = if (checked) TextDecoration.LineThrough else null,
         )
+    }
+}
+
+/** Mockup .ing .box: a 22dp rounded square, moss border, fills moss with a check when done. */
+@Composable
+private fun MossCheckBox(checked: Boolean) {
+    Box(
+        modifier = Modifier
+            .size(22.dp)
+            .clip(RoundedCornerShape(7.dp))
+            .background(if (checked) Moss else Color.Transparent)
+            .border(2.dp, Moss, RoundedCornerShape(7.dp)),
+        contentAlignment = Alignment.Center,
+    ) {
+        if (checked) {
+            Icon(
+                Icons.Default.Check,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(14.dp),
+            )
+        }
     }
 }
 
@@ -541,7 +613,7 @@ private fun StepRow(number: Int, step: Step, isLast: Boolean) {
                     modifier = Modifier
                         .padding(top = 8.dp)
                         .fillMaxWidth()
-                        .height(170.dp)
+                        .height(130.dp)
                         .clip(RoundedCornerShape(16.dp)),
                 )
             }
