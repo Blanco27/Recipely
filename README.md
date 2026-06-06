@@ -1,54 +1,55 @@
 # Recipely 🍃
 
-Eine schlanke, native **Android-App** zum Anlegen, Ansehen, Bearbeiten und Löschen von Kochrezepten — komplett **offline**, mit einem modernen Material-3-UI in frischem Grün.
+A lean, native **Android app** for creating, viewing, editing and deleting cooking recipes — fully **offline**, with a modern Material 3 UI in fresh green.
 
-Jedes Rezept hat einen Namen (Pflicht), optional ein Titelbild, optional Zubereitungszeit und Portionen, eine Zutatenliste sowie nummerierte Zubereitungsschritte mit optionalem Bild pro Schritt.
+Each recipe has a name (required), an optional title image, optional prep time and servings, an ingredient list, and numbered preparation steps with an optional image per step. The UI is fully localized — **English by default, German on German-locale devices.**
 
 ## Screenshots
 
 <p align="center">
-  <img src="docs/screenshots/01-list.png" width="30%" alt="Rezeptliste – Meine Rezepte" />
+  <img src="docs/screenshots/01-list.png" width="30%" alt="Recipe list – My Recipes" />
   &nbsp;&nbsp;
-  <img src="docs/screenshots/02-detail.png" width="30%" alt="Rezeptdetail – Spaghetti Carbonara" />
+  <img src="docs/screenshots/02-detail.png" width="30%" alt="Recipe detail – Spaghetti Carbonara" />
   &nbsp;&nbsp;
-  <img src="docs/screenshots/03-edit.png" width="30%" alt="Rezept bearbeiten" />
+  <img src="docs/screenshots/03-edit.png" width="30%" alt="Edit recipe" />
 </p>
 
 <p align="center">
-  <em>Rezeptliste &nbsp;·&nbsp; Detailansicht &nbsp;·&nbsp; Editor &nbsp;— hier mit Demodaten</em>
+  <em>Recipe list &nbsp;·&nbsp; Detail view &nbsp;·&nbsp; Editor &nbsp;— shown with demo data</em>
 </p>
 
-> Helles und dunkles Theme werden automatisch unterstützt (die Screenshots zeigen den Light-Mode).
+> Light and dark themes are supported automatically (the screenshots show light mode).
 
 ## Features
 
-- 📋 **Rezeptliste** mit kompakten Einträgen (Thumbnail, Name, „⏱ Zeit · 🍽 Portionen"), alphabetisch sortiert
-- 👀 **Detailansicht**: Titelbild, Zeit-/Portionen-Chips, Zutatenliste, nummerierte Schritte mit optionalem Schrittbild
-- ✏️ **Anlegen & Bearbeiten** über ein dynamisches Formular (Zutaten und Schritte beliebig hinzufügen/entfernen)
-- 🖼️ **Bilder** aus **Galerie** (Photo Picker) oder **Kamera** — für das Titelbild und je Schritt
-- 🗑️ **Löschen** mit Bestätigungsdialog
-- 💾 **Offline-First**: lokale Speicherung via Room; Bilder werden in den App-internen Speicher kopiert, die Datenbank hält nur Pfade — verwaiste Bilddateien werden automatisch aufgeräumt
-- 🎨 Festes grünes **Material-3**-Theme (Hell/Dunkel automatisch)
+- 📋 **Recipe list** with compact rows (thumbnail, name, "⏱ time · 🍽 servings"), sorted alphabetically
+- 👀 **Detail view**: title image, time/servings chips, ingredient list, numbered steps with an optional step image
+- ✏️ **Create & edit** via a dynamic form (add/remove ingredients and steps freely)
+- 🖼️ **Images** from the **gallery** (Photo Picker) or **camera** — for the title image and per step
+- 🗑️ **Delete** with a confirmation dialog
+- 💾 **Offline-first**: local storage via Room; images are copied into app-internal storage and the database keeps only the paths — orphaned image files are cleaned up automatically
+- 🌍 **Localized**: English (default) and German
+- 🎨 Fixed green **Material 3** theme (light/dark automatic)
 
-## Tech-Stack
+## Tech stack
 
 - **Kotlin** 2.0.21
 - **Jetpack Compose** + **Material 3** (Compose BOM 2024.09.03), Navigation-Compose
-- **Room** (lokale SQLite-Persistenz) mit **KSP**
-- **Coil** für das Laden von Bildern
+- **Room** (local SQLite persistence) with **KSP**
+- **Coil** for image loading
 - Coroutines / `StateFlow`
-- Architektur: **Single-Activity, lean MVVM** mit manueller DI (kein Hilt/Dagger)
-- Tests: JUnit 4 + `kotlinx-coroutines-test` (JVM), AndroidX Test (instrumentierter Room-DAO-Test)
+- Architecture: **single-Activity, lean MVVM** with manual DI (no Hilt/Dagger)
+- Tests: JUnit 4 + `kotlinx-coroutines-test` (JVM), AndroidX Test (instrumented Room DAO test)
 
-## Architektur
+## Architecture
 
-Single-Activity-Compose-App nach **lean MVVM**: Compose UI → ViewModel → Repository → Room DAO.
+Single-Activity Compose app following **lean MVVM**: Compose UI → ViewModel → Repository → Room DAO.
 
 ```
 RecipelyApp (Application)
-  └─ AppContainer (manuelle DI)
+  └─ AppContainer (manual DI)
        ├─ RecipeDatabase (Room)  → RecipeDao
-       ├─ ImageStore (interner Bildspeicher)
+       ├─ ImageStore (internal image storage)
        └─ RoomRecipeRepository
             ▲
    ViewModels (List / Detail / Edit)
@@ -56,58 +57,60 @@ RecipelyApp (Application)
    Compose Screens  ── RecipelyNavHost (list · detail/{id} · edit?id={id})
 ```
 
-Details und projektweite Konventionen stehen in [`CLAUDE.md`](CLAUDE.md); Design-Spec und Implementierungsplan unter [`docs/superpowers/`](docs/superpowers/).
+Details and project-wide conventions are in [`CLAUDE.md`](CLAUDE.md); the design spec and implementation plan live under [`docs/superpowers/`](docs/superpowers/).
 
-## Build & Start
+## Build & run
 
-**Voraussetzungen**
+**Prerequisites**
 
-- Android SDK (compileSdk/targetSdk **36**, minSdk **24**); `local.properties` mit `sdk.dir` (von Android Studio erzeugt)
-- **Gradle läuft mit einem JDK ≤ 21.** Das Java-11-Level in der Build-Konfig ist nur die *Bytecode-Ebene* und nicht das JDK, das Gradle ausführt. Android Studio nutzt seine gebündelte JBR (21) automatisch. Für **CLI-Builds** ggf. das JDK setzen, falls der System-Default neuer ist (z. B. JDK 24, das Gradle 8.13 nicht unterstützt):
+- Android SDK (compileSdk/targetSdk **36**, minSdk **24**); a `local.properties` with `sdk.dir` (generated by Android Studio)
+- **Gradle runs on a JDK ≤ 21.** The Java 11 level in the build config is only the *bytecode* level, not the JDK that runs Gradle. Android Studio uses its bundled JBR (21) automatically. For **CLI builds**, set the JDK if your system default is newer (e.g. JDK 24, which Gradle 8.13 does not support):
 
   ```powershell
   $env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"
   ```
 
-**Bauen / Installieren** (Windows/PowerShell — sonst `./gradlew`):
+**Build / install** (Windows/PowerShell — otherwise `./gradlew`):
 
 ```powershell
-.\gradlew.bat assembleDebug     # Debug-APK bauen
-.\gradlew.bat installDebug      # Auf verbundenem Gerät/Emulator installieren
+.\gradlew.bat assembleDebug     # build the debug APK
+.\gradlew.bat installDebug      # install on a connected device/emulator
 ```
 
-Alternativ das Projekt in **Android Studio** öffnen und auf ▶ Run drücken.
+Alternatively, open the project in **Android Studio** and press ▶ Run.
 
 ## Tests
 
 ```powershell
-.\gradlew.bat testDebugUnitTest          # JVM-Unit-Tests (Mapping + ViewModels)
-.\gradlew.bat connectedDebugAndroidTest  # Instrumentierter Room-DAO-Test (Gerät/Emulator nötig)
+.\gradlew.bat testDebugUnitTest          # JVM unit tests (mapping + ViewModels)
+.\gradlew.bat connectedDebugAndroidTest  # instrumented Room DAO test (device/emulator required)
 ```
 
-Einzelne Tests:
+Single tests:
 
 ```powershell
 .\gradlew.bat testDebugUnitTest --tests "com.nwe.recipely.RecipeMappingTest"
 .\gradlew.bat connectedDebugAndroidTest -Pandroid.testInstrumentationRunnerArguments.class=com.nwe.recipely.RecipeDaoTest
 ```
 
-## Projektstruktur
+## Project structure
 
 ```
 app/src/main/java/com/nwe/recipely/
-├─ RecipelyApp.kt            # Application + AppContainer-Halter
-├─ MainActivity.kt           # Single Activity → Compose + NavHost
-├─ di/AppContainer.kt        # manuelle DI (DB, ImageStore, Repository)
-├─ data/                     # Room: Entities, DAO, Database, ImageStore, Repository
+├─ RecipelyApp.kt            # Application + holds AppContainer
+├─ MainActivity.kt           # single Activity → Compose + NavHost
+├─ di/AppContainer.kt        # manual DI (DB, ImageStore, Repository)
+├─ data/                     # Room: entities, DAO, Database, ImageStore, Repository
 ├─ navigation/               # RecipelyNavHost + Routes
 └─ ui/
-   ├─ theme/                 # grünes Material-3-Theme (Color/Type/Theme)
+   ├─ theme/                 # green Material 3 theme (Color/Type/Theme)
    ├─ list/                  # RecipeListScreen + ViewModel
    ├─ detail/                # RecipeDetailScreen + ViewModel
-   └─ edit/                  # RecipeEditScreen + ViewModel + Formular-State/Mapping
+   └─ edit/                  # RecipeEditScreen + ViewModel + form state/mapping
 ```
 
-## Nicht im Umfang (bewusst)
+UI strings are localized via `app/src/main/res/values/strings.xml` (English) and `values-de/strings.xml` (German).
 
-Suche, Tags/Kategorien, Cloud-Sync, Export/Teilen und Mengen-Skalierung sind bewusst nicht enthalten — die App bleibt einfach und auf das Wesentliche fokussiert.
+## Out of scope (by design)
+
+Search, tags/categories, cloud sync, export/share and serving scaling are intentionally not included — the app stays simple and focused on the essentials.

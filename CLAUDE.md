@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project overview
 
-Recipely is a native **Android app** (Kotlin) for creating, viewing, editing and deleting cooking recipes. A recipe has a required name, optional title image, optional prep time and servings, an ordered ingredient list, and ordered preparation steps each with an optional image. It is **offline-only** (local Room database, no network/cloud) with a modern Material 3 UI. The UI language is **German** (strings are inline in the composables, not extracted to resources).
+Recipely is a native **Android app** (Kotlin) for creating, viewing, editing and deleting cooking recipes. A recipe has a required name, optional title image, optional prep time and servings, an ordered ingredient list, and ordered preparation steps each with an optional image. It is **offline-only** (local Room database, no network/cloud) with a modern Material 3 UI. The UI is **localized** — English by default, German on German-locale devices (strings live in `app/src/main/res/values/strings.xml` and `values-de/strings.xml`; composables use `stringResource`).
 
 ## Commands
 
