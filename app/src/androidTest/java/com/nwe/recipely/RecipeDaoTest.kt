@@ -78,6 +78,23 @@ class RecipeDaoTest {
     }
 
     @Test
+    fun upsert_persistsCategory_andNullStaysNull() = runTest {
+        val withCategory = dao.upsertRecipeWithChildren(
+            recipe = Recipe(name = "Cake", category = "DESSERT"),
+            ingredients = emptyList(),
+            steps = emptyList(),
+        )
+        val withoutCategory = dao.upsertRecipeWithChildren(
+            recipe = Recipe(name = "Plain", category = null),
+            ingredients = emptyList(),
+            steps = emptyList(),
+        )
+
+        assertEquals("DESSERT", dao.observeRecipe(withCategory).first()!!.recipe.category)
+        assertNull(dao.observeRecipe(withoutCategory).first()!!.recipe.category)
+    }
+
+    @Test
     fun deleteRecipe_cascadesToChildren() = runTest {
         val id = dao.upsertRecipeWithChildren(
             recipe = Recipe(name = "ToDelete"),
