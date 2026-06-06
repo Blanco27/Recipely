@@ -1,8 +1,8 @@
 # Recipely 🍃
 
-A lean, native **Android app** for creating, viewing, editing and deleting cooking recipes — fully **offline**, with a modern Material 3 UI in fresh green.
+A lean, native **Android app** for creating, viewing, editing and deleting cooking recipes — fully **offline**, with a warm, editorial Material 3 UI (cream, forest green & terracotta, serif display headings).
 
-Each recipe has a name (required), an optional title image, optional prep time and servings, an ingredient list, and numbered preparation steps with an optional image per step. The UI is fully localized — **English by default, German on German-locale devices.**
+Each recipe has a name (required), an optional title image, an optional category, optional prep time, servings and nutrition (calories + macros), an ingredient list, and numbered preparation steps with an optional image per step. The UI is fully localized — **English by default, German on German-locale devices.**
 
 ## Screenshots
 
@@ -22,14 +22,16 @@ Each recipe has a name (required), an optional title image, optional prep time a
 
 ## Features
 
-- 📋 **Recipe list** with compact rows (thumbnail, name, "⏱ time · 🍽 servings"), sorted alphabetically
-- 👀 **Detail view**: title image, time/servings chips, ingredient list, numbered steps with an optional step image
-- ✏️ **Create & edit** via a dynamic form (add/remove ingredients and steps freely)
+- 📋 **Recipe list** of rich image cards (title image, category badge, "⏱ time · 🍽 servings · 🔥 kcal"), sorted alphabetically — with a **category filter bar**
+- 👀 **Detail view**: hero image, stat cards (time · servings · calories · protein), an optional **nutrition breakdown** (per portion & total), check-off ingredient list, and numbered steps with an optional step image
+- 🏷️ **Categories**: optionally tag a recipe (Main, Breakfast, Salad, Baking, Dessert, Snack) and filter the list by category
+- 🔥 **Nutrition (optional)**: total calories, carbs, protein & fat per recipe — shown both per portion and as a total
+- ✏️ **Create & edit** via a dynamic form (add/remove ingredients and steps freely, pick a category, enter optional nutrition values)
 - 🖼️ **Images** from the **gallery** (Photo Picker) or **camera** — for the title image and per step
 - 🗑️ **Delete** with a confirmation dialog
 - 💾 **Offline-first**: local storage via Room; images are copied into app-internal storage and the database keeps only the paths — orphaned image files are cleaned up automatically
 - 🌍 **Localized**: English (default) and German
-- 🎨 Fixed green **Material 3** theme (light/dark automatic)
+- 🎨 Warm, fixed **Material 3** theme (cream, forest green & terracotta) — light/dark automatic, no dynamic color
 
 ## Tech stack
 
@@ -103,7 +105,7 @@ app/src/main/java/com/nwe/recipely/
 ├─ data/                     # Room: entities, DAO, Database, ImageStore, Repository
 ├─ navigation/               # RecipelyNavHost + Routes
 └─ ui/
-   ├─ theme/                 # green Material 3 theme (Color/Type/Theme)
+   ├─ theme/                 # warm Material 3 theme — cream/forest/terracotta (Color/Type/Theme)
    ├─ list/                  # RecipeListScreen + ViewModel
    ├─ detail/                # RecipeDetailScreen + ViewModel
    └─ edit/                  # RecipeEditScreen + ViewModel + form state/mapping
@@ -113,4 +115,4 @@ UI strings are localized via `app/src/main/res/values/strings.xml` (English) and
 
 ## Out of scope (by design)
 
-Search, tags/categories, cloud sync, export/share and serving scaling are intentionally not included — the app stays simple and focused on the essentials.
+Search, tags, cloud sync, export/share and serving scaling are intentionally not included — the app stays simple and focused on the essentials.
