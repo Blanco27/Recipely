@@ -9,6 +9,7 @@ import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -134,6 +135,26 @@ class RecipeEditViewModelTest {
         assertEquals("Loaded", vm.state.value.name)
         assertEquals("12", vm.state.value.prepTime)
         assertEquals("/s.jpg", vm.state.value.steps[0].imagePath)
+    }
+
+    @Test
+    fun setCategory_updatesState_andClearsToNull() {
+        val vm = newViewModel(FakeRecipeRepository())
+        vm.setCategory("MAIN")
+        assertEquals("MAIN", vm.state.value.category)
+        vm.setCategory(null)
+        assertNull(vm.state.value.category)
+    }
+
+    @Test
+    fun save_passesCategoryToRepository() = runTest {
+        val repo = FakeRecipeRepository()
+        val vm = newViewModel(repo)
+        vm.setName("X")
+        vm.setCategory("BAKING")
+        vm.save {}
+        advanceUntilIdle()
+        assertEquals("BAKING", repo.lastSavedRecipe?.category)
     }
 
     @Test
