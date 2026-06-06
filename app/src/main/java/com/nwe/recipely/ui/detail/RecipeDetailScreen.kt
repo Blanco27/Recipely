@@ -255,16 +255,24 @@ private fun NutritionRow(label: String, value: String) {
 private fun totalSummary(facts: NutritionFacts): String {
     val parts = buildList {
         facts.calories?.let {
-            add("${stringResource(R.string.label_calories)} ${stringResource(R.string.nutrition_value_kcal, it)}")
+            add(stringResource(R.string.nutrition_summary_part,
+                stringResource(R.string.label_calories),
+                stringResource(R.string.nutrition_value_kcal, it)))
         }
         facts.carbsGrams?.let {
-            add("${stringResource(R.string.label_carbs)} ${stringResource(R.string.nutrition_value_grams, NutritionFormat.grams(it))}")
+            add(stringResource(R.string.nutrition_summary_part,
+                stringResource(R.string.label_carbs),
+                stringResource(R.string.nutrition_value_grams, NutritionFormat.grams(it))))
         }
         facts.proteinGrams?.let {
-            add("${stringResource(R.string.label_protein)} ${stringResource(R.string.nutrition_value_grams, NutritionFormat.grams(it))}")
+            add(stringResource(R.string.nutrition_summary_part,
+                stringResource(R.string.label_protein),
+                stringResource(R.string.nutrition_value_grams, NutritionFormat.grams(it))))
         }
         facts.fatGrams?.let {
-            add("${stringResource(R.string.label_fat)} ${stringResource(R.string.nutrition_value_grams, NutritionFormat.grams(it))}")
+            add(stringResource(R.string.nutrition_summary_part,
+                stringResource(R.string.label_fat),
+                stringResource(R.string.nutrition_value_grams, NutritionFormat.grams(it))))
         }
     }
     return "${stringResource(R.string.nutrition_total_prefix)} ${parts.joinToString(" · ")}"
