@@ -10,6 +10,7 @@ import com.nwe.recipely.ui.edit.StepRow
 import com.nwe.recipely.ui.edit.referencedPaths
 import com.nwe.recipely.ui.edit.toEntities
 import com.nwe.recipely.ui.edit.toUiState
+import java.util.Locale
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -136,10 +137,22 @@ class RecipeMappingTest {
             ingredients = emptyList(),
             steps = emptyList(),
         )
-        val state = details.toUiState()
+        val state = details.toUiState(Locale.US)
         assertEquals("350", state.calories)
         assertEquals("160", state.carbs)   // 160.0 -> "160"
         assertEquals("15.5", state.protein)
         assertEquals("", state.fat)
+    }
+
+    @Test
+    fun toUiState_formatsMacros_usingLocaleDecimalSeparator() {
+        val details = RecipeWithDetails(
+            recipe = Recipe(id = 1, name = "X", carbsGrams = 160.0, proteinGrams = 15.5),
+            ingredients = emptyList(),
+            steps = emptyList(),
+        )
+        val de = details.toUiState(Locale.GERMANY)
+        assertEquals("160", de.carbs)    // whole number -> no separator
+        assertEquals("15,5", de.protein) // comma on DE
     }
 }

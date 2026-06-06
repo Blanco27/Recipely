@@ -4,7 +4,7 @@ import com.nwe.recipely.data.Ingredient
 import com.nwe.recipely.data.Recipe
 import com.nwe.recipely.data.RecipeWithDetails
 import com.nwe.recipely.data.Step
-import kotlin.math.roundToLong
+import java.util.Locale
 
 data class IngredientRow(val text: String = "")
 
@@ -56,15 +56,15 @@ fun EditUiState.toEntities(): Triple<Recipe, List<Ingredient>, List<Step>> {
     return Triple(recipe, ingredients, steps)
 }
 
-fun RecipeWithDetails.toUiState(): EditUiState = EditUiState(
+fun RecipeWithDetails.toUiState(locale: Locale = Locale.getDefault()): EditUiState = EditUiState(
     id = recipe.id,
     name = recipe.name,
     prepTime = recipe.prepTimeMinutes?.toString() ?: "",
     servings = recipe.servings?.toString() ?: "",
     calories = recipe.calories?.toString() ?: "",
-    carbs = recipe.carbsGrams?.toEditString() ?: "",
-    protein = recipe.proteinGrams?.toEditString() ?: "",
-    fat = recipe.fatGrams?.toEditString() ?: "",
+    carbs = recipe.carbsGrams?.toEditString(locale) ?: "",
+    protein = recipe.proteinGrams?.toEditString(locale) ?: "",
+    fat = recipe.fatGrams?.toEditString(locale) ?: "",
     imagePath = recipe.imageUri,
     ingredients = ingredients.sortedBy { it.position }
         .map { IngredientRow(it.text) }
@@ -78,8 +78,10 @@ fun RecipeWithDetails.toUiState(): EditUiState = EditUiState(
 internal fun String.toGramsOrNull(): Double? =
     trim().replace(',', '.').toDoubleOrNull()
 
-/** Formats a stored gram value for an editable text field: one decimal max, trailing ".0" dropped. */
-internal fun Double.toEditString(): String {
-    val rounded = (this * 10.0).roundToLong() / 10.0
-    return if (rounded % 1.0 == 0.0) rounded.toLong().toString() else rounded.toString()
+/** Formats a stored gram value for an editable text field: one decimal max, a whole number
+ * shown without decimals, otherwise using [locale]'s decimal separator (comma on DE). */
+internal fun Double.toEditString(locale: Locale = Locale.getDefault()): String {
+    val rounded = String.format(Locale.US, "%.1f", this).toDouble()
+    return if (rounded % 1.0 == 0.0) rounded.toLong().toString()
+    else String.format(locale, "%.1f", rounded)
 }
