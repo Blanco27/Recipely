@@ -76,4 +76,12 @@
     <string name="nutrition_value_kcal">%1$d kcal</string>
     <string name="nutrition_value_grams">%1$s g</string>
     <string name="nutrition_summary_part">%1$s %2$s</string>
+
+    <!-- Categories -->
+    <string name="category_main">Main</string>
+    <string name="category_breakfast">Breakfast</string>
+    <string name="category_salad">Salad</string>
+    <string name="category_baking">Baking</string>
+    <string name="category_dessert">Dessert</string>
+    <string name="category_snack">Snack</string>
 </resources>
