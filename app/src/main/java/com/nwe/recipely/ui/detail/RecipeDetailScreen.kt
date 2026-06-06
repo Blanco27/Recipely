@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -159,6 +160,12 @@ private fun DetailContent(details: RecipeWithDetails, modifier: Modifier = Modif
             }
         }
 
+        val facts = details.recipe.nutritionFacts()
+        if (facts.hasAny) {
+            item { SectionHeader(stringResource(R.string.section_nutrition)) }
+            item { NutritionBlock(facts = facts, servings = details.recipe.servings) }
+        }
+
         if (details.ingredients.isNotEmpty()) {
             item { SectionHeader(stringResource(R.string.section_ingredients)) }
             val sortedIngredients = details.ingredients.sortedBy { it.position }
@@ -192,6 +199,83 @@ private fun SectionHeader(text: String) {
         color = MaterialTheme.colorScheme.primary,
         modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 4.dp),
     )
+}
+
+@Composable
+private fun NutritionBlock(facts: NutritionFacts, servings: Int?) {
+    Column(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp)) {
+        val perPortion = facts.perPortion(servings)
+        if (perPortion != null) {
+            Text(
+                text = stringResource(R.string.nutrition_per_portion),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.primary,
+            )
+            NutritionRows(perPortion)
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text = totalSummary(facts),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        } else {
+            NutritionRows(facts)
+        }
+    }
+}
+
+@Composable
+private fun NutritionRows(facts: NutritionFacts) {
+    facts.calories?.let {
+        NutritionRow(stringResource(R.string.label_calories), stringResource(R.string.nutrition_value_kcal, it))
+    }
+    facts.carbsGrams?.let {
+        NutritionRow(stringResource(R.string.label_carbs), stringResource(R.string.nutrition_value_grams, NutritionFormat.grams(it)))
+    }
+    facts.proteinGrams?.let {
+        NutritionRow(stringResource(R.string.label_protein), stringResource(R.string.nutrition_value_grams, NutritionFormat.grams(it)))
+    }
+    facts.fatGrams?.let {
+        NutritionRow(stringResource(R.string.label_fat), stringResource(R.string.nutrition_value_grams, NutritionFormat.grams(it)))
+    }
+}
+
+@Composable
+private fun NutritionRow(label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(vertical = 3.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(label, style = MaterialTheme.typography.bodyMedium)
+        Text(value, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold)
+    }
+}
+
+@Composable
+private fun totalSummary(facts: NutritionFacts): String {
+    val parts = buildList {
+        facts.calories?.let {
+            add(stringResource(R.string.nutrition_summary_part,
+                stringResource(R.string.label_calories),
+                stringResource(R.string.nutrition_value_kcal, it)))
+        }
+        facts.carbsGrams?.let {
+            add(stringResource(R.string.nutrition_summary_part,
+                stringResource(R.string.label_carbs),
+                stringResource(R.string.nutrition_value_grams, NutritionFormat.grams(it))))
+        }
+        facts.proteinGrams?.let {
+            add(stringResource(R.string.nutrition_summary_part,
+                stringResource(R.string.label_protein),
+                stringResource(R.string.nutrition_value_grams, NutritionFormat.grams(it))))
+        }
+        facts.fatGrams?.let {
+            add(stringResource(R.string.nutrition_summary_part,
+                stringResource(R.string.label_fat),
+                stringResource(R.string.nutrition_value_grams, NutritionFormat.grams(it))))
+        }
+    }
+    return "${stringResource(R.string.nutrition_total_prefix)} ${parts.joinToString(" · ")}"
 }
 
 @Composable

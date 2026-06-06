@@ -135,4 +135,21 @@ class RecipeEditViewModelTest {
         assertEquals("12", vm.state.value.prepTime)
         assertEquals("/s.jpg", vm.state.value.steps[0].imagePath)
     }
+
+    @Test
+    fun save_passesNutritionToRepository() = runTest {
+        val repo = FakeRecipeRepository()
+        val vm = newViewModel(repo)
+        vm.setName("X")
+        vm.setCalories("350")
+        vm.setCarbs("40,5")
+        vm.setProtein("15.5")
+        vm.setFat("12")
+        vm.save {}
+        advanceUntilIdle()
+        assertEquals(350, repo.lastSavedRecipe?.calories)
+        assertEquals(40.5, repo.lastSavedRecipe?.carbsGrams!!, 0.0001)
+        assertEquals(15.5, repo.lastSavedRecipe?.proteinGrams!!, 0.0001)
+        assertEquals(12.0, repo.lastSavedRecipe?.fatGrams!!, 0.0001)
+    }
 }

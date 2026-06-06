@@ -40,4 +40,21 @@
     <string name="add_image_dialog_text">Woher soll das Bild kommen?</string>
     <string name="gallery">Galerie</string>
     <string name="camera">Kamera</string>
+
+    <!-- Nutrition -->
+    <string name="section_nutrition">Nährwerte</string>
+    <string name="nutrition_optional">Nährwerte (optional)</string>
+    <string name="nutrition_per_portion">Pro Portion</string>
+    <string name="nutrition_total_prefix">Gesamt:</string>
+    <string name="label_calories">Kalorien</string>
+    <string name="label_carbs">Kohlenhydrate</string>
+    <string name="label_protein">Eiweiß</string>
+    <string name="label_fat">Fett</string>
+    <string name="label_calories_input">Kalorien (kcal)</string>
+    <string name="label_carbs_input">Kohlenhydrate (g)</string>
+    <string name="label_protein_input">Eiweiß (g)</string>
+    <string name="label_fat_input">Fett (g)</string>
+    <string name="nutrition_value_kcal">%1$d kcal</string>
+    <string name="nutrition_value_grams">%1$s g</string>
+    <string name="nutrition_summary_part">%1$s %2$s</string>
 </resources>

@@ -42,4 +42,21 @@
     <string name="add_image_dialog_text">Where should the image come from?</string>
     <string name="gallery">Gallery</string>
     <string name="camera">Camera</string>
+
+    <!-- Nutrition -->
+    <string name="section_nutrition">Nutrition</string>
+    <string name="nutrition_optional">Nutrition (optional)</string>
+    <string name="nutrition_per_portion">Per portion</string>
+    <string name="nutrition_total_prefix">Total:</string>
+    <string name="label_calories">Calories</string>
+    <string name="label_carbs">Carbs</string>
+    <string name="label_protein">Protein</string>
+    <string name="label_fat">Fat</string>
+    <string name="label_calories_input">Calories (kcal)</string>
+    <string name="label_carbs_input">Carbs (g)</string>
+    <string name="label_protein_input">Protein (g)</string>
+    <string name="label_fat_input">Fat (g)</string>
+    <string name="nutrition_value_kcal">%1$d kcal</string>
+    <string name="nutrition_value_grams">%1$s g</string>
+    <string name="nutrition_summary_part">%1$s %2$s</string>
 </resources>

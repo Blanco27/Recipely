@@ -10,6 +10,7 @@ import com.nwe.recipely.ui.edit.StepRow
 import com.nwe.recipely.ui.edit.referencedPaths
 import com.nwe.recipely.ui.edit.toEntities
 import com.nwe.recipely.ui.edit.toUiState
+import java.util.Locale
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -104,5 +105,54 @@ class RecipeMappingTest {
         assertEquals("", steps[0].text)
         assertEquals("/photo.jpg", steps[0].imageUri)
         assertEquals(0, steps[0].position)
+    }
+
+    @Test
+    fun toEntities_parsesNutrition_acceptingCommaAndPeriod() {
+        val state = EditUiState(
+            name = "X",
+            calories = "350",
+            carbs = "40,5",   // comma decimal
+            protein = "15.5", // period decimal
+            fat = "",         // empty -> null
+        )
+        val (recipe, _, _) = state.toEntities()
+        assertEquals(350, recipe.calories)
+        assertEquals(40.5, recipe.carbsGrams!!, 0.0001)
+        assertEquals(15.5, recipe.proteinGrams!!, 0.0001)
+        assertEquals(null, recipe.fatGrams)
+    }
+
+    @Test
+    fun toEntities_parsesInvalidNutritionAsNull() {
+        val (recipe, _, _) = EditUiState(name = "X", calories = "abc", carbs = "x").toEntities()
+        assertEquals(null, recipe.calories)
+        assertEquals(null, recipe.carbsGrams)
+    }
+
+    @Test
+    fun toUiState_formatsNutrition_strippingTrailingZero() {
+        val details = RecipeWithDetails(
+            recipe = Recipe(id = 1, name = "X", calories = 350, carbsGrams = 160.0, proteinGrams = 15.5, fatGrams = null),
+            ingredients = emptyList(),
+            steps = emptyList(),
+        )
+        val state = details.toUiState(Locale.US)
+        assertEquals("350", state.calories)
+        assertEquals("160", state.carbs)   // 160.0 -> "160"
+        assertEquals("15.5", state.protein)
+        assertEquals("", state.fat)
+    }
+
+    @Test
+    fun toUiState_formatsMacros_usingLocaleDecimalSeparator() {
+        val details = RecipeWithDetails(
+            recipe = Recipe(id = 1, name = "X", carbsGrams = 160.0, proteinGrams = 15.5),
+            ingredients = emptyList(),
+            steps = emptyList(),
+        )
+        val de = details.toUiState(Locale.GERMANY)
+        assertEquals("160", de.carbs)    // whole number -> no separator
+        assertEquals("15,5", de.protein) // comma on DE
     }
 }
