@@ -4,6 +4,7 @@ import com.nwe.recipely.data.Ingredient
 import com.nwe.recipely.data.Recipe
 import com.nwe.recipely.data.RecipeWithDetails
 import com.nwe.recipely.data.Step
+import kotlin.math.roundToLong
 
 data class IngredientRow(val text: String = "")
 
@@ -14,6 +15,10 @@ data class EditUiState(
     val name: String = "",
     val prepTime: String = "",
     val servings: String = "",
+    val calories: String = "",
+    val carbs: String = "",
+    val protein: String = "",
+    val fat: String = "",
     val imagePath: String? = null,
     val ingredients: List<IngredientRow> = listOf(IngredientRow()),
     val steps: List<StepRow> = listOf(StepRow()),
@@ -34,6 +39,10 @@ fun EditUiState.toEntities(): Triple<Recipe, List<Ingredient>, List<Step>> {
         imageUri = imagePath,
         prepTimeMinutes = prepTime.trim().toIntOrNull(),
         servings = servings.trim().toIntOrNull(),
+        calories = calories.trim().toIntOrNull(),
+        carbsGrams = carbs.toGramsOrNull(),
+        proteinGrams = protein.toGramsOrNull(),
+        fatGrams = fat.toGramsOrNull(),
     )
     val ingredients = ingredients
         .map { it.text.trim() }
@@ -52,6 +61,10 @@ fun RecipeWithDetails.toUiState(): EditUiState = EditUiState(
     name = recipe.name,
     prepTime = recipe.prepTimeMinutes?.toString() ?: "",
     servings = recipe.servings?.toString() ?: "",
+    calories = recipe.calories?.toString() ?: "",
+    carbs = recipe.carbsGrams?.toEditString() ?: "",
+    protein = recipe.proteinGrams?.toEditString() ?: "",
+    fat = recipe.fatGrams?.toEditString() ?: "",
     imagePath = recipe.imageUri,
     ingredients = ingredients.sortedBy { it.position }
         .map { IngredientRow(it.text) }
@@ -60,3 +73,13 @@ fun RecipeWithDetails.toUiState(): EditUiState = EditUiState(
         .map { StepRow(it.text, it.imageUri) }
         .ifEmpty { listOf(StepRow()) },
 )
+
+/** Parses a gram value, accepting both comma and period decimals; blank/invalid -> null. */
+internal fun String.toGramsOrNull(): Double? =
+    trim().replace(',', '.').toDoubleOrNull()
+
+/** Formats a stored gram value for an editable text field: one decimal max, trailing ".0" dropped. */
+internal fun Double.toEditString(): String {
+    val rounded = (this * 10.0).roundToLong() / 10.0
+    return if (rounded % 1.0 == 0.0) rounded.toLong().toString() else rounded.toString()
+}

@@ -105,4 +105,41 @@ class RecipeMappingTest {
         assertEquals("/photo.jpg", steps[0].imageUri)
         assertEquals(0, steps[0].position)
     }
+
+    @Test
+    fun toEntities_parsesNutrition_acceptingCommaAndPeriod() {
+        val state = EditUiState(
+            name = "X",
+            calories = "350",
+            carbs = "40,5",   // comma decimal
+            protein = "15.5", // period decimal
+            fat = "",         // empty -> null
+        )
+        val (recipe, _, _) = state.toEntities()
+        assertEquals(350, recipe.calories)
+        assertEquals(40.5, recipe.carbsGrams!!, 0.0001)
+        assertEquals(15.5, recipe.proteinGrams!!, 0.0001)
+        assertEquals(null, recipe.fatGrams)
+    }
+
+    @Test
+    fun toEntities_parsesInvalidNutritionAsNull() {
+        val (recipe, _, _) = EditUiState(name = "X", calories = "abc", carbs = "x").toEntities()
+        assertEquals(null, recipe.calories)
+        assertEquals(null, recipe.carbsGrams)
+    }
+
+    @Test
+    fun toUiState_formatsNutrition_strippingTrailingZero() {
+        val details = RecipeWithDetails(
+            recipe = Recipe(id = 1, name = "X", calories = 350, carbsGrams = 160.0, proteinGrams = 15.5, fatGrams = null),
+            ingredients = emptyList(),
+            steps = emptyList(),
+        )
+        val state = details.toUiState()
+        assertEquals("350", state.calories)
+        assertEquals("160", state.carbs)   // 160.0 -> "160"
+        assertEquals("15.5", state.protein)
+        assertEquals("", state.fat)
+    }
 }
