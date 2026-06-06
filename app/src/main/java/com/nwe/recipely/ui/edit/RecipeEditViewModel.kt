@@ -74,15 +74,25 @@ class RecipeEditViewModel(
         s.copy(steps = s.steps.filterIndexed { i, _ -> i != index })
     }
 
+    private var isSaving = false
+
     fun save(onSaved: () -> Unit) {
         val current = _state.value
-        if (!current.canSave) return
+        if (!current.canSave || isSaving) return
+        isSaving = true
         val (recipe, ingredients, steps) = current.toEntities()
         val referenced = current.referencedPaths().toSet()
         val orphans = (originalImagePaths + pendingNewImages) - referenced
         viewModelScope.launch {
-            repository.save(recipe, ingredients, steps, orphans.toList())
-            onSaved()
+            try {
+                repository.save(recipe, ingredients, steps, orphans.toList())
+                // Persisted paths are now the baseline; nothing imported-but-unsaved remains.
+                originalImagePaths = referenced
+                pendingNewImages.clear()
+                onSaved()
+            } finally {
+                isSaving = false
+            }
         }
     }
 

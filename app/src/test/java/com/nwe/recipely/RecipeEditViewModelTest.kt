@@ -109,6 +109,19 @@ class RecipeEditViewModelTest {
     }
 
     @Test
+    fun save_isGuardedAgainstDoubleInvocation() = runTest {
+        val repo = FakeRecipeRepository()
+        val vm = newViewModel(repo)
+        vm.setName("X")
+        var savedCount = 0
+        vm.save { savedCount++ }
+        vm.save { savedCount++ }   // second tap before the first coroutine runs
+        advanceUntilIdle()
+        assertEquals(1, repo.saveCount)
+        assertEquals(1, savedCount)
+    }
+
+    @Test
     fun loadingExistingRecipe_populatesState() = runTest {
         val repo = FakeRecipeRepository()
         repo.detail.value = RecipeWithDetails(

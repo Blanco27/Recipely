@@ -20,6 +20,7 @@ class FakeRecipeRepository : RecipeRepository {
     var lastRemovedImagePaths: List<String> = emptyList()
     var discardedImages: List<String> = emptyList()
     var deletedDetails: RecipeWithDetails? = null
+    var saveCount = 0
 
     override fun observeRecipes(): Flow<List<Recipe>> = recipes
     override fun observeRecipe(id: Long): Flow<RecipeWithDetails?> = detail
@@ -30,6 +31,7 @@ class FakeRecipeRepository : RecipeRepository {
         steps: List<Step>,
         removedImagePaths: List<String>,
     ): Long {
+        saveCount++
         lastSavedRecipe = recipe
         lastSavedIngredients = ingredients
         lastSavedSteps = steps
