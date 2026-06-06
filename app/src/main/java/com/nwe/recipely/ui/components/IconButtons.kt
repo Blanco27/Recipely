@@ -10,6 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,6 +47,7 @@ fun BoxedIconButton(
     val shape = if (circle) CircleShape else RoundedCornerShape(13.dp)
     Box(
         modifier = modifier
+            .minimumInteractiveComponentSize()
             .size(size)
             .clip(shape)
             .background(paper)
@@ -81,6 +83,7 @@ fun FrostedIconButton(
     val tint = if (solid) (if (dark) Color.White else Ink) else Color.White
     Box(
         modifier = modifier
+            .minimumInteractiveComponentSize()
             .size(size)
             .clip(CircleShape)
             .background(bg)

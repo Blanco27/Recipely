@@ -78,6 +78,7 @@ import com.nwe.recipely.ui.components.BoxedIconButton
 import com.nwe.recipely.ui.components.FrostedIconButton
 import com.nwe.recipely.ui.components.RecipelyTextField
 import com.nwe.recipely.ui.theme.Forest2
+import com.nwe.recipely.ui.theme.ForestPrimaryDark
 import com.nwe.recipely.ui.theme.Fraunces
 import com.nwe.recipely.ui.theme.Moss
 import com.nwe.recipely.ui.theme.Paper
@@ -337,20 +338,25 @@ private fun Modifier.dashedBorder(color: Color, cornerRadius: Dp, strokeWidth: D
 
 @Composable
 private fun AddButton(text: String, onClick: () -> Unit) {
+    // Moss + dark Forest2 text read well on the cream background, but Forest2 is unreadable
+    // on the dark theme — switch to the light mint primary there (the mockup is light-only).
+    val dark = isSystemInDarkTheme()
+    val accent = if (dark) ForestPrimaryDark else Moss
+    val textColor = if (dark) ForestPrimaryDark else Forest2
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
-            .background(Moss.copy(alpha = 0.07f))
-            .dashedBorder(Moss.copy(alpha = 0.6f), 16.dp)
+            .background(accent.copy(alpha = if (dark) 0.12f else 0.07f))
+            .dashedBorder(accent.copy(alpha = 0.6f), 16.dp)
             .clickable(onClick = onClick)
             .padding(vertical = 14.dp),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Icon(Icons.Default.Add, contentDescription = null, tint = Moss)
+        Icon(Icons.Default.Add, contentDescription = null, tint = accent)
         Spacer(Modifier.width(8.dp))
-        Text(text, color = Forest2, fontWeight = FontWeight.Medium)
+        Text(text, color = textColor, fontWeight = FontWeight.Medium)
     }
 }
 
