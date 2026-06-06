@@ -2,26 +2,26 @@ package com.nwe.recipely.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-// --- Light ---
-val ForestPrimary = Color(0xFF1E3A2B)
-val OnForest = Color(0xFFFFFFFF)
-val ForestContainer = Color(0xFFC7E6C0)
-val OnForestContainer = Color(0xFF06210F)
-val Terracotta = Color(0xFFC75D3C)
-val OnTerracotta = Color(0xFFFFFFFF)
-val TerracottaContainer = Color(0xFFF7D9CC)
-val OnTerracottaContainer = Color(0xFF3A1207)
-val Honey = Color(0xFFE2A03C)
-val OnHoney = Color(0xFF3A2600)
-val HoneyContainer = Color(0xFFFBEAC9)
-val OnHoneyContainer = Color(0xFF3A2600)
-val Cream = Color(0xFFF6F0E6)
-val CreamSurface = Color(0xFFFBF7EF)
-val Ink = Color(0xFF21201B)
-val CreamSurfaceVariant = Color(0xFFE8E0D2)
-val OnSurfaceVariantLight = Color(0xFF57534A)
-val OutlineLight = Color(0xFF8C8578)
-val OutlineVariantLight = Color(0xFFDBD3C4)
+// --- Light — every value is a mockup palette token (docs/mockups/ui-redesign.html) ---
+val ForestPrimary = Color(0xFF1E3A2B)          // --forest
+val OnForest = Color(0xFFFFFFFF)               // text/icons on forest
+val ForestContainer = Color(0xFF4F7A4A)        // --moss (dormant primaryContainer slot)
+val OnForestContainer = Color(0xFFFFFDF9)       // --paper
+val Terracotta = Color(0xFFC75D3C)             // --terra
+val OnTerracotta = Color(0xFFFFFFFF)           // text/icons on terracotta
+val TerracottaContainer = Color(0xFFE08A63)    // --terra-soft (dormant)
+val OnTerracottaContainer = Color(0xFF21201B)  // --ink
+val Honey = Color(0xFFE2A03C)                  // --honey
+val OnHoney = Color(0xFF21201B)                // --ink
+val HoneyContainer = Color(0xFFE2A03C)         // --honey (dormant)
+val OnHoneyContainer = Color(0xFF21201B)       // --ink
+val Cream = Color(0xFFF6F0E6)                  // --cream (background)
+val CreamSurface = Color(0xFFFBF7EF)           // --cream-2 (surface)
+val Ink = Color(0xFF21201B)                    // --ink
+val CreamSurfaceVariant = Color(0xFFE6DECF)    // --line (image-placeholder / drop-zone fill)
+val OnSurfaceVariantLight = Color(0xFF6B655A)  // --ink-soft
+val OutlineLight = Color(0xFF6B655A)           // --ink-soft
+val OutlineVariantLight = Color(0xFFE6DECF)    // --line
 
 // --- Dark ---
 val ForestPrimaryDark = Color(0xFF9CD49A)
@@ -43,6 +43,26 @@ val DarkSurfaceVariant = Color(0xFF44483D)
 val OnSurfaceVariantDark = Color(0xFFC6C2B4)
 val OutlineDark = Color(0xFF8F8B7E)
 val OutlineVariantDark = Color(0xFF615E54)
+
+// --- Surface container roles ---
+// Material 3 components (e.g. AlertDialog uses surfaceContainerHigh) fall back to the
+// baseline purple-tinted defaults when these roles aren't set; pin them to warm cream/dark.
+// Light (warm cream hierarchy, lightest = paper)
+val SurfaceDimLight = Color(0xFFEBE3D3)
+val SurfaceBrightLight = Color(0xFFFFFDF9)
+val SurfaceContainerLowestLight = Color(0xFFFFFDF9)
+val SurfaceContainerLowLight = Color(0xFFFCF8F0)
+val SurfaceContainerLight = Color(0xFFF8F2E8)
+val SurfaceContainerHighLight = Color(0xFFF3ECDD)
+val SurfaceContainerHighestLight = Color(0xFFEEE6D5)
+// Dark (warm near-black hierarchy)
+val SurfaceDimDark = Color(0xFF15170F)
+val SurfaceBrightDark = Color(0xFF3B3D31)
+val SurfaceContainerLowestDark = Color(0xFF101109)
+val SurfaceContainerLowDark = Color(0xFF1D1F17)
+val SurfaceContainerDark = Color(0xFF212318)
+val SurfaceContainerHighDark = Color(0xFF2C2E22)
+val SurfaceContainerHighestDark = Color(0xFF373930)
 
 // --- Accent extras ---
 val Moss = Color(0xFF4F7A4A)

@@ -424,7 +424,7 @@ private fun TitleImagePicker(imagePath: String?, onPick: () -> Unit, onRemove: (
                 Icon(
                     Icons.Outlined.AddPhotoAlternate,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
+                    tint = if (isSystemInDarkTheme()) ForestPrimaryDark else Moss,
                     modifier = Modifier.size(36.dp),
                 )
                 Text(

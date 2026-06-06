@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Recipely</string>
+    <string name="app_name" translatable="false">Recipely</string>
 
     <!-- List screen -->
     <string name="list_title">My Recipes</string>

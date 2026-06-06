@@ -39,7 +39,9 @@ import com.nwe.recipely.R
 import com.nwe.recipely.data.Recipe
 import com.nwe.recipely.data.RecipeCategory
 import com.nwe.recipely.ui.theme.ForestPrimary
+import com.nwe.recipely.ui.theme.ForestPrimaryDark
 import com.nwe.recipely.ui.theme.Fraunces
+import com.nwe.recipely.ui.theme.Moss
 import com.nwe.recipely.ui.theme.KcalChipBgDark
 import com.nwe.recipely.ui.theme.KcalChipBgLight
 import com.nwe.recipely.ui.theme.KcalChipBorderDark
@@ -88,13 +90,13 @@ fun RecipeCard(recipe: Recipe, onClick: () -> Unit, modifier: Modifier = Modifie
                     Box(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(MaterialTheme.colorScheme.primaryContainer),
+                            .background(MaterialTheme.colorScheme.surfaceVariant),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
                             Icons.Outlined.Restaurant,
                             contentDescription = null,
-                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            tint = if (isSystemInDarkTheme()) ForestPrimaryDark else Moss,
                             modifier = Modifier.size(40.dp),
                         )
                     }

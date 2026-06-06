@@ -71,6 +71,7 @@ import com.nwe.recipely.data.RecipeWithDetails
 import com.nwe.recipely.data.Step
 import com.nwe.recipely.ui.components.FrostedIconButton
 import com.nwe.recipely.ui.theme.Fraunces
+import com.nwe.recipely.ui.theme.ForestPrimaryDark
 import com.nwe.recipely.ui.theme.Honey
 import com.nwe.recipely.ui.theme.Moss
 import com.nwe.recipely.ui.theme.Paper
@@ -257,13 +258,13 @@ private fun Hero(name: String, imageUri: String?, categoryLabel: String?) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.primaryContainer),
+                    .background(MaterialTheme.colorScheme.surfaceVariant),
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     Icons.Outlined.Restaurant,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    tint = if (isSystemInDarkTheme()) ForestPrimaryDark else Moss,
                     modifier = Modifier.size(72.dp),
                 )
             }
