@@ -14,6 +14,10 @@ data class Recipe(
     val imageUri: String? = null,
     val prepTimeMinutes: Int? = null,
     val servings: Int? = null,
+    val calories: Int? = null,        // kcal, total for the whole recipe
+    val carbsGrams: Double? = null,   // carbohydrates in grams, total
+    val proteinGrams: Double? = null, // protein in grams, total
+    val fatGrams: Double? = null,     // fat in grams, total
 )
 
 @Entity(
