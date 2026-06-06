@@ -19,6 +19,7 @@ data class EditUiState(
     val carbs: String = "",
     val protein: String = "",
     val fat: String = "",
+    val category: String? = null,
     val imagePath: String? = null,
     val ingredients: List<IngredientRow> = listOf(IngredientRow()),
     val steps: List<StepRow> = listOf(StepRow()),
@@ -43,6 +44,7 @@ fun EditUiState.toEntities(): Triple<Recipe, List<Ingredient>, List<Step>> {
         carbsGrams = carbs.toGramsOrNull(),
         proteinGrams = protein.toGramsOrNull(),
         fatGrams = fat.toGramsOrNull(),
+        category = category,
     )
     val ingredients = ingredients
         .map { it.text.trim() }
@@ -65,6 +67,7 @@ fun RecipeWithDetails.toUiState(locale: Locale = Locale.getDefault()): EditUiSta
     carbs = recipe.carbsGrams?.toEditString(locale) ?: "",
     protein = recipe.proteinGrams?.toEditString(locale) ?: "",
     fat = recipe.fatGrams?.toEditString(locale) ?: "",
+    category = recipe.category,
     imagePath = recipe.imageUri,
     ingredients = ingredients.sortedBy { it.position }
         .map { IngredientRow(it.text) }
