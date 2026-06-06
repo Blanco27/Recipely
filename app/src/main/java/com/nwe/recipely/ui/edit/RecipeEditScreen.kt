@@ -173,6 +173,48 @@ fun RecipeEditScreen(
                 }
             }
 
+            item { EditSectionHeader(stringResource(R.string.nutrition_optional)) }
+            item {
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    OutlinedTextField(
+                        value = state.calories,
+                        onValueChange = vm::setCalories,
+                        label = { Text(stringResource(R.string.label_calories_input)) },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        modifier = Modifier.weight(1f),
+                    )
+                    OutlinedTextField(
+                        value = state.carbs,
+                        onValueChange = vm::setCarbs,
+                        label = { Text(stringResource(R.string.label_carbs_input)) },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
+            item {
+                Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    OutlinedTextField(
+                        value = state.protein,
+                        onValueChange = vm::setProtein,
+                        label = { Text(stringResource(R.string.label_protein_input)) },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        modifier = Modifier.weight(1f),
+                    )
+                    OutlinedTextField(
+                        value = state.fat,
+                        onValueChange = vm::setFat,
+                        label = { Text(stringResource(R.string.label_fat_input)) },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
+
             item { EditSectionHeader(stringResource(R.string.section_ingredients)) }
             items(state.ingredients.size) { index ->
                 Row(
