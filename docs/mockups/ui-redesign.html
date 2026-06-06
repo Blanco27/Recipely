@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Recipely · UI Redesign — Warm Editorial Kitchen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --cream: #F6F0E6;
+    --cream-2: #FBF7EF;
+    --paper: #FFFDF9;
+    --forest: #1E3A2B;
+    --forest-2: #2C5238;
+    --moss: #4F7A4A;
+    --terra: #C75D3C;
+    --terra-soft: #E08a63;
+    --honey: #E2A03C;
+    --ink: #21201B;
+    --ink-soft: #6B655A;
+    --line: #E6DECF;
+    --shadow: 28px 28px 60px rgba(30, 40, 30, 0.12), -2px -2px 0 rgba(255,255,255,0.6) inset;
+    font-family: 'Hanken Grotesk', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(199,93,60,0.07), transparent 42%),
+      radial-gradient(circle at 88% 8%, rgba(226,160,60,0.10), transparent 38%),
+      radial-gradient(circle at 78% 92%, rgba(30,58,43,0.07), transparent 45%);
+    min-height: 100vh;
+  }
+
+  /* film grain overlay */
+  body::after {
+    content: "";
+    position: fixed; inset: 0; pointer-events: none; z-index: 999; opacity: 0.35;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+
+  /* ---------- Page header ---------- */
+  header.hero {
+    max-width: 1180px; margin: 0 auto; padding: 72px 40px 28px;
+  }
+  .kicker {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--terra); margin-bottom: 22px;
+  }
+  .kicker::before { content: ""; width: 30px; height: 2px; background: var(--terra); display: inline-block; }
+  header.hero h1 {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: clamp(40px, 6vw, 78px);
+    line-height: 0.98; letter-spacing: -0.02em; color: var(--forest); max-width: 16ch;
+  }
+  header.hero h1 em { font-style: italic; color: var(--terra); font-weight: 500; }
+  header.hero p.lede {
+    margin-top: 24px; max-width: 56ch; font-size: 18px; line-height: 1.6; color: var(--ink-soft);
+  }
+
+  /* palette + type chips */
+  .meta-row { display: flex; flex-wrap: wrap; gap: 28px; margin-top: 34px; align-items: flex-start; }
+  .swatches { display: flex; gap: 0; border-radius: 14px; overflow: hidden; box-shadow: 0 10px 24px rgba(30,40,30,.14); }
+  .swatch { width: 52px; height: 52px; display: grid; place-items: end; padding: 5px; }
+  .swatch span { font-size: 8px; font-weight: 700; color: rgba(255,255,255,.85); letter-spacing: .04em; }
+  .typenote { font-size: 13px; line-height: 1.7; color: var(--ink-soft); }
+  .typenote b { color: var(--ink); font-weight: 700; }
+  .typenote .ff { font-family: 'Fraunces', serif; font-size: 19px; font-weight: 600; color: var(--forest); }
+
+  /* ---------- Phone grid ---------- */
+  .stage {
+    max-width: 1180px; margin: 0 auto; padding: 30px 40px 120px;
+    display: flex; flex-wrap: wrap; gap: 56px 64px; justify-content: center; align-items: flex-start;
+  }
+  .frame-wrap { display: flex; flex-direction: column; align-items: center; gap: 20px; }
+  .frame-label {
+    font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; color: var(--forest);
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  .frame-label .n {
+    font-family: 'Hanken Grotesk'; font-size: 12px; font-weight: 800; color: var(--paper);
+    background: var(--terra); width: 24px; height: 24px; border-radius: 50%;
+    display: grid; place-items: center; transform: translateY(-2px);
+  }
+  .frame-sub { font-size: 13px; color: var(--ink-soft); max-width: 30ch; text-align: center; margin-top: -10px; }
+
+  /* phone shell */
+  .phone {
+    width: 340px; height: 720px; border-radius: 48px; padding: 11px;
+    background: linear-gradient(160deg, #2a2a28, #15150f);
+    box-shadow: var(--shadow);
+    position: relative;
+  }
+  .phone::before { /* side button */
+    content:""; position:absolute; right:-3px; top:150px; width:3px; height:64px; border-radius:2px; background:#23231f;
+  }
+  .screen {
+    width: 100%; height: 100%; border-radius: 38px; overflow: hidden; position: relative;
+    background: var(--cream-2); display: flex; flex-direction: column;
+  }
+  .screen .scroll { overflow-y: auto; height: 100%; scrollbar-width: none; }
+  .screen .scroll::-webkit-scrollbar { display: none; }
+
+  /* status bar */
+  .statusbar {
+    height: 40px; display: flex; align-items: center; justify-content: space-between;
+    padding: 0 22px; font-size: 12px; font-weight: 700; color: var(--ink); flex-shrink: 0;
+    position: relative; z-index: 5;
+  }
+  .statusbar .dots { display:flex; gap:5px; align-items:center; }
+  .statusbar .dots i { font-style: normal; font-size: 11px; }
+
+  /* ================= LIST SCREEN ================= */
+  .list-top { padding: 4px 22px 14px; }
+  .list-top .eyebrow { font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--terra); }
+  .list-top h2 {
+    font-family:'Fraunces', serif; font-weight:600; font-size:40px; line-height:1; letter-spacing:-.02em;
+    color:var(--forest); margin-top:6px;
+  }
+  .list-top .count { font-size:13px; color:var(--ink-soft); margin-top:8px; }
+
+  .filter-row { display:flex; gap:8px; padding:4px 22px 16px; overflow-x:auto; scrollbar-width:none; }
+  .filter-row::-webkit-scrollbar{display:none;}
+  .pill {
+    flex-shrink:0; font-size:12.5px; font-weight:600; padding:8px 14px; border-radius:100px;
+    background:var(--paper); color:var(--ink-soft); border:1px solid var(--line);
+  }
+  .pill.active { background:var(--forest); color:var(--cream-2); border-color:var(--forest); }
+
+  .card {
+    margin: 0 18px 18px; background: var(--paper); border-radius: 26px; overflow: hidden;
+    border: 1px solid var(--line); box-shadow: 0 14px 30px rgba(30,40,30,.07);
+    opacity: 0; transform: translateY(18px); animation: rise .7s cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  .card .photo { height: 158px; position: relative; background-size: cover; background-position: center; }
+  .card .photo .fav {
+    position:absolute; top:12px; right:12px; width:34px; height:34px; border-radius:50%;
+    background:rgba(255,253,249,.82); backdrop-filter: blur(6px); display:grid; place-items:center; font-size:15px;
+    box-shadow:0 4px 12px rgba(0,0,0,.15);
+  }
+  .card .photo .tag {
+    position:absolute; left:12px; bottom:12px; font-size:11px; font-weight:700; letter-spacing:.03em;
+    padding:5px 11px; border-radius:100px; color:var(--paper); background:rgba(30,58,43,.78);
+    backdrop-filter:blur(4px);
+  }
+  .card .body { padding: 14px 16px 16px; }
+  .card .body h3 { font-family:'Fraunces', serif; font-weight:600; font-size:21px; letter-spacing:-.01em; color:var(--ink); line-height:1.1; }
+  .card .chips { display:flex; gap:7px; margin-top:11px; flex-wrap:wrap; }
+  .chip {
+    display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:600;
+    padding:5px 10px; border-radius:9px; background:var(--cream); color:var(--forest-2); border:1px solid var(--line);
+  }
+  .chip.kcal { background:#FBEEDD; color:#A85B1E; border-color:#F3DDBE; }
+
+  .fab {
+    position:absolute; right:20px; bottom:24px; height:56px; padding:0 22px; border-radius:20px;
+    background:var(--terra); color:var(--paper); display:flex; align-items:center; gap:9px;
+    font-size:15px; font-weight:700; box-shadow:0 12px 26px rgba(199,93,60,.45); z-index:8;
+  }
+  .fab .plus { font-size:22px; line-height:1; }
+
+  /* ================= DETAIL SCREEN ================= */
+  .hero-img {
+    height: 300px; position: relative; background-size: cover; background-position: center; flex-shrink:0;
+    margin-top: -40px; /* slide under status bar */
+  }
+  .hero-img .scrim {
+    position:absolute; inset:0;
+    background: linear-gradient(to top, rgba(20,30,22,.92) 4%, rgba(20,30,22,.35) 40%, rgba(20,30,22,.15) 100%);
+  }
+  .hero-nav {
+    position:absolute; top:48px; left:0; right:0; padding:0 18px; display:flex; justify-content:space-between; z-index:4;
+  }
+  .hero-nav .icon {
+    width:40px; height:40px; border-radius:50%; background:rgba(255,253,249,.18); backdrop-filter:blur(8px);
+    display:grid; place-items:center; color:var(--paper); font-size:17px; border:1px solid rgba(255,255,255,.22);
+  }
+  .hero-nav .group{ display:flex; gap:10px; }
+  .hero-text { position:absolute; left:22px; right:22px; bottom:22px; z-index:4; }
+  .hero-text .eyebrow{ font-size:11px; font-weight:700; letter-spacing:.2em; text-transform:uppercase; color:var(--honey); }
+  .hero-text h2 {
+    font-family:'Fraunces', serif; font-weight:600; font-size:33px; line-height:1.02; letter-spacing:-.02em;
+    color:var(--paper); margin-top:7px; text-shadow:0 2px 16px rgba(0,0,0,.35);
+  }
+
+  .sheet {
+    background:var(--cream-2); border-radius:28px 28px 0 0; margin-top:-26px; position:relative; z-index:3;
+    padding: 22px 20px 28px; flex:1;
+  }
+  .grabber { width:42px; height:5px; border-radius:3px; background:var(--line); margin:0 auto 20px; }
+
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:9px; margin-bottom:26px; }
+  .stat {
+    background:var(--paper); border:1px solid var(--line); border-radius:18px; padding:13px 6px 11px;
+    text-align:center;
+  }
+  .stat .ic{ font-size:18px; }
+  .stat .v{ font-family:'Fraunces',serif; font-weight:600; font-size:18px; color:var(--forest); margin-top:5px; line-height:1; }
+  .stat .l{ font-size:10px; font-weight:600; letter-spacing:.04em; text-transform:uppercase; color:var(--ink-soft); margin-top:4px; }
+  .stat.accent{ background:var(--forest); border-color:var(--forest); }
+  .stat.accent .v{ color:var(--paper); }
+  .stat.accent .l{ color:rgba(255,255,255,.7); }
+  .stat.accent .ic{ filter:grayscale(0); }
+
+  .sec-head { display:flex; align-items:baseline; justify-content:space-between; margin:0 2px 13px; }
+  .sec-head h3 { font-family:'Fraunces',serif; font-weight:600; font-size:23px; color:var(--ink); letter-spacing:-.01em; }
+  .sec-head .meta { font-size:12px; font-weight:600; color:var(--terra); }
+
+  .ing-card { background:var(--paper); border:1px solid var(--line); border-radius:20px; padding:6px 4px; margin-bottom:28px; }
+  .ing {
+    display:flex; align-items:center; gap:13px; padding:11px 14px; border-bottom:1px solid var(--cream);
+    font-size:15px; color:var(--ink);
+  }
+  .ing:last-child{ border-bottom:none; }
+  .ing .box {
+    width:22px; height:22px; border-radius:7px; border:2px solid var(--moss); flex-shrink:0;
+    display:grid; place-items:center; font-size:13px; color:var(--paper);
+  }
+  .ing.done .box{ background:var(--moss); }
+  .ing.done .txt{ color:var(--ink-soft); text-decoration:line-through; text-decoration-color:var(--moss); }
+  .ing .amt{ font-weight:700; color:var(--forest-2); }
+
+  .steps { display:flex; flex-direction:column; gap:0; }
+  .step { display:flex; gap:15px; position:relative; padding-bottom:22px; }
+  .step .num {
+    width:36px; height:36px; flex-shrink:0; border-radius:13px; background:var(--terra); color:var(--paper);
+    font-family:'Fraunces',serif; font-weight:600; font-size:18px; display:grid; place-items:center;
+    box-shadow:0 6px 14px rgba(199,93,60,.32); z-index:2;
+  }
+  .step:not(:last-child)::before{
+    content:""; position:absolute; left:17px; top:40px; bottom:-2px; width:2px;
+    background:repeating-linear-gradient(var(--line) 0 5px, transparent 5px 11px);
+  }
+  .step .stx { padding-top:5px; }
+  .step .stx p{ font-size:14.5px; line-height:1.55; color:var(--ink); }
+  .step .stx .shot{
+    margin-top:11px; height:130px; border-radius:16px; background-size:cover; background-position:center;
+    border:1px solid var(--line);
+  }
+
+  /* ================= EDIT SCREEN ================= */
+  .edit-bar { display:flex; align-items:center; justify-content:space-between; padding:6px 16px 12px; flex-shrink:0; }
+  .edit-bar .x {
+    width:38px; height:38px; border-radius:50%; background:var(--paper); border:1px solid var(--line);
+    display:grid; place-items:center; font-size:17px; color:var(--ink);
+  }
+  .edit-bar .ttl { font-family:'Fraunces',serif; font-weight:600; font-size:19px; color:var(--forest); letter-spacing:-.01em; }
+  .edit-bar .save {
+    background:var(--terra); color:var(--paper); font-weight:700; font-size:13.5px; padding:9px 18px;
+    border-radius:100px; box-shadow:0 6px 14px rgba(199,93,60,.32);
+  }
+
+  .edit-body { padding:4px 18px 20px; display:flex; flex-direction:column; gap:15px; }
+
+  .titledrop {
+    height:172px; border-radius:24px; position:relative; overflow:hidden;
+    background-size:cover; background-position:center; border:1px solid var(--line);
+  }
+  .titledrop .scrim2 { position:absolute; inset:0; background:linear-gradient(to top, rgba(20,30,22,.55), transparent 55%); }
+  .titledrop .lbl {
+    position:absolute; left:14px; bottom:13px; color:var(--paper); font-size:12px; font-weight:700;
+    letter-spacing:.04em; text-transform:uppercase; display:flex; align-items:center; gap:7px;
+  }
+  .titledrop .ctl { position:absolute; top:12px; right:12px; display:flex; gap:8px; }
+  .titledrop .ctl div {
+    width:34px; height:34px; border-radius:50%; background:rgba(255,253,249,.85); backdrop-filter:blur(6px);
+    display:grid; place-items:center; font-size:15px; color:var(--ink); box-shadow:0 4px 10px rgba(0,0,0,.18);
+  }
+
+  /* outlined text field with notched floating label */
+  .tf { position:relative; background:var(--paper); border:1.5px solid var(--line); border-radius:16px; padding:17px 14px 9px; }
+  .tf.focus { border-color:var(--terra); box-shadow:0 0 0 3px rgba(199,93,60,.12); }
+  .tf > label {
+    position:absolute; top:-8px; left:11px; background:var(--paper); padding:0 6px;
+    font-size:11px; font-weight:700; letter-spacing:.02em; color:var(--ink-soft);
+  }
+  .tf.focus > label { color:var(--terra); }
+  .tf .val { font-size:15px; color:var(--ink); line-height:1.5; }
+  .tf .val.ph { color:#b8b1a2; }
+  .tf.multiline { padding-top:18px; }
+
+  .row2 { display:flex; gap:12px; }
+  .row2 .tf { flex:1; }
+
+  .esec { font-family:'Fraunces',serif; font-weight:600; font-size:21px; color:var(--forest);
+          letter-spacing:-.01em; margin:8px 2px 1px; display:flex; align-items:center; gap:9px; }
+  .esec::before { content:""; width:18px; height:3px; border-radius:2px; background:var(--terra); }
+
+  .ing-edit { display:flex; gap:9px; align-items:center; }
+  .ing-edit .tf { flex:1; }
+  .del {
+    width:42px; height:42px; flex-shrink:0; border-radius:13px; background:var(--paper); border:1px solid var(--line);
+    display:grid; place-items:center; color:var(--terra); font-size:16px;
+  }
+
+  .add-btn {
+    display:flex; align-items:center; justify-content:center; gap:9px; width:100%; padding:13px;
+    border-radius:16px; border:1.5px dashed var(--moss); color:var(--forest-2); font-weight:700; font-size:14px;
+    background:rgba(79,122,74,.07);
+  }
+  .add-btn .p { font-size:18px; line-height:1; }
+
+  .step-edit { background:var(--paper); border:1px solid var(--line); border-radius:20px; padding:13px; }
+  .step-edit .top { display:flex; gap:11px; align-items:flex-start; }
+  .step-edit .num {
+    width:34px; height:34px; flex-shrink:0; border-radius:12px; background:var(--terra); color:var(--paper);
+    font-family:'Fraunces',serif; font-weight:600; font-size:17px; display:grid; place-items:center;
+    box-shadow:0 5px 12px rgba(199,93,60,.3); margin-top:3px;
+  }
+  .step-edit .top .tf { flex:1; }
+  .step-edit .top .del { width:34px; height:34px; margin-top:3px; }
+  .step-thumb {
+    margin-top:11px; margin-left:45px; height:120px; border-radius:14px; position:relative; overflow:hidden;
+    background-size:cover; background-position:center; border:1px solid var(--line);
+  }
+  .step-thumb .rm {
+    position:absolute; top:8px; right:8px; width:28px; height:28px; border-radius:50%;
+    background:rgba(20,20,18,.6); backdrop-filter:blur(4px); display:grid; place-items:center; color:#fff; font-size:13px;
+  }
+  .step-addimg {
+    margin-top:11px; margin-left:45px; display:flex; align-items:center; justify-content:center; gap:8px;
+    padding:11px; border-radius:13px; border:1.5px dashed var(--line); color:var(--ink-soft); font-weight:600; font-size:13px;
+  }
+
+  .cat-pick { display:flex; flex-wrap:wrap; gap:8px; }
+  .catchip {
+    font-size:13px; font-weight:600; padding:9px 14px; border-radius:100px;
+    background:var(--paper); border:1.5px solid var(--line); color:var(--ink-soft);
+  }
+  .catchip.sel { background:var(--forest); border-color:var(--forest); color:var(--cream-2); }
+  .opt-hint { font-size:11.5px; font-weight:500; color:var(--ink-soft); margin:-4px 2px 0; }
+
+  @keyframes rise { to { opacity:1; transform:none; } }
+  .card:nth-child(1){ animation-delay:.05s; } .card:nth-child(2){ animation-delay:.14s; }
+  .card:nth-child(3){ animation-delay:.23s; } .card:nth-child(4){ animation-delay:.32s; }
+
+  /* footer note */
+  .foot { max-width:1180px; margin:0 auto; padding:0 40px 90px; }
+  .foot .panel {
+    background:var(--forest); color:var(--cream-2); border-radius:28px; padding:38px 42px;
+    display:flex; flex-wrap:wrap; gap:34px; justify-content:space-between;
+  }
+  .foot h4 { font-family:'Fraunces',serif; font-weight:600; font-size:26px; margin-bottom:14px; color:var(--paper); }
+  .foot ul { list-style:none; display:flex; flex-direction:column; gap:9px; }
+  .foot li { font-size:14.5px; color:rgba(255,255,255,.82); display:flex; gap:10px; align-items:flex-start; }
+  .foot li::before{ content:"›"; color:var(--honey); font-weight:800; }
+  .foot .col{ min-width:240px; flex:1; }
+  .badge-soft { font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--honey); }
+
+  @media (max-width:760px){
+    header.hero{ padding:48px 24px 18px; }
+    .stage{ padding:20px 16px 80px; gap:44px; }
+    .foot .panel{ padding:28px; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="kicker">Recipely · UI Redesign Concept</div>
+    <h1>Warm Editorial <em>Kitchen</em></h1>
+    <p class="lede">
+      Ein Vorschlag, der deine native Compose-App von „sauberem Standard-Material" zu einer
+      magazinartigen Koch-App hebt — großzügige Food-Fotografie, charaktervolle Serifen-Titel,
+      warme Cremetöne mit Wald­grün &amp; Terrakotta. Material 3 bleibt das Fundament,
+      nur Typografie, Farbe, Form und Rhythmus werden geschärft.
+    </p>
+
+    <div class="meta-row">
+      <div>
+        <div class="badge-soft" style="margin-bottom:10px;">Palette</div>
+        <div class="swatches">
+          <div class="swatch" style="background:#1E3A2B"><span>FOREST</span></div>
+          <div class="swatch" style="background:#4F7A4A"><span>MOSS</span></div>
+          <div class="swatch" style="background:#C75D3C"><span>TERRA</span></div>
+          <div class="swatch" style="background:#E2A03C"><span>HONEY</span></div>
+          <div class="swatch" style="background:#F6F0E6"><span style="color:#8a8273">CREAM</span></div>
+        </div>
+      </div>
+      <div class="typenote">
+        <div class="badge-soft" style="margin-bottom:10px;">Typografie</div>
+        <div class="ff">Fraunces — Display</div>
+        <div style="margin-top:2px;"><b>Hanken Grotesk</b> — Body &amp; UI</div>
+        <div style="margin-top:6px; max-width:34ch;">Optische Serife mit Charakter für Rezeptnamen, ruhige Grotesk für alles Funktionale.</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="stage">
+
+    <!-- ============ SCREEN 1: LIST ============ -->
+    <div class="frame-wrap">
+      <div class="frame-label"><span class="n">1</span> Rezeptliste</div>
+      <div class="frame-sub">Karten statt Zeilen · Foto 16:9 · echte Chips · große Display-Headline</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="statusbar">
+            <span>9:41</span>
+            <span class="dots"><i>●●●</i><i>📶</i><i>🔋</i></span>
+          </div>
+          <div class="scroll">
+            <div class="list-top">
+              <div class="eyebrow">Offline · 12 Rezepte</div>
+              <h2>My Recipes</h2>
+            </div>
+            <div class="filter-row">
+              <div class="pill active">Alle</div>
+              <div class="pill">Schnell</div>
+              <div class="pill">Vegetarisch</div>
+              <div class="pill">Backen</div>
+              <div class="pill">Favoriten</div>
+            </div>
+
+            <div class="card">
+              <div class="photo" style="background:linear-gradient(135deg,#c75d3c,#8c2d20);background-image:url('https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=600&q=70')">
+                <div class="tag">🍝 Hauptgericht</div>
+              </div>
+              <div class="body">
+                <h3>Spaghetti Bolognese</h3>
+                <div class="chips">
+                  <span class="chip">⏱ 30 min</span>
+                  <span class="chip">🍽 4 Port.</span>
+                  <span class="chip kcal">🔥 540 kcal</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="photo" style="background:linear-gradient(135deg,#e2a03c,#b9701a);background-image:url('https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=70')">
+                <div class="tag">🥞 Frühstück</div>
+              </div>
+              <div class="body">
+                <h3>Fluffige Pancakes</h3>
+                <div class="chips">
+                  <span class="chip">⏱ 15 min</span>
+                  <span class="chip">🍽 2 Port.</span>
+                  <span class="chip kcal">🔥 320 kcal</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="photo" style="background:linear-gradient(135deg,#4f7a4a,#26432a);background-image:url('https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=70')">
+                <div class="tag">🥗 Salat</div>
+              </div>
+              <div class="body">
+                <h3>Garten-Bowl mit Feta</h3>
+                <div class="chips">
+                  <span class="chip">⏱ 20 min</span>
+                  <span class="chip">🍽 2 Port.</span>
+                  <span class="chip kcal">🔥 410 kcal</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="height:90px"></div>
+          </div>
+          <div class="fab"><span class="plus">+</span> Rezept</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SCREEN 2: DETAIL ============ -->
+    <div class="frame-wrap">
+      <div class="frame-label"><span class="n">2</span> Rezept-Detail</div>
+      <div class="frame-sub">Parallax-Hero mit Scrim &amp; Titel · Nutrition-Statleiste · abhakbare Zutaten</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="statusbar" style="color:#fff; position:absolute; left:0; right:0; z-index:6;">
+            <span>9:41</span>
+            <span class="dots"><i>●●●</i><i>📶</i><i>🔋</i></span>
+          </div>
+          <div class="scroll">
+            <div class="hero-img" style="background:linear-gradient(135deg,#c75d3c,#7a2418);background-image:url('https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=800&q=75')">
+              <div class="scrim"></div>
+              <div class="hero-nav">
+                <div class="icon">‹</div>
+                <div class="group"><div class="icon">✎</div><div class="icon">🗑</div></div>
+              </div>
+              <div class="hero-text">
+                <div class="eyebrow">Hauptgericht · Italienisch</div>
+                <h2>Spaghetti Bolognese</h2>
+              </div>
+            </div>
+
+            <div class="sheet">
+              <div class="grabber"></div>
+
+              <div class="stats">
+                <div class="stat"><div class="ic">⏱</div><div class="v">30</div><div class="l">Min</div></div>
+                <div class="stat"><div class="ic">🍽</div><div class="v">4</div><div class="l">Port.</div></div>
+                <div class="stat accent"><div class="ic">🔥</div><div class="v">540</div><div class="l">kcal</div></div>
+                <div class="stat"><div class="ic">🥩</div><div class="v">28g</div><div class="l">Protein</div></div>
+              </div>
+
+              <div class="sec-head">
+                <h3>Zutaten</h3>
+                <span class="meta">2 / 5 erledigt</span>
+              </div>
+              <div class="ing-card">
+                <div class="ing done"><span class="box">✓</span><span class="amt">500 g</span><span class="txt">Spaghetti</span></div>
+                <div class="ing done"><span class="box">✓</span><span class="amt">400 g</span><span class="txt">gehackte Tomaten</span></div>
+                <div class="ing"><span class="box"></span><span class="amt">300 g</span><span class="txt">Rinderhack</span></div>
+                <div class="ing"><span class="box"></span><span class="amt">1</span><span class="txt">Zwiebel, gewürfelt</span></div>
+                <div class="ing"><span class="box"></span><span class="amt">2</span><span class="txt">Knoblauchzehen</span></div>
+              </div>
+
+              <div class="sec-head">
+                <h3>Zubereitung</h3>
+                <span class="meta">3 Schritte</span>
+              </div>
+              <div class="steps">
+                <div class="step">
+                  <div class="num">1</div>
+                  <div class="stx"><p>Zwiebel und Knoblauch in Olivenöl glasig anschwitzen, Hackfleisch zugeben und krümelig braten.</p></div>
+                </div>
+                <div class="step">
+                  <div class="num">2</div>
+                  <div class="stx">
+                    <p>Tomaten angießen, mit Salz, Pfeffer und Oregano würzen und 20 Minuten köcheln lassen.</p>
+                    <div class="shot" style="background:linear-gradient(135deg,#c75d3c,#7a2418);background-image:url('https://images.unsplash.com/photo-1572441713132-51c75654db73?w=600&q=70')"></div>
+                  </div>
+                </div>
+                <div class="step">
+                  <div class="num">3</div>
+                  <div class="stx"><p>Spaghetti al dente kochen, abgießen und mit der Sauce vermengen. Mit Parmesan servieren.</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ SCREEN 3: EDIT / CREATE ============ -->
+    <div class="frame-wrap">
+      <div class="frame-label"><span class="n">3</span> Rezept bearbeiten</div>
+      <div class="frame-sub">Titelbild-Picker · genotchte Eingabefelder · Zutaten- &amp; Schritt-Editor</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="statusbar">
+            <span>9:41</span>
+            <span class="dots"><i>●●●</i><i>📶</i><i>🔋</i></span>
+          </div>
+          <div class="edit-bar">
+            <div class="x">✕</div>
+            <div class="ttl">Rezept bearbeiten</div>
+            <div class="save">Speichern</div>
+          </div>
+          <div class="scroll">
+            <div class="edit-body">
+
+              <div class="titledrop" style="background:linear-gradient(135deg,#c75d3c,#7a2418);background-image:url('https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=700&q=72')">
+                <div class="scrim2"></div>
+                <div class="ctl"><div>✎</div><div>✕</div></div>
+                <div class="lbl">📷 Titelbild</div>
+              </div>
+
+              <div class="tf focus">
+                <label>Name</label>
+                <div class="val">Spaghetti Bolognese</div>
+              </div>
+
+              <div class="row2">
+                <div class="tf">
+                  <label>Zeit (Min)</label>
+                  <div class="val">30</div>
+                </div>
+                <div class="tf">
+                  <label>Portionen</label>
+                  <div class="val">4</div>
+                </div>
+              </div>
+
+              <div class="esec">Nährwerte</div>
+              <div class="opt-hint">Optional · Gesamtwerte fürs ganze Rezept</div>
+              <div class="row2">
+                <div class="tf"><label>Kalorien (kcal)</label><div class="val">540</div></div>
+                <div class="tf"><label>Kohlenhydrate (g)</label><div class="val">62</div></div>
+              </div>
+              <div class="row2">
+                <div class="tf"><label>Eiweiß (g)</label><div class="val">28</div></div>
+                <div class="tf"><label>Fett (g)</label><div class="val ph">z. B. 18</div></div>
+              </div>
+
+              <div class="esec">Kategorie</div>
+              <div class="opt-hint">Optional · eine Kategorie wählen</div>
+              <div class="cat-pick">
+                <div class="catchip sel">🍝 Hauptgericht</div>
+                <div class="catchip">🥞 Frühstück</div>
+                <div class="catchip">🥗 Salat</div>
+                <div class="catchip">🧁 Backen</div>
+                <div class="catchip">🍰 Dessert</div>
+                <div class="catchip">🥪 Snack</div>
+              </div>
+
+              <div class="esec">Zutaten</div>
+
+              <div class="ing-edit">
+                <div class="tf"><label>Zutat 1</label><div class="val">500 g Spaghetti</div></div>
+                <div class="del">✕</div>
+              </div>
+              <div class="ing-edit">
+                <div class="tf"><label>Zutat 2</label><div class="val">400 g gehackte Tomaten</div></div>
+                <div class="del">✕</div>
+              </div>
+              <div class="ing-edit">
+                <div class="tf"><label>Zutat 3</label><div class="val ph">Zutat eingeben …</div></div>
+                <div class="del">✕</div>
+              </div>
+              <div class="add-btn"><span class="p">+</span> Zutat hinzufügen</div>
+
+              <div class="esec">Zubereitung</div>
+
+              <div class="step-edit">
+                <div class="top">
+                  <div class="num">1</div>
+                  <div class="tf multiline"><label>Schritt 1</label><div class="val">Zwiebel &amp; Knoblauch anschwitzen, Hackfleisch krümelig braten.</div></div>
+                  <div class="del">✕</div>
+                </div>
+                <div class="step-thumb" style="background:linear-gradient(135deg,#c75d3c,#7a2418);background-image:url('https://images.unsplash.com/photo-1572441713132-51c75654db73?w=500&q=70')">
+                  <div class="rm">✕</div>
+                </div>
+              </div>
+
+              <div class="step-edit">
+                <div class="top">
+                  <div class="num">2</div>
+                  <div class="tf multiline"><label>Schritt 2</label><div class="val ph">Schritt beschreiben …</div></div>
+                  <div class="del">✕</div>
+                </div>
+                <div class="step-addimg">📷 Schritt-Bild hinzufügen</div>
+              </div>
+
+              <div class="add-btn"><span class="p">+</span> Schritt hinzufügen</div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <section class="foot">
+    <div class="panel">
+      <div class="col">
+        <div class="badge-soft">Was sich ändert</div>
+        <h4>Design-Entscheidungen</h4>
+        <ul>
+          <li><b style="color:#fff">Fraunces</b>&nbsp;Display-Serife für Rezeptnamen — sofort „Food-Magazin".</li>
+          <li>Fotos als <b style="color:#fff">Held</b> der Karte (16:9) statt 56dp-Thumbnail.</li>
+          <li>Emoji-Meta-Text → echte <b style="color:#fff">Chips</b> mit Nutrition-Kalorien.</li>
+          <li>Detail: <b style="color:#fff">Parallax-Hero</b> mit Scrim &amp; Titel-Overlay.</li>
+          <li>Neue <b style="color:#fff">Nutrition-Statleiste</b> (passt zu feature/nutrition).</li>
+          <li><b style="color:#fff">Abhakbare</b> Zutaten beim Kochen.</li>
+          <li>Neu: <b style="color:#fff">Kategorie</b> (optional) — Picker in der Maske, Filter &amp; Badge in der Liste.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <div class="badge-soft">Was bleibt</div>
+        <h4>Geringes Risiko</h4>
+        <ul>
+          <li>Bleibt 100 % <b style="color:#fff">native Compose</b> + Material 3 — kein Rewrite.</li>
+          <li>Architektur (MVVM, Room, ImageStore) im Kern unverändert.</li>
+          <li>UI: nur <b style="color:#fff">Theme + Composables</b>; Kategorie braucht zusätzlich <b style="color:#fff">1 Room-Spalte + Migration</b>.</li>
+          <li>Dark Mode &amp; Lokalisierung (DE/EN) bleiben erhalten.</li>
+          <li>Umsetzbar Screen für Screen — Liste zuerst.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
