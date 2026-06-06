@@ -43,6 +43,9 @@ class RecipeListViewModelTest {
         vm.selectCategory("MAIN")
         advanceUntilIdle()
         assertEquals(listOf("Pasta"), vm.recipes.value.map { it.name })
+        vm.selectCategory(null)
+        advanceUntilIdle()
+        assertEquals(listOf("Pasta", "Cake", "Toast"), vm.recipes.value.map { it.name })
     }
 
     @Test

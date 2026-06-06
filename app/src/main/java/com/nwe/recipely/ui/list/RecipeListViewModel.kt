@@ -15,7 +15,8 @@ import kotlinx.coroutines.flow.stateIn
 
 class RecipeListViewModel(repository: RecipeRepository) : ViewModel() {
 
-    private val allRecipes = repository.observeRecipes()
+    private val allRecipes: StateFlow<List<Recipe>> = repository.observeRecipes()
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     /** Currently selected filter category key; null means "All". */
     private val _selectedCategory = MutableStateFlow<String?>(null)
