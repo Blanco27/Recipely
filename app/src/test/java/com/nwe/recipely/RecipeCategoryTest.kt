@@ -11,6 +11,7 @@ class RecipeCategoryTest {
     fun fromKey_returnsMatchingConstant() {
         assertEquals(RecipeCategory.MAIN, RecipeCategory.fromKey("MAIN"))
         assertEquals(RecipeCategory.SNACK, RecipeCategory.fromKey("SNACK"))
+        assertEquals(RecipeCategory.SALAD, RecipeCategory.fromKey("SALAD"))
     }
 
     @Test
@@ -18,6 +19,7 @@ class RecipeCategoryTest {
         assertNull(RecipeCategory.fromKey(null))
         assertNull(RecipeCategory.fromKey(""))
         assertNull(RecipeCategory.fromKey("BOGUS"))
+        assertNull(RecipeCategory.fromKey("   "))
     }
 
     @Test
