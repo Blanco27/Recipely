@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -195,7 +196,7 @@ private fun CategoryBadge(emoji: String, label: String, modifier: Modifier = Mod
         color = ForestPrimary.copy(alpha = 0.82f),
         contentColor = Color.White,
         shape = RoundedCornerShape(100.dp),
-        modifier = modifier,
+        modifier = modifier.semantics(mergeDescendants = true) {},
     ) {
         Row(
             modifier = Modifier.padding(horizontal = 11.dp, vertical = 5.dp),
