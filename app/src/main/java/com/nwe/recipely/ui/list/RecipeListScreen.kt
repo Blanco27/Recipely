@@ -1,7 +1,6 @@
 package com.nwe.recipely.ui.list
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,8 +61,7 @@ fun RecipeListScreen(
     // If the selected category no longer has any recipes (e.g. the last one was deleted),
     // fall back to "All" so the list never shows an empty filtered result with no matching pill.
     LaunchedEffect(availableCategories, selectedCategory) {
-        val current = selectedCategory
-        if (current != null && availableCategories.none { it.key == current }) {
+        if (selectedCategory != null && availableCategories.none { it.key == selectedCategory }) {
             vm.selectCategory(null)
         }
     }
@@ -190,7 +190,11 @@ private fun FilterPill(label: String, selected: Boolean, onClick: () -> Unit) {
         contentColor = fg,
         shape = RoundedCornerShape(100.dp),
         border = BorderStroke(1.dp, border),
-        modifier = Modifier.clickable(onClick = onClick),
+        modifier = Modifier.selectable(
+            selected = selected,
+            role = Role.Tab,
+            onClick = onClick,
+        ),
     ) {
         Text(
             text = label,
