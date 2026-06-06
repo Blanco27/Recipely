@@ -77,4 +77,4 @@ Wired up: Jetpack Compose (BOM `2024.09.03`) + **Material 3** + `material-icons-
 
 ## Workflow docs
 
-The original design spec and the task-by-task implementation plan live under `docs/superpowers/` (`specs/` and `plans/`). Out of scope by design: search, tags, categories, cloud sync, export/share, ingredient scaling.
+The original design spec and the task-by-task implementation plan live under `docs/superpowers/` (`specs/` and `plans/`). Out of scope by design: search, tags, cloud sync, export/share, ingredient scaling.
