@@ -76,6 +76,8 @@
     <string name="nutrition_summary_part">%1$s %2$s</string>
 
     <!-- Categories -->
+    <string name="section_category">Kategorie</string>
+    <string name="category_hint">Optional · eine Kategorie wählen</string>
     <string name="category_main">Hauptgericht</string>
     <string name="category_breakfast">Frühstück</string>
     <string name="category_salad">Salat</string>

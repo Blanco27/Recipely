@@ -5,10 +5,13 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,6 +40,7 @@ import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
@@ -66,6 +70,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.compose.AsyncImage
 import com.nwe.recipely.R
+import com.nwe.recipely.data.RecipeCategory
 import com.nwe.recipely.RecipelyApp
 import com.nwe.recipely.data.ImageStore
 import com.nwe.recipely.ui.theme.Fraunces
@@ -239,6 +244,10 @@ fun RecipeEditScreen(
                     )
                 }
             }
+
+            item { EditSectionHeader(stringResource(R.string.section_category)) }
+            item { EditHint(stringResource(R.string.category_hint)) }
+            item { CategoryPicker(selected = state.category, onSelect = vm::setCategory) }
 
             item { EditSectionHeader(stringResource(R.string.section_ingredients)) }
             items(state.ingredients.size) { index ->
@@ -523,4 +532,48 @@ private fun EditHint(text: String) {
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         modifier = Modifier.padding(start = 2.dp),
     )
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun CategoryPicker(selected: String?, onSelect: (String?) -> Unit) {
+    FlowRow(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        RecipeCategory.entries.forEach { category ->
+            val isSelected = category.key == selected
+            CategoryChip(
+                emoji = category.emoji,
+                label = stringResource(category.labelRes),
+                selected = isSelected,
+                // Tapping the selected chip clears the category (it is optional).
+                onClick = { onSelect(if (isSelected) null else category.key) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun CategoryChip(emoji: String, label: String, selected: Boolean, onClick: () -> Unit) {
+    val bg = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
+    val fg = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
+    val border = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
+    Surface(
+        color = bg,
+        contentColor = fg,
+        shape = RoundedCornerShape(12.dp),
+        border = BorderStroke(1.dp, border),
+        modifier = Modifier.clickable(onClick = onClick),
+    ) {
+        Row(
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 9.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Text(emoji, style = MaterialTheme.typography.labelLarge)
+            Text(label, style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold)
+        }
+    }
 }

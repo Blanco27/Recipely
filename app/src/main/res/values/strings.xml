@@ -78,6 +78,8 @@
     <string name="nutrition_summary_part">%1$s %2$s</string>
 
     <!-- Categories -->
+    <string name="section_category">Category</string>
+    <string name="category_hint">Optional · choose one category</string>
     <string name="category_main">Main</string>
     <string name="category_breakfast">Breakfast</string>
     <string name="category_salad">Salad</string>
