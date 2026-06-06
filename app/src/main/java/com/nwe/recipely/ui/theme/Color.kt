@@ -43,3 +43,23 @@ val DarkSurfaceVariant = Color(0xFF44483D)
 val OnSurfaceVariantDark = Color(0xFFC6C2B4)
 val OutlineDark = Color(0xFF8F8B7E)
 val OutlineVariantDark = Color(0xFF615E54)
+
+// --- Accent extras ---
+val Moss = Color(0xFF4F7A4A)
+val Forest2 = Color(0xFF2C5238)
+
+// --- Meta chips (soft, bordered — see mockup .chip / .chip.kcal) ---
+// Light
+val MetaChipBgLight = Color(0xFFF3ECDD)
+val MetaChipFgLight = Color(0xFF2C5238)
+val MetaChipBorderLight = Color(0xFFE6DECF)
+val KcalChipBgLight = Color(0xFFFBEEDD)
+val KcalChipFgLight = Color(0xFFA85B1E)
+val KcalChipBorderLight = Color(0xFFF3DDBE)
+// Dark
+val MetaChipBgDark = Color(0xFF2A2D23)
+val MetaChipFgDark = Color(0xFF9CD49A)
+val MetaChipBorderDark = Color(0xFF45493D)
+val KcalChipBgDark = Color(0xFF3A2C18)
+val KcalChipFgDark = Color(0xFFE9C07A)
+val KcalChipBorderDark = Color(0xFF5E4316)

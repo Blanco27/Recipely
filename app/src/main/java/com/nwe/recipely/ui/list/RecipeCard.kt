@@ -1,21 +1,25 @@
 package com.nwe.recipely.ui.list
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.outlined.Restaurant
+import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -25,14 +29,28 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.nwe.recipely.R
 import com.nwe.recipely.data.Recipe
 import com.nwe.recipely.ui.theme.Fraunces
+import com.nwe.recipely.ui.theme.KcalChipBgDark
+import com.nwe.recipely.ui.theme.KcalChipBgLight
+import com.nwe.recipely.ui.theme.KcalChipBorderDark
+import com.nwe.recipely.ui.theme.KcalChipBorderLight
+import com.nwe.recipely.ui.theme.KcalChipFgDark
+import com.nwe.recipely.ui.theme.KcalChipFgLight
+import com.nwe.recipely.ui.theme.MetaChipBgDark
+import com.nwe.recipely.ui.theme.MetaChipBgLight
+import com.nwe.recipely.ui.theme.MetaChipBorderDark
+import com.nwe.recipely.ui.theme.MetaChipBorderLight
+import com.nwe.recipely.ui.theme.MetaChipFgDark
+import com.nwe.recipely.ui.theme.MetaChipFgLight
 import java.io.File
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -94,10 +112,18 @@ fun RecipeCard(recipe: Recipe, onClick: () -> Unit, modifier: Modifier = Modifie
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
-                        recipe.prepTimeMinutes?.let { MetaChip(stringResource(R.string.meta_time, it)) }
-                        recipe.servings?.let { MetaChip(stringResource(R.string.meta_servings, it)) }
+                        recipe.prepTimeMinutes?.let {
+                            MetaChip(Icons.Outlined.Schedule, stringResource(R.string.chip_time, it))
+                        }
+                        recipe.servings?.let {
+                            MetaChip(Icons.Outlined.Restaurant, stringResource(R.string.chip_portions, it))
+                        }
                         recipe.calories?.let {
-                            MetaChip(stringResource(R.string.nutrition_value_kcal, it), accent = true)
+                            MetaChip(
+                                Icons.Filled.LocalFireDepartment,
+                                stringResource(R.string.nutrition_value_kcal, it),
+                                kcal = true,
+                            )
                         }
                     }
                 }
@@ -106,16 +132,49 @@ fun RecipeCard(recipe: Recipe, onClick: () -> Unit, modifier: Modifier = Modifie
     }
 }
 
-/** Small rounded pill for a single meta fact. `accent` uses the honey tertiary tint (kcal). */
+/**
+ * Small rounded pill for a single meta fact: a colored leading icon plus text, soft
+ * bordered background (see mockup `.chip`). `kcal` switches to the warm honey/amber variant.
+ */
 @Composable
-fun MetaChip(text: String, accent: Boolean = false, modifier: Modifier = Modifier) {
-    val bg = if (accent) MaterialTheme.colorScheme.tertiaryContainer else MaterialTheme.colorScheme.surfaceVariant
-    val fg = if (accent) MaterialTheme.colorScheme.onTertiaryContainer else MaterialTheme.colorScheme.onSurfaceVariant
-    Surface(color = bg, contentColor = fg, shape = RoundedCornerShape(10.dp), modifier = modifier) {
-        Text(
-            text = text,
-            style = MaterialTheme.typography.labelLarge,
+fun MetaChip(icon: ImageVector, text: String, kcal: Boolean = false, modifier: Modifier = Modifier) {
+    val dark = isSystemInDarkTheme()
+    val bg = when {
+        kcal && dark -> KcalChipBgDark
+        kcal -> KcalChipBgLight
+        dark -> MetaChipBgDark
+        else -> MetaChipBgLight
+    }
+    val fg = when {
+        kcal && dark -> KcalChipFgDark
+        kcal -> KcalChipFgLight
+        dark -> MetaChipFgDark
+        else -> MetaChipFgLight
+    }
+    val border = when {
+        kcal && dark -> KcalChipBorderDark
+        kcal -> KcalChipBorderLight
+        dark -> MetaChipBorderDark
+        else -> MetaChipBorderLight
+    }
+    Surface(
+        color = bg,
+        contentColor = fg,
+        shape = RoundedCornerShape(9.dp),
+        border = BorderStroke(1.dp, border),
+        modifier = modifier,
+    ) {
+        Row(
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
-        )
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(5.dp),
+        ) {
+            Icon(icon, contentDescription = null, tint = fg, modifier = Modifier.size(14.dp))
+            Text(
+                text = text,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.SemiBold,
+            )
+        }
     }
 }

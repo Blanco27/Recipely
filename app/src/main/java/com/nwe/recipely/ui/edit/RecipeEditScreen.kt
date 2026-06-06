@@ -193,7 +193,8 @@ fun RecipeEditScreen(
                 }
             }
 
-            item { EditSectionHeader(stringResource(R.string.nutrition_optional)) }
+            item { EditSectionHeader(stringResource(R.string.section_nutrition)) }
+            item { EditHint(stringResource(R.string.nutrition_hint)) }
             item {
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     OutlinedTextField(
@@ -254,7 +255,11 @@ fun RecipeEditScreen(
                         modifier = Modifier.weight(1f),
                     )
                     IconButton(onClick = { vm.removeIngredient(index) }) {
-                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.remove_ingredient))
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = stringResource(R.string.remove_ingredient),
+                            tint = MaterialTheme.colorScheme.secondary,
+                        )
                     }
                 }
             }
@@ -324,6 +329,7 @@ private fun AddButton(text: String, onClick: () -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .clip(RoundedCornerShape(16.dp))
+            .background(tint.copy(alpha = 0.06f))
             .dashedBorder(tint.copy(alpha = 0.6f), 16.dp)
             .clickable(onClick = onClick)
             .padding(vertical = 14.dp),
@@ -380,7 +386,7 @@ private fun TitleImagePicker(imagePath: String?, onPick: () -> Unit, onRemove: (
                 Icon(
                     Icons.Outlined.AddPhotoAlternate,
                     contentDescription = null,
-                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(36.dp),
                 )
                 Text(
@@ -436,7 +442,11 @@ private fun StepEditor(
                 modifier = Modifier.weight(1f),
             )
             IconButton(onClick = onRemove) {
-                Icon(Icons.Default.Close, contentDescription = stringResource(R.string.remove_step))
+                Icon(
+                    Icons.Default.Close,
+                    contentDescription = stringResource(R.string.remove_step),
+                    tint = MaterialTheme.colorScheme.secondary,
+                )
             }
         }
         if (imagePath != null) {
@@ -483,12 +493,34 @@ private fun AddImageButton(onClick: () -> Unit) {
 
 @Composable
 private fun EditSectionHeader(text: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(top = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(9.dp),
+    ) {
+        // Short terracotta rule before the title (mockup .esec::before).
+        Box(
+            Modifier
+                .size(width = 18.dp, height = 3.dp)
+                .clip(RoundedCornerShape(2.dp))
+                .background(MaterialTheme.colorScheme.secondary)
+        )
+        Text(
+            text = text,
+            style = MaterialTheme.typography.titleLarge,
+            fontFamily = Fraunces,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.primary,
+        )
+    }
+}
+
+@Composable
+private fun EditHint(text: String) {
     Text(
         text = text,
-        style = MaterialTheme.typography.titleLarge,
-        fontFamily = Fraunces,
-        fontWeight = FontWeight.SemiBold,
-        color = MaterialTheme.colorScheme.onBackground,
-        modifier = Modifier.padding(top = 8.dp),
+        style = MaterialTheme.typography.bodySmall,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier.padding(start = 2.dp),
     )
 }

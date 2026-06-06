@@ -8,6 +8,12 @@
     <string name="empty_hint">Tap + to add your first recipe.</string>
     <string name="meta_time">⏱ %1$d min</string>
     <string name="meta_servings">🍽 %1$d</string>
+    <string name="chip_time">%1$d min</string>
+    <string name="chip_portions">%1$d serv.</string>
+    <plurals name="recipe_count">
+        <item quantity="one">Offline · %d recipe</item>
+        <item quantity="other">Offline · %d recipes</item>
+    </plurals>
 
     <!-- Detail screen -->
     <string name="back">Back</string>
@@ -18,6 +24,11 @@
     <string name="chip_servings">🍽 %1$d servings</string>
     <string name="section_ingredients">Ingredients</string>
     <string name="section_steps">Steps</string>
+    <string name="ingredients_done">%1$d / %2$d done</string>
+    <plurals name="steps_count">
+        <item quantity="one">%d step</item>
+        <item quantity="other">%d steps</item>
+    </plurals>
     <string name="delete_dialog_title">Delete recipe?</string>
     <string name="delete_dialog_text">This recipe will be permanently removed.</string>
 
@@ -46,6 +57,12 @@
     <!-- Nutrition -->
     <string name="section_nutrition">Nutrition</string>
     <string name="nutrition_optional">Nutrition (optional)</string>
+    <string name="nutrition_hint">Optional · total values for the whole recipe</string>
+    <string name="stat_time">Min</string>
+    <string name="stat_servings">Serv.</string>
+    <string name="stat_kcal">kcal</string>
+    <string name="stat_protein">Protein</string>
+    <string name="stat_grams">%1$sg</string>
     <string name="nutrition_per_portion">Per portion</string>
     <string name="nutrition_total_prefix">Total:</string>
     <string name="label_calories">Calories</string>

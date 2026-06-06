@@ -1,6 +1,7 @@
 package com.nwe.recipely.ui.detail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,13 +16,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.outlined.Restaurant
+import androidx.compose.material.icons.outlined.Schedule
+import androidx.compose.material.icons.outlined.SetMeal
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -39,13 +42,19 @@ import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshots.SnapshotStateMap
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -58,9 +67,9 @@ import com.nwe.recipely.R
 import com.nwe.recipely.RecipelyApp
 import com.nwe.recipely.data.RecipeWithDetails
 import com.nwe.recipely.data.Step
-import com.nwe.recipely.ui.list.MetaChip
 import com.nwe.recipely.ui.theme.Fraunces
 import java.io.File
+import kotlin.math.roundToInt
 
 private val SidePadding = 20.dp
 
@@ -126,7 +135,7 @@ fun RecipeDetailScreen(
 
 @Composable
 private fun OverlayIcon(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    icon: ImageVector,
     contentDescription: String,
     onClick: () -> Unit,
 ) {
@@ -143,12 +152,24 @@ private fun OverlayIcon(
 
 @Composable
 private fun DetailContent(details: RecipeWithDetails, modifier: Modifier = Modifier) {
+    val sortedIngredients = details.ingredients.sortedBy { it.position }
+    val sortedSteps = details.steps.sortedBy { it.position }
+    // Ephemeral check state (not persisted) — resets when leaving the screen.
+    val checked = remember { mutableStateMapOf<Long, Boolean>() }
+
     LazyColumn(modifier = modifier.fillMaxSize()) {
         item { Hero(name = details.recipe.name, imageUri = details.recipe.imageUri) }
 
-        item { Spacer(Modifier.height(16.dp)) }
+        item { Spacer(Modifier.height(18.dp)) }
 
-        item { QuickFacts(prepTime = details.recipe.prepTimeMinutes, servings = details.recipe.servings) }
+        item {
+            StatGrid(
+                prepTime = details.recipe.prepTimeMinutes,
+                servings = details.recipe.servings,
+                calories = details.recipe.calories,
+                protein = details.recipe.proteinGrams,
+            )
+        }
 
         val facts = details.recipe.nutritionFacts()
         if (facts.hasAny) {
@@ -156,16 +177,25 @@ private fun DetailContent(details: RecipeWithDetails, modifier: Modifier = Modif
             item { NutritionCard(facts = facts, servings = details.recipe.servings) }
         }
 
-        if (details.ingredients.isNotEmpty()) {
-            item { SectionHeader(stringResource(R.string.section_ingredients)) }
-            val sorted = details.ingredients.sortedBy { it.position }
-            item { IngredientsCard(items = sorted.map { it.id to it.text }) }
+        if (sortedIngredients.isNotEmpty()) {
+            item {
+                val done = sortedIngredients.count { checked[it.id] == true }
+                SectionHeader(
+                    text = stringResource(R.string.section_ingredients),
+                    meta = stringResource(R.string.ingredients_done, done, sortedIngredients.size),
+                )
+            }
+            item { IngredientsCard(items = sortedIngredients.map { it.id to it.text }, checked = checked) }
         }
 
-        if (details.steps.isNotEmpty()) {
-            item { SectionHeader(stringResource(R.string.section_steps)) }
-            val sorted = details.steps.sortedBy { it.position }
-            item { StepsColumn(sorted) }
+        if (sortedSteps.isNotEmpty()) {
+            item {
+                SectionHeader(
+                    text = stringResource(R.string.section_steps),
+                    meta = pluralStringResource(R.plurals.steps_count, sortedSteps.size, sortedSteps.size),
+                )
+            }
+            item { StepsColumn(sortedSteps) }
         }
 
         item { Spacer(Modifier.height(32.dp)) }
@@ -225,28 +255,110 @@ private fun Hero(name: String, imageUri: String?) {
     }
 }
 
+private data class StatData(
+    val icon: ImageVector,
+    val iconTint: Color,
+    val value: String,
+    val label: String,
+    val accent: Boolean,
+)
+
+/** The mockup's nutrition stat bar: up to four icon/value/label cards, kcal as the accent card. */
 @Composable
-private fun QuickFacts(prepTime: Int?, servings: Int?) {
-    if (prepTime == null && servings == null) return
+private fun StatGrid(prepTime: Int?, servings: Int?, calories: Int?, protein: Double?) {
+    val cs = MaterialTheme.colorScheme
+    val stats = ArrayList<StatData>(4)
+    if (prepTime != null) {
+        stats.add(StatData(Icons.Outlined.Schedule, cs.primary, prepTime.toString(), stringResource(R.string.stat_time), accent = false))
+    }
+    if (servings != null) {
+        stats.add(StatData(Icons.Outlined.Restaurant, cs.secondary, servings.toString(), stringResource(R.string.stat_servings), accent = false))
+    }
+    if (calories != null) {
+        stats.add(StatData(Icons.Filled.LocalFireDepartment, cs.tertiary, calories.toString(), stringResource(R.string.stat_kcal), accent = true))
+    }
+    if (protein != null) {
+        stats.add(
+            StatData(
+                icon = Icons.Outlined.SetMeal,
+                iconTint = cs.primary,
+                value = stringResource(R.string.stat_grams, protein.roundToInt().toString()),
+                label = stringResource(R.string.stat_protein),
+                accent = false,
+            )
+        )
+    }
+    if (stats.isEmpty()) return
     Row(
         modifier = Modifier.fillMaxWidth().padding(horizontal = SidePadding),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(9.dp),
     ) {
-        prepTime?.let { MetaChip(stringResource(R.string.meta_time, it)) }
-        servings?.let { MetaChip(stringResource(R.string.chip_servings, it)) }
+        stats.forEach { StatCard(it, Modifier.weight(1f)) }
     }
 }
 
 @Composable
-private fun SectionHeader(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.titleLarge,
-        fontFamily = Fraunces,
-        fontWeight = FontWeight.SemiBold,
-        color = MaterialTheme.colorScheme.onBackground,
-        modifier = Modifier.padding(start = SidePadding, end = SidePadding, top = 20.dp, bottom = 8.dp),
-    )
+private fun StatCard(stat: StatData, modifier: Modifier = Modifier) {
+    val cs = MaterialTheme.colorScheme
+    val bg = if (stat.accent) cs.primary else cs.surface
+    val valueColor = if (stat.accent) cs.onPrimary else cs.primary
+    val labelColor = if (stat.accent) cs.onPrimary.copy(alpha = 0.75f) else cs.onSurfaceVariant
+    val iconTint = if (stat.accent) cs.tertiary else stat.iconTint
+    val borderColor = if (stat.accent) cs.primary else cs.outlineVariant
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(18.dp))
+            .background(bg)
+            .border(1.dp, borderColor, RoundedCornerShape(18.dp))
+            .padding(vertical = 13.dp, horizontal = 6.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Icon(stat.icon, contentDescription = null, tint = iconTint, modifier = Modifier.size(20.dp))
+        Text(
+            text = stat.value,
+            style = MaterialTheme.typography.titleLarge,
+            fontFamily = Fraunces,
+            fontWeight = FontWeight.SemiBold,
+            color = valueColor,
+            maxLines = 1,
+            modifier = Modifier.padding(top = 5.dp),
+        )
+        Text(
+            text = stat.label.uppercase(),
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.SemiBold,
+            color = labelColor,
+            maxLines = 1,
+            modifier = Modifier.padding(top = 3.dp),
+        )
+    }
+}
+
+@Composable
+private fun SectionHeader(text: String, meta: String? = null) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = SidePadding, end = SidePadding, top = 20.dp, bottom = 8.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = text,
+            style = MaterialTheme.typography.titleLarge,
+            fontFamily = Fraunces,
+            fontWeight = FontWeight.SemiBold,
+            color = MaterialTheme.colorScheme.onBackground,
+        )
+        if (meta != null) {
+            Text(
+                text = meta,
+                style = MaterialTheme.typography.labelMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = MaterialTheme.colorScheme.secondary,
+            )
+        }
+    }
 }
 
 @Composable
@@ -334,9 +446,7 @@ private fun totalSummary(facts: NutritionFacts): String {
 }
 
 @Composable
-private fun IngredientsCard(items: List<Pair<Long, String>>) {
-    // Ephemeral check state (not persisted) — resets when leaving the screen.
-    val checked = remember { mutableStateMapOf<Long, Boolean>() }
+private fun IngredientsCard(items: List<Pair<Long, String>>, checked: SnapshotStateMap<Long, Boolean>) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = SidePadding),
         shape = RoundedCornerShape(20.dp),
@@ -381,6 +491,7 @@ private fun StepsColumn(steps: List<Step>) {
 
 @Composable
 private fun StepRow(number: Int, step: Step, isLast: Boolean) {
+    val connectorColor = MaterialTheme.colorScheme.outlineVariant
     Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min)) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Box(
@@ -399,11 +510,24 @@ private fun StepRow(number: Int, step: Step, isLast: Boolean) {
                 )
             }
             if (!isLast) {
+                // Dashed connector between step badges (mockup .step::before).
                 Box(
                     modifier = Modifier
                         .width(2.dp)
                         .weight(1f)
-                        .background(MaterialTheme.colorScheme.outlineVariant),
+                        .drawBehind {
+                            val x = size.width / 2f
+                            drawLine(
+                                color = connectorColor,
+                                start = Offset(x, 0f),
+                                end = Offset(x, size.height),
+                                strokeWidth = size.width,
+                                pathEffect = PathEffect.dashPathEffect(
+                                    floatArrayOf(4.dp.toPx(), 6.dp.toPx()),
+                                    0f,
+                                ),
+                            )
+                        },
                 )
             }
         }
