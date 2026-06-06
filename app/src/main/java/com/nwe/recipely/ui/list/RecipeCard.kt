@@ -4,8 +4,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -34,6 +35,7 @@ import com.nwe.recipely.data.Recipe
 import com.nwe.recipely.ui.theme.Fraunces
 import java.io.File
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun RecipeCard(recipe: Recipe, onClick: () -> Unit, modifier: Modifier = Modifier) {
     Card(
@@ -87,9 +89,10 @@ fun RecipeCard(recipe: Recipe, onClick: () -> Unit, modifier: Modifier = Modifie
                     recipe.servings != null ||
                     recipe.calories != null
                 if (hasMeta) {
-                    Row(
+                    FlowRow(
                         modifier = Modifier.padding(top = 10.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         recipe.prepTimeMinutes?.let { MetaChip(stringResource(R.string.meta_time, it)) }
                         recipe.servings?.let { MetaChip(stringResource(R.string.meta_servings, it)) }
