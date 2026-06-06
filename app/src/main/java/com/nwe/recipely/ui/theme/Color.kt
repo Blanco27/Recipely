@@ -48,9 +48,17 @@ val OutlineVariantDark = Color(0xFF615E54)
 val Moss = Color(0xFF4F7A4A)
 val Forest2 = Color(0xFF2C5238)
 
+// --- Paper: elevated near-white surface for cards/fields/chips (mockup --paper #FFFDF9) ---
+val Paper = Color(0xFFFFFDF9)
+val PaperDark = Color(0xFF26281F)
+
+// --- Soft warm border for fields/boxed elements (mockup --line #E6DECF) ---
+val FieldBorderLight = Color(0xFFE6DECF)
+val FieldBorderDark = Color(0xFF45493D)
+
 // --- Meta chips (soft, bordered — see mockup .chip / .chip.kcal) ---
 // Light
-val MetaChipBgLight = Color(0xFFF3ECDD)
+val MetaChipBgLight = Color(0xFFF6F0E6)
 val MetaChipFgLight = Color(0xFF2C5238)
 val MetaChipBorderLight = Color(0xFFE6DECF)
 val KcalChipBgLight = Color(0xFFFBEEDD)
