@@ -89,4 +89,20 @@ class RecipeMappingTest {
         )
         assertEquals(listOf("/t.jpg", "/a.jpg", "/b.jpg"), state.referencedPaths())
     }
+
+    @Test
+    fun toEntities_keepsImageOnlyStep_butDropsFullyBlankStep() {
+        val state = EditUiState(
+            name = "X",
+            steps = listOf(
+                StepRow(text = "   ", imagePath = "/photo.jpg"), // image-only -> kept
+                StepRow(text = "   ", imagePath = null),         // fully blank -> dropped
+            ),
+        )
+        val (_, _, steps) = state.toEntities()
+        assertEquals(1, steps.size)
+        assertEquals("", steps[0].text)
+        assertEquals("/photo.jpg", steps[0].imageUri)
+        assertEquals(0, steps[0].position)
+    }
 }
