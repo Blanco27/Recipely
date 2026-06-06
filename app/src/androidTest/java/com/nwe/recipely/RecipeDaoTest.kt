@@ -89,5 +89,10 @@ class RecipeDaoTest {
 
         assertNull(dao.observeRecipe(id).first())
         assertEquals(0, dao.observeRecipes().first().size)
+
+        val ingredientCount = db.query("SELECT COUNT(*) FROM ingredients", null)
+        ingredientCount.use { c -> c.moveToFirst(); assertEquals(0, c.getInt(0)) }
+        val stepCount = db.query("SELECT COUNT(*) FROM steps", null)
+        stepCount.use { c -> c.moveToFirst(); assertEquals(0, c.getInt(0)) }
     }
 }
