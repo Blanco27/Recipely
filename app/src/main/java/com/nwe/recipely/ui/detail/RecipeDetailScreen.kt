@@ -65,6 +65,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.compose.AsyncImage
 import com.nwe.recipely.R
 import com.nwe.recipely.RecipelyApp
+import com.nwe.recipely.data.Ingredient
 import com.nwe.recipely.data.RecipeCategory
 import com.nwe.recipely.data.RecipeWithDetails
 import com.nwe.recipely.data.Step
@@ -75,6 +76,7 @@ import com.nwe.recipely.ui.theme.Moss
 import com.nwe.recipely.ui.theme.Paper
 import com.nwe.recipely.ui.theme.PaperDark
 import java.io.File
+import java.util.Locale
 import kotlin.math.roundToInt
 
 private val SidePadding = 20.dp
@@ -139,6 +141,7 @@ fun RecipeDetailScreen(
     }
 }
 
+/** The hero nav buttons (back/edit/delete): a frosted overlay icon with a required label. */
 @Composable
 private fun OverlayIcon(
     icon: ImageVector,
@@ -179,7 +182,7 @@ private fun DetailContent(details: RecipeWithDetails, modifier: Modifier = Modif
 @Composable
 private fun DetailSheet(
     details: RecipeWithDetails,
-    ingredients: List<com.nwe.recipely.data.Ingredient>,
+    ingredients: List<Ingredient>,
     steps: List<Step>,
     checked: SnapshotStateMap<Long, Boolean>,
 ) {
@@ -230,7 +233,9 @@ private fun DetailSheet(
             StepsColumn(steps)
         }
 
-        Spacer(Modifier.height(24.dp))
+        // 26dp recovers the sheet's (-26).dp graphical offset (which doesn't shrink the
+        // measured height), + 24dp design breathing room at the bottom of the scroll.
+        Spacer(Modifier.height(50.dp))
     }
 }
 
@@ -282,7 +287,7 @@ private fun Hero(name: String, imageUri: String?, categoryLabel: String?) {
         ) {
             if (categoryLabel != null) {
                 Text(
-                    text = categoryLabel.uppercase(),
+                    text = categoryLabel.uppercase(Locale.ROOT),
                     style = MaterialTheme.typography.labelMedium,
                     fontWeight = FontWeight.Bold,
                     letterSpacing = 1.5.sp,
