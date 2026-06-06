@@ -2,6 +2,7 @@ package com.nwe.recipely.ui.list
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -44,6 +45,8 @@ import com.nwe.recipely.R
 import com.nwe.recipely.RecipelyApp
 import com.nwe.recipely.data.RecipeCategory
 import com.nwe.recipely.ui.theme.Fraunces
+import com.nwe.recipely.ui.theme.Paper
+import com.nwe.recipely.ui.theme.PaperDark
 
 @Composable
 fun RecipeListScreen(
@@ -74,6 +77,7 @@ fun RecipeListScreen(
                 text = { Text(stringResource(R.string.add_recipe)) },
                 containerColor = MaterialTheme.colorScheme.secondary,
                 contentColor = MaterialTheme.colorScheme.onSecondary,
+                shape = RoundedCornerShape(20.dp),
             )
         },
     ) { padding ->
@@ -182,7 +186,7 @@ private fun FilterRow(
 
 @Composable
 private fun FilterPill(label: String, selected: Boolean, onClick: () -> Unit) {
-    val bg = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
+    val bg = if (selected) MaterialTheme.colorScheme.primary else (if (isSystemInDarkTheme()) PaperDark else Paper)
     val fg = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
     val border = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
     Surface(

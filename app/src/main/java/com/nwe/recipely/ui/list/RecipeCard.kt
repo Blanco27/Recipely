@@ -52,6 +52,8 @@ import com.nwe.recipely.ui.theme.MetaChipBorderDark
 import com.nwe.recipely.ui.theme.MetaChipBorderLight
 import com.nwe.recipely.ui.theme.MetaChipFgDark
 import com.nwe.recipely.ui.theme.MetaChipFgLight
+import com.nwe.recipely.ui.theme.Paper
+import com.nwe.recipely.ui.theme.PaperDark
 import java.io.File
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -61,8 +63,10 @@ fun RecipeCard(recipe: Recipe, onClick: () -> Unit, modifier: Modifier = Modifie
         modifier = modifier
             .fillMaxWidth()
             .clickable(onClick = onClick),
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        shape = RoundedCornerShape(26.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isSystemInDarkTheme()) PaperDark else Paper,
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
         Column {
