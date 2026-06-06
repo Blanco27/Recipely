@@ -1,13 +1,20 @@
 package com.nwe.recipely.ui.list
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Restaurant
@@ -15,8 +22,10 @@ import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,6 +41,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.nwe.recipely.R
 import com.nwe.recipely.RecipelyApp
+import com.nwe.recipely.data.RecipeCategory
 import com.nwe.recipely.ui.theme.Fraunces
 
 @Composable
@@ -44,6 +54,17 @@ fun RecipeListScreen(
         factory = viewModelFactory { initializer { RecipeListViewModel(container.repository) } }
     )
     val recipes by vm.recipes.collectAsState()
+    val availableCategories by vm.availableCategories.collectAsState()
+    val selectedCategory by vm.selectedCategory.collectAsState()
+
+    // If the selected category no longer has any recipes (e.g. the last one was deleted),
+    // fall back to "All" so the list never shows an empty filtered result with no matching pill.
+    LaunchedEffect(availableCategories, selectedCategory) {
+        val current = selectedCategory
+        if (current != null && availableCategories.none { it.key == current }) {
+            vm.selectCategory(null)
+        }
+    }
 
     Scaffold(
         floatingActionButton = {
@@ -65,6 +86,15 @@ fun RecipeListScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 item { ListHeader(count = recipes.size) }
+                if (availableCategories.isNotEmpty()) {
+                    item {
+                        FilterRow(
+                            categories = availableCategories,
+                            selected = selectedCategory,
+                            onSelect = vm::selectCategory,
+                        )
+                    }
+                }
                 items(recipes, key = { it.id }) { recipe ->
                     RecipeCard(recipe = recipe, onClick = { onOpen(recipe.id) })
                 }
@@ -119,6 +149,54 @@ private fun EmptyState(modifier: Modifier = Modifier) {
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 6.dp),
+        )
+    }
+}
+
+@Composable
+private fun FilterRow(
+    categories: List<RecipeCategory>,
+    selected: String?,
+    onSelect: (String?) -> Unit,
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .horizontalScroll(rememberScrollState()),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        FilterPill(
+            label = stringResource(R.string.filter_all),
+            selected = selected == null,
+            onClick = { onSelect(null) },
+        )
+        categories.forEach { category ->
+            FilterPill(
+                label = category.emoji + " " + stringResource(category.labelRes),
+                selected = selected == category.key,
+                onClick = { onSelect(category.key) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun FilterPill(label: String, selected: Boolean, onClick: () -> Unit) {
+    val bg = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surface
+    val fg = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+    val border = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
+    Surface(
+        color = bg,
+        contentColor = fg,
+        shape = RoundedCornerShape(100.dp),
+        border = BorderStroke(1.dp, border),
+        modifier = Modifier.clickable(onClick = onClick),
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.padding(horizontal = 14.dp, vertical = 8.dp),
         )
     }
 }

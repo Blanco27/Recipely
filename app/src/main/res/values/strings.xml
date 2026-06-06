@@ -78,6 +78,7 @@
     <string name="nutrition_summary_part">%1$s %2$s</string>
 
     <!-- Categories -->
+    <string name="filter_all">All</string>
     <string name="section_category">Category</string>
     <string name="category_hint">Optional · choose one category</string>
     <string name="category_main">Main</string>
