@@ -3,7 +3,6 @@ package com.nwe.recipely.ui.detail
 import com.nwe.recipely.data.Recipe
 import java.util.Locale
 import kotlin.math.roundToInt
-import kotlin.math.roundToLong
 
 /** The four optional energy/macro values, all nullable. */
 data class NutritionFacts(
@@ -35,7 +34,8 @@ fun NutritionFacts.perPortion(servings: Int?): NutritionFacts? {
     )
 }
 
-private fun roundTo1(value: Double): Double = (value * 10.0).roundToLong() / 10.0
+private fun roundTo1(value: Double): Double =
+    String.format(Locale.US, "%.1f", value).toDouble()
 
 object NutritionFormat {
     /** A gram value with exactly one decimal, using [locale]'s decimal separator. */

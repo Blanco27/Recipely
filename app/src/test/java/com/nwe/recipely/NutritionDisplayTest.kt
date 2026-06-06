@@ -41,8 +41,11 @@ class NutritionDisplayTest {
 
     @Test
     fun perPortion_roundsMacrosToOneDecimal() {
-        val pp = NutritionFacts(carbsGrams = 160.0).perPortion(3)!!
-        assertEquals(53.3, pp.carbsGrams!!, 0.0001) // 53.333... -> 53.3
+        val down = NutritionFacts(carbsGrams = 160.0).perPortion(3)!!
+        assertEquals(53.3, down.carbsGrams!!, 0.0001) // 53.333... -> 53.3
+
+        val up = NutritionFacts(carbsGrams = 5.0).perPortion(3)!!
+        assertEquals(1.7, up.carbsGrams!!, 0.0001) // 1.666... -> 1.7
     }
 
     @Test
