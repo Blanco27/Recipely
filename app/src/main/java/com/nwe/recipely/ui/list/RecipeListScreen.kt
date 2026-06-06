@@ -186,7 +186,7 @@ private fun FilterRow(
 
 @Composable
 private fun FilterPill(label: String, selected: Boolean, onClick: () -> Unit) {
-    val bg = if (selected) MaterialTheme.colorScheme.primary else (if (isSystemInDarkTheme()) PaperDark else Paper)
+    val bg = if (selected) MaterialTheme.colorScheme.primary else if (isSystemInDarkTheme()) PaperDark else Paper
     val fg = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
     val border = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
     Surface(
