@@ -1,5 +1,6 @@
 package com.nwe.recipely.ui.edit
 
+import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -80,6 +81,11 @@ fun RecipeEditScreen(
     var imageTarget by remember { mutableStateOf<ImageTarget?>(null) }
     var showSourceDialog by remember { mutableStateOf(false) }
     var cameraTargetPath by remember { mutableStateOf<String?>(null) }
+
+    BackHandler {
+        vm.discardChanges()
+        onClose()
+    }
 
     fun applyImage(path: String?) {
         when (val target = imageTarget) {
