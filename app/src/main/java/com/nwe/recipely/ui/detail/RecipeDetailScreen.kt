@@ -414,7 +414,9 @@ private fun NutritionCard(facts: NutritionFacts, servings: Int?) {
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = SidePadding),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isSystemInDarkTheme()) PaperDark else Paper,
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -498,7 +500,9 @@ private fun IngredientsCard(items: List<Pair<Long, String>>, checked: SnapshotSt
     Card(
         modifier = Modifier.fillMaxWidth().padding(horizontal = SidePadding),
         shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        colors = CardDefaults.cardColors(
+            containerColor = if (isSystemInDarkTheme()) PaperDark else Paper,
+        ),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Column(modifier = Modifier.padding(vertical = 4.dp)) {
