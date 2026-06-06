@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.nwe.recipely.ui.theme.FieldBorderDark
@@ -49,7 +50,7 @@ fun BoxedIconButton(
             .clip(shape)
             .background(paper)
             .border(1.dp, border, shape)
-            .clickable(onClick = onClick),
+            .clickable(role = Role.Button, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
         Icon(icon, contentDescription = contentDescription, tint = tint)
@@ -67,6 +68,7 @@ fun FrostedIconButton(
     contentDescription: String?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    size: Dp = 40.dp,
     solid: Boolean = false,
 ) {
     val dark = isSystemInDarkTheme()
@@ -79,11 +81,11 @@ fun FrostedIconButton(
     val tint = if (solid) (if (dark) Color.White else Ink) else Color.White
     Box(
         modifier = modifier
-            .size(40.dp)
+            .size(size)
             .clip(CircleShape)
             .background(bg)
             .border(1.dp, borderColor, CircleShape)
-            .clickable(onClick = onClick),
+            .clickable(role = Role.Button, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
         Icon(icon, contentDescription = contentDescription, tint = tint)
