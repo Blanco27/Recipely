@@ -37,6 +37,10 @@ class RecipeEditViewModel(
     fun setName(value: String) = update { it.copy(name = value) }
     fun setPrepTime(value: String) = update { it.copy(prepTime = value) }
     fun setServings(value: String) = update { it.copy(servings = value) }
+    fun setCalories(value: String) = update { it.copy(calories = value) }
+    fun setCarbs(value: String) = update { it.copy(carbs = value) }
+    fun setProtein(value: String) = update { it.copy(protein = value) }
+    fun setFat(value: String) = update { it.copy(fat = value) }
 
     fun setTitleImage(path: String?) {
         if (path != null) pendingNewImages += path
