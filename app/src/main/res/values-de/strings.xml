@@ -1,0 +1,43 @@
+<resources>
+    <!-- List screen -->
+    <string name="list_title">Meine Rezepte</string>
+    <string name="add_recipe">Rezept hinzufügen</string>
+    <string name="empty_title">Noch keine Rezepte</string>
+    <string name="empty_hint">Tippe auf +, um dein erstes Rezept anzulegen.</string>
+    <string name="meta_time">⏱ %1$d Min</string>
+    <string name="meta_servings">🍽 %1$d</string>
+
+    <!-- Detail screen -->
+    <string name="back">Zurück</string>
+    <string name="edit">Bearbeiten</string>
+    <string name="delete">Löschen</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="recipe_not_found">Rezept nicht gefunden</string>
+    <string name="chip_servings">🍽 %1$d Portionen</string>
+    <string name="section_ingredients">Zutaten</string>
+    <string name="section_steps">Zubereitung</string>
+    <string name="delete_dialog_title">Rezept löschen?</string>
+    <string name="delete_dialog_text">Das Rezept wird dauerhaft entfernt.</string>
+
+    <!-- Edit screen -->
+    <string name="new_recipe">Neues Rezept</string>
+    <string name="edit_recipe">Rezept bearbeiten</string>
+    <string name="save">Speichern</string>
+    <string name="label_name">Name</string>
+    <string name="label_time">Zeit (Min)</string>
+    <string name="label_servings">Portionen</string>
+    <string name="ingredient_n">Zutat %1$d</string>
+    <string name="remove_ingredient">Zutat entfernen</string>
+    <string name="add_ingredient">Zutat hinzufügen</string>
+    <string name="step_n">Schritt %1$d</string>
+    <string name="remove_step">Schritt entfernen</string>
+    <string name="add_step">Schritt hinzufügen</string>
+    <string name="add_step_image">Bild zum Schritt</string>
+    <string name="remove_step_image">Schritt-Bild entfernen</string>
+    <string name="title_image_hint">Titelbild · Galerie / Kamera</string>
+    <string name="remove_image">Bild entfernen</string>
+    <string name="add_image_dialog_title">Bild hinzufügen</string>
+    <string name="add_image_dialog_text">Woher soll das Bild kommen?</string>
+    <string name="gallery">Galerie</string>
+    <string name="camera">Kamera</string>
+</resources>

@@ -12,10 +12,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -48,6 +50,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.foundation.text.KeyboardOptions
@@ -56,6 +59,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.compose.AsyncImage
+import com.nwe.recipely.R
 import com.nwe.recipely.RecipelyApp
 import com.nwe.recipely.data.ImageStore
 import java.io.File
@@ -110,20 +114,20 @@ fun RecipeEditScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (recipeId == 0L) "Neues Rezept" else "Rezept bearbeiten") },
+                title = { Text(if (recipeId == 0L) stringResource(R.string.new_recipe) else stringResource(R.string.edit_recipe)) },
                 navigationIcon = {
                     IconButton(onClick = {
                         vm.discardChanges()
                         onClose()
                     }) {
-                        Icon(Icons.Default.Close, contentDescription = "Abbrechen")
+                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.cancel))
                     }
                 },
                 actions = {
                     TextButton(
                         enabled = state.canSave,
                         onClick = { vm.save(onClose) },
-                    ) { Text("Speichern") }
+                    ) { Text(stringResource(R.string.save)) }
                 },
             )
         },
@@ -143,7 +147,7 @@ fun RecipeEditScreen(
                 OutlinedTextField(
                     value = state.name,
                     onValueChange = vm::setName,
-                    label = { Text("Name") },
+                    label = { Text(stringResource(R.string.label_name)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -153,7 +157,7 @@ fun RecipeEditScreen(
                     OutlinedTextField(
                         value = state.prepTime,
                         onValueChange = vm::setPrepTime,
-                        label = { Text("Zeit (Min)") },
+                        label = { Text(stringResource(R.string.label_time)) },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.weight(1f),
@@ -161,7 +165,7 @@ fun RecipeEditScreen(
                     OutlinedTextField(
                         value = state.servings,
                         onValueChange = vm::setServings,
-                        label = { Text("Portionen") },
+                        label = { Text(stringResource(R.string.label_servings)) },
                         singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         modifier = Modifier.weight(1f),
@@ -169,7 +173,7 @@ fun RecipeEditScreen(
                 }
             }
 
-            item { EditSectionHeader("Zutaten") }
+            item { EditSectionHeader(stringResource(R.string.section_ingredients)) }
             items(state.ingredients.size) { index ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
@@ -178,23 +182,24 @@ fun RecipeEditScreen(
                     OutlinedTextField(
                         value = state.ingredients[index].text,
                         onValueChange = { vm.setIngredient(index, it) },
-                        label = { Text("Zutat ${index + 1}") },
+                        label = { Text(stringResource(R.string.ingredient_n, index + 1)) },
                         singleLine = true,
                         modifier = Modifier.weight(1f),
                     )
                     IconButton(onClick = { vm.removeIngredient(index) }) {
-                        Icon(Icons.Default.Close, contentDescription = "Zutat entfernen")
+                        Icon(Icons.Default.Close, contentDescription = stringResource(R.string.remove_ingredient))
                     }
                 }
             }
             item {
                 OutlinedButton(onClick = vm::addIngredient) {
                     Icon(Icons.Default.Add, contentDescription = null)
-                    Text("  Zutat hinzufügen")
+                    Spacer(Modifier.width(8.dp))
+                    Text(stringResource(R.string.add_ingredient))
                 }
             }
 
-            item { EditSectionHeader("Zubereitung") }
+            item { EditSectionHeader(stringResource(R.string.section_steps)) }
             items(state.steps.size) { index ->
                 StepEditor(
                     number = index + 1,
@@ -209,7 +214,8 @@ fun RecipeEditScreen(
             item {
                 OutlinedButton(onClick = vm::addStep) {
                     Icon(Icons.Default.Add, contentDescription = null)
-                    Text("  Schritt hinzufügen")
+                    Spacer(Modifier.width(8.dp))
+                    Text(stringResource(R.string.add_step))
                 }
             }
             item { Box(Modifier.height(24.dp)) }
@@ -219,15 +225,15 @@ fun RecipeEditScreen(
     if (showSourceDialog) {
         AlertDialog(
             onDismissRequest = { showSourceDialog = false },
-            title = { Text("Bild hinzufügen") },
-            text = { Text("Woher soll das Bild kommen?") },
+            title = { Text(stringResource(R.string.add_image_dialog_title)) },
+            text = { Text(stringResource(R.string.add_image_dialog_text)) },
             confirmButton = {
                 TextButton(onClick = {
                     showSourceDialog = false
                     pickImage.launch(
                         PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                     )
-                }) { Text("Galerie") }
+                }) { Text(stringResource(R.string.gallery)) }
             },
             dismissButton = {
                 TextButton(onClick = {
@@ -235,7 +241,7 @@ fun RecipeEditScreen(
                     val (uri, path) = imageStore.createCameraTarget()
                     cameraTargetPath = path
                     takePhoto.launch(uri)
-                }) { Text("Kamera") }
+                }) { Text(stringResource(R.string.camera)) }
             },
         )
     }
@@ -267,7 +273,7 @@ private fun TitleImagePicker(imagePath: String?, onPick: () -> Unit, onRemove: (
                     .size(28.dp)
                     .background(Color(0xAA000000), CircleShape),
             ) {
-                Icon(Icons.Default.Close, contentDescription = "Bild entfernen", tint = Color.White)
+                Icon(Icons.Default.Close, contentDescription = stringResource(R.string.remove_image), tint = Color.White)
             }
         } else {
             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -276,7 +282,7 @@ private fun TitleImagePicker(imagePath: String?, onPick: () -> Unit, onRemove: (
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.primary,
                 )
-                Text("Titelbild · Galerie / Kamera", color = MaterialTheme.colorScheme.primary)
+                Text(stringResource(R.string.title_image_hint), color = MaterialTheme.colorScheme.primary)
             }
         }
     }
@@ -309,11 +315,11 @@ private fun StepEditor(
             OutlinedTextField(
                 value = text,
                 onValueChange = onTextChange,
-                label = { Text("Schritt $number") },
+                label = { Text(stringResource(R.string.step_n, number)) },
                 modifier = Modifier.weight(1f),
             )
             IconButton(onClick = onRemove) {
-                Icon(Icons.Default.Close, contentDescription = "Schritt entfernen")
+                Icon(Icons.Default.Close, contentDescription = stringResource(R.string.remove_step))
             }
         }
         if (imagePath != null) {
@@ -332,13 +338,14 @@ private fun StepEditor(
                         .size(26.dp)
                         .background(Color(0xAA000000), CircleShape),
                 ) {
-                    Icon(Icons.Default.Close, contentDescription = "Schritt-Bild entfernen", tint = Color.White)
+                    Icon(Icons.Default.Close, contentDescription = stringResource(R.string.remove_step_image), tint = Color.White)
                 }
             }
         } else {
             OutlinedButton(onClick = onAddImage) {
                 Icon(Icons.Default.PhotoCamera, contentDescription = null)
-                Text("  Bild zum Schritt")
+                Spacer(Modifier.width(8.dp))
+                Text(stringResource(R.string.add_step_image))
             }
         }
     }

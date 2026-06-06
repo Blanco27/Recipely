@@ -30,12 +30,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.compose.AsyncImage
+import com.nwe.recipely.R
 import com.nwe.recipely.RecipelyApp
 import com.nwe.recipely.data.Recipe
 import java.io.File
@@ -53,10 +55,10 @@ fun RecipeListScreen(
     val recipes by vm.recipes.collectAsState()
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Meine Rezepte") }) },
+        topBar = { TopAppBar(title = { Text(stringResource(R.string.list_title)) }) },
         floatingActionButton = {
             FloatingActionButton(onClick = onAdd) {
-                Icon(Icons.Default.Add, contentDescription = "Rezept hinzufügen")
+                Icon(Icons.Default.Add, contentDescription = stringResource(R.string.add_recipe))
             }
         },
     ) { padding ->
@@ -137,12 +139,12 @@ private fun EmptyState(modifier: Modifier = Modifier) {
             modifier = Modifier.size(64.dp),
         )
         Text(
-            text = "Noch keine Rezepte",
+            text = stringResource(R.string.empty_title),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(top = 16.dp),
         )
         Text(
-            text = "Tippe auf +, um dein erstes Rezept anzulegen.",
+            text = stringResource(R.string.empty_hint),
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = 4.dp),
@@ -150,11 +152,12 @@ private fun EmptyState(modifier: Modifier = Modifier) {
     }
 }
 
-/** Builds e.g. "⏱ 30 Min · 🍽 4" from whatever fields are set, or null if none. */
+/** Builds e.g. "⏱ 30 min · 🍽 4" from whatever fields are set, or null if none. */
+@Composable
 fun recipeMeta(recipe: Recipe): String? {
     val parts = buildList {
-        recipe.prepTimeMinutes?.let { add("⏱ $it Min") }
-        recipe.servings?.let { add("🍽 $it") }
+        recipe.prepTimeMinutes?.let { add(stringResource(R.string.meta_time, it)) }
+        recipe.servings?.let { add(stringResource(R.string.meta_servings, it)) }
     }
     return parts.takeIf { it.isNotEmpty() }?.joinToString(" · ")
 }

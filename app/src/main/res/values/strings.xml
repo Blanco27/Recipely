@@ -1,3 +1,45 @@
 <resources>
     <string name="app_name">Recipely</string>
+
+    <!-- List screen -->
+    <string name="list_title">My Recipes</string>
+    <string name="add_recipe">Add recipe</string>
+    <string name="empty_title">No recipes yet</string>
+    <string name="empty_hint">Tap + to add your first recipe.</string>
+    <string name="meta_time">⏱ %1$d min</string>
+    <string name="meta_servings">🍽 %1$d</string>
+
+    <!-- Detail screen -->
+    <string name="back">Back</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="recipe_not_found">Recipe not found</string>
+    <string name="chip_servings">🍽 %1$d servings</string>
+    <string name="section_ingredients">Ingredients</string>
+    <string name="section_steps">Steps</string>
+    <string name="delete_dialog_title">Delete recipe?</string>
+    <string name="delete_dialog_text">This recipe will be permanently removed.</string>
+
+    <!-- Edit screen -->
+    <string name="new_recipe">New Recipe</string>
+    <string name="edit_recipe">Edit Recipe</string>
+    <string name="save">Save</string>
+    <string name="label_name">Name</string>
+    <string name="label_time">Time (min)</string>
+    <string name="label_servings">Servings</string>
+    <string name="ingredient_n">Ingredient %1$d</string>
+    <string name="remove_ingredient">Remove ingredient</string>
+    <string name="add_ingredient">Add ingredient</string>
+    <string name="step_n">Step %1$d</string>
+    <string name="remove_step">Remove step</string>
+    <string name="add_step">Add step</string>
+    <string name="add_step_image">Add step image</string>
+    <string name="remove_step_image">Remove step image</string>
+    <string name="title_image_hint">Title image · Gallery / Camera</string>
+    <string name="remove_image">Remove image</string>
+    <string name="add_image_dialog_title">Add image</string>
+    <string name="add_image_dialog_text">Where should the image come from?</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
 </resources>

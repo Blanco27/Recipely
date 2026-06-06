@@ -40,12 +40,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import coil.compose.AsyncImage
+import com.nwe.recipely.R
 import com.nwe.recipely.RecipelyApp
 import com.nwe.recipely.data.RecipeWithDetails
 import com.nwe.recipely.data.Step
@@ -72,15 +74,15 @@ fun RecipeDetailScreen(
                 title = { Text(details?.recipe?.name ?: "") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Zurück")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 actions = {
                     IconButton(onClick = onEdit) {
-                        Icon(Icons.Default.Edit, contentDescription = "Bearbeiten")
+                        Icon(Icons.Default.Edit, contentDescription = stringResource(R.string.edit))
                     }
                     IconButton(onClick = { showDeleteDialog = true }) {
-                        Icon(Icons.Default.Delete, contentDescription = "Löschen")
+                        Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.delete))
                     }
                 },
             )
@@ -89,7 +91,7 @@ fun RecipeDetailScreen(
         val current = details
         if (current == null) {
             Box(Modifier.padding(padding).fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Rezept nicht gefunden")
+                Text(stringResource(R.string.recipe_not_found))
             }
         } else {
             DetailContent(current, Modifier.padding(padding))
@@ -99,16 +101,16 @@ fun RecipeDetailScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { showDeleteDialog = false },
-            title = { Text("Rezept löschen?") },
-            text = { Text("Das Rezept wird dauerhaft entfernt.") },
+            title = { Text(stringResource(R.string.delete_dialog_title)) },
+            text = { Text(stringResource(R.string.delete_dialog_text)) },
             confirmButton = {
                 TextButton(onClick = {
                     showDeleteDialog = false
                     vm.delete(onDeleted)
-                }) { Text("Löschen") }
+                }) { Text(stringResource(R.string.delete)) }
             },
             dismissButton = {
-                TextButton(onClick = { showDeleteDialog = false }) { Text("Abbrechen") }
+                TextButton(onClick = { showDeleteDialog = false }) { Text(stringResource(R.string.cancel)) }
             },
         )
     }
@@ -149,16 +151,16 @@ private fun DetailContent(details: RecipeWithDetails, modifier: Modifier = Modif
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 details.recipe.prepTimeMinutes?.let {
-                    AssistChip(onClick = {}, label = { Text("⏱ $it Min") })
+                    AssistChip(onClick = {}, label = { Text(stringResource(R.string.meta_time, it)) })
                 }
                 details.recipe.servings?.let {
-                    AssistChip(onClick = {}, label = { Text("🍽 $it Portionen") })
+                    AssistChip(onClick = {}, label = { Text(stringResource(R.string.chip_servings, it)) })
                 }
             }
         }
 
         if (details.ingredients.isNotEmpty()) {
-            item { SectionHeader("Zutaten") }
+            item { SectionHeader(stringResource(R.string.section_ingredients)) }
             val sortedIngredients = details.ingredients.sortedBy { it.position }
             items(sortedIngredients.size) { index ->
                 Text(
@@ -170,7 +172,7 @@ private fun DetailContent(details: RecipeWithDetails, modifier: Modifier = Modif
         }
 
         if (details.steps.isNotEmpty()) {
-            item { SectionHeader("Zubereitung") }
+            item { SectionHeader(stringResource(R.string.section_steps)) }
             val sortedSteps = details.steps.sortedBy { it.position }
             items(sortedSteps.size) { index ->
                 StepItem(number = index + 1, step = sortedSteps[index])
