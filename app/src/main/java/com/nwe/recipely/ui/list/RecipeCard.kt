@@ -17,9 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.outlined.Restaurant
-import androidx.compose.material.icons.outlined.Schedule
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -29,7 +27,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -113,17 +110,13 @@ fun RecipeCard(recipe: Recipe, onClick: () -> Unit, modifier: Modifier = Modifie
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                     ) {
                         recipe.prepTimeMinutes?.let {
-                            MetaChip(Icons.Outlined.Schedule, stringResource(R.string.chip_time, it))
+                            MetaChip("⏱", stringResource(R.string.chip_time, it))
                         }
                         recipe.servings?.let {
-                            MetaChip(Icons.Outlined.Restaurant, stringResource(R.string.chip_portions, it))
+                            MetaChip("🍽", stringResource(R.string.chip_portions, it))
                         }
                         recipe.calories?.let {
-                            MetaChip(
-                                Icons.Filled.LocalFireDepartment,
-                                stringResource(R.string.nutrition_value_kcal, it),
-                                kcal = true,
-                            )
+                            MetaChip("🔥", stringResource(R.string.nutrition_value_kcal, it), kcal = true)
                         }
                     }
                 }
@@ -133,11 +126,11 @@ fun RecipeCard(recipe: Recipe, onClick: () -> Unit, modifier: Modifier = Modifie
 }
 
 /**
- * Small rounded pill for a single meta fact: a colored leading icon plus text, soft
+ * Small rounded pill for a single meta fact: a colorful leading emoji plus text, soft
  * bordered background (see mockup `.chip`). `kcal` switches to the warm honey/amber variant.
  */
 @Composable
-fun MetaChip(icon: ImageVector, text: String, kcal: Boolean = false, modifier: Modifier = Modifier) {
+fun MetaChip(emoji: String, text: String, kcal: Boolean = false, modifier: Modifier = Modifier) {
     val dark = isSystemInDarkTheme()
     val bg = when {
         kcal && dark -> KcalChipBgDark
@@ -169,7 +162,7 @@ fun MetaChip(icon: ImageVector, text: String, kcal: Boolean = false, modifier: M
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(5.dp),
         ) {
-            Icon(icon, contentDescription = null, tint = fg, modifier = Modifier.size(14.dp))
+            Text(text = emoji, style = MaterialTheme.typography.labelMedium)
             Text(
                 text = text,
                 style = MaterialTheme.typography.labelMedium,

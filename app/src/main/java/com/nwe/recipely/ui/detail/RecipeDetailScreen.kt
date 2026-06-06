@@ -21,10 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.outlined.Restaurant
-import androidx.compose.material.icons.outlined.Schedule
-import androidx.compose.material.icons.outlined.SetMeal
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -59,6 +56,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -256,32 +254,29 @@ private fun Hero(name: String, imageUri: String?) {
 }
 
 private data class StatData(
-    val icon: ImageVector,
-    val iconTint: Color,
+    val emoji: String,
     val value: String,
     val label: String,
     val accent: Boolean,
 )
 
-/** The mockup's nutrition stat bar: up to four icon/value/label cards, kcal as the accent card. */
+/** The mockup's nutrition stat bar: up to four emoji/value/label cards, kcal as the accent card. */
 @Composable
 private fun StatGrid(prepTime: Int?, servings: Int?, calories: Int?, protein: Double?) {
-    val cs = MaterialTheme.colorScheme
     val stats = ArrayList<StatData>(4)
     if (prepTime != null) {
-        stats.add(StatData(Icons.Outlined.Schedule, cs.primary, prepTime.toString(), stringResource(R.string.stat_time), accent = false))
+        stats.add(StatData("⏱", prepTime.toString(), stringResource(R.string.stat_time), accent = false))
     }
     if (servings != null) {
-        stats.add(StatData(Icons.Outlined.Restaurant, cs.secondary, servings.toString(), stringResource(R.string.stat_servings), accent = false))
+        stats.add(StatData("🍽", servings.toString(), stringResource(R.string.stat_servings), accent = false))
     }
     if (calories != null) {
-        stats.add(StatData(Icons.Filled.LocalFireDepartment, cs.tertiary, calories.toString(), stringResource(R.string.stat_kcal), accent = true))
+        stats.add(StatData("🔥", calories.toString(), stringResource(R.string.stat_kcal), accent = true))
     }
     if (protein != null) {
         stats.add(
             StatData(
-                icon = Icons.Outlined.SetMeal,
-                iconTint = cs.primary,
+                emoji = "🥩",
                 value = stringResource(R.string.stat_grams, protein.roundToInt().toString()),
                 label = stringResource(R.string.stat_protein),
                 accent = false,
@@ -303,7 +298,6 @@ private fun StatCard(stat: StatData, modifier: Modifier = Modifier) {
     val bg = if (stat.accent) cs.primary else cs.surface
     val valueColor = if (stat.accent) cs.onPrimary else cs.primary
     val labelColor = if (stat.accent) cs.onPrimary.copy(alpha = 0.75f) else cs.onSurfaceVariant
-    val iconTint = if (stat.accent) cs.tertiary else stat.iconTint
     val borderColor = if (stat.accent) cs.primary else cs.outlineVariant
     Column(
         modifier = modifier
@@ -313,7 +307,7 @@ private fun StatCard(stat: StatData, modifier: Modifier = Modifier) {
             .padding(vertical = 13.dp, horizontal = 6.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Icon(stat.icon, contentDescription = null, tint = iconTint, modifier = Modifier.size(20.dp))
+        Text(text = stat.emoji, fontSize = 18.sp)
         Text(
             text = stat.value,
             style = MaterialTheme.typography.titleLarge,
