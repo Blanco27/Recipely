@@ -46,10 +46,10 @@ Run a single instrumented test class (filter via the runner argument — `--test
 
 Single-Activity Jetpack Compose app, lean **MVVM**: Compose UI → ViewModel → Repository → Room DAO. Source root: `app/src/main/java/com/nwe/recipely/`.
 
-- **`RecipelyApp`** (`Application`) creates and holds an **`di/AppContainer`** — manual dependency injection (no Hilt/Dagger). `AppContainer` builds the Room database (`recipely.db`), the `ImageStore`, and the `RoomRecipeRepository`.
+- **`RecipelyApp`** (`Application`) creates and holds an **`di/AppContainer`** — manual dependency injection (no Hilt/Dagger). `AppContainer` builds the Room database (`recipely.db`), the `ImageStore`, the `RoomRecipeRepository`, the `DataStoreSettingsRepository`, and the `RecipeBackupManager`.
 - **`MainActivity`** sets a Compose tree: `RecipelyTheme { Surface { RecipelyNavHost() } }`.
-- **`navigation/RecipelyNavHost`** wires three routes via `Routes`: `list` (start), `detail/{id}` (LongType), `edit?id={id}` (optional LongType, **default `0L` = new recipe**).
-- **Screens** (`ui/list`, `ui/detail`, `ui/edit`) each obtain their ViewModel via a `viewModelFactory { initializer { ... } }` that pulls `container.repository`/`container.imageStore` from `RecipelyApp` (the composable reaches the Application through `LocalContext`).
+- **`navigation/RecipelyNavHost`** wires five routes via `Routes`: `list` (start), `detail/{id}` (LongType), `edit?id={id}` (optional LongType, **default `0L` = new recipe**), `cook/{id}` (LongType, full-screen Cook Mode), and `settings`.
+- **Screens** (`ui/list`, `ui/detail`, `ui/edit`, `ui/cook`, `ui/settings`) each obtain their ViewModel via a `viewModelFactory { initializer { ... } }` that pulls the dependencies it needs (`container.repository`/`imageStore`/`settingsRepository`/`backupManager`) from `RecipelyApp` (the composable reaches the Application through `LocalContext`).
 - **Data layer** (`data/`): Room entities `Recipe` + child `Ingredient`/`Step` (CASCADE FK, indexed on `recipeId`, `position` for ordering) and the `RecipeWithDetails` `@Relation` POJO; `RecipeDao` (Flows for reads, suspend writes, a transactional `upsertRecipeWithChildren`); `RecipeDatabase`; `RecipeRepository` interface + `RoomRecipeRepository`.
 
 ### Key cross-cutting rules (read before changing related code)
@@ -77,4 +77,4 @@ Wired up: Jetpack Compose (BOM `2024.09.03`) + **Material 3** + `material-icons-
 
 ## Workflow docs
 
-The original design spec and the task-by-task implementation plan live under `docs/superpowers/` (`specs/` and `plans/`). Out of scope by design: search, tags, cloud sync, export/share, ingredient scaling.
+The original design spec and the task-by-task implementation plan live under `docs/superpowers/` (`specs/` and `plans/`). Out of scope by design: search, free-form tags, cloud sync, social sharing, ingredient scaling. (Local `.zip` backup/restore — `data/backup/` — **is** in scope and shipped; cloud sync is not.)

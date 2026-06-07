@@ -2,7 +2,7 @@
 
 A lean, native **Android app** for creating, viewing, editing and deleting cooking recipes — fully **offline**, with a warm, editorial Material 3 UI (cream, forest green & terracotta, serif display headings).
 
-Each recipe has a name (required), an optional title image, an optional category, optional prep time, servings and nutrition (calories + macros), an ingredient list, and numbered preparation steps with an optional image per step. The UI is fully localized — **English by default, German on German-locale devices.**
+Each recipe has a name (required), an optional title image, an optional category, optional prep time, servings and nutrition (calories + macros), an ingredient list, and numbered preparation steps with an optional image per step. A hands-free **Cook Mode** walks you through the steps one at a time — keeping the screen awake and surfacing **automatic timers** detected from the step text — and your whole collection can be **backed up to a `.zip`** and restored on any device. The UI is fully localized — **English by default, German on German-locale devices** — and the theme and language are switchable in **Settings**.
 
 ## Screenshots
 
@@ -15,7 +15,13 @@ Each recipe has a name (required), an optional title image, an optional category
 </p>
 
 <p align="center">
-  <em>Recipe list &nbsp;·&nbsp; Detail view &nbsp;·&nbsp; Editor &nbsp;— shown with demo data</em>
+  <img src="docs/screenshots/04-cook.png" width="30%" alt="Cook mode – step-by-step with an automatic timer" />
+  &nbsp;&nbsp;
+  <img src="docs/screenshots/05-settings.png" width="30%" alt="Settings – theme, language and .zip backup" />
+</p>
+
+<p align="center">
+  <em>Recipe list &nbsp;·&nbsp; Detail view &nbsp;·&nbsp; Editor &nbsp;·&nbsp; Cook mode &nbsp;·&nbsp; Settings &nbsp;— shown with demo data</em>
 </p>
 
 > Light and dark themes are supported automatically (the screenshots show light mode).
@@ -26,9 +32,12 @@ Each recipe has a name (required), an optional title image, an optional category
 - 👀 **Detail view**: hero image, stat cards (time · servings · calories · protein), an optional **nutrition breakdown** (per portion & total), check-off ingredient list, and numbered steps with an optional step image
 - 🏷️ **Categories**: optionally tag a recipe (Main, Breakfast, Salad, Baking, Dessert, Snack) and filter the list by category
 - 🔥 **Nutrition (optional)**: total calories, carbs, protein & fat per recipe — shown both per portion and as a total
+- 👨‍🍳 **Cook Mode**: a focused, full-screen step-by-step walkthrough that keeps the screen awake, shows a progress bar, and surfaces an **automatic per-step timer** (detected from phrases like "10 minutes" in the step text) that keeps running in the background via a notification
 - ✏️ **Create & edit** via a dynamic form (add/remove ingredients and steps freely, pick a category, enter optional nutrition values)
 - 🖼️ **Images** from the **gallery** (Photo Picker) or **camera** — for the title image and per step
 - 🗑️ **Delete** with a confirmation dialog
+- 📦 **Backup & restore**: export your entire collection (recipes **and** images) to a `.zip`, and import it back later or on another device — fully offline, via the system file picker
+- ⚙️ **Settings**: choose the theme (System / Light / Dark) and the app language (System / English / German)
 - 💾 **Offline-first**: local storage via Room; images are copied into app-internal storage and the database keeps only the paths — orphaned image files are cleaned up automatically
 - 🌍 **Localized**: English (default) and German
 - 🎨 Warm, fixed **Material 3** theme (cream, forest green & terracotta) — light/dark automatic, no dynamic color
@@ -56,7 +65,7 @@ RecipelyApp (Application)
             ▲
    ViewModels (List / Detail / Edit)
             ▲
-   Compose Screens  ── RecipelyNavHost (list · detail/{id} · edit?id={id})
+   Compose Screens  ── RecipelyNavHost (list · detail/{id} · edit?id={id} · cook/{id} · settings)
 ```
 
 Details and project-wide conventions are in [`CLAUDE.md`](CLAUDE.md); the design spec and implementation plan live under [`docs/superpowers/`](docs/superpowers/).
@@ -101,18 +110,23 @@ Single tests:
 app/src/main/java/com/nwe/recipely/
 ├─ RecipelyApp.kt            # Application + holds AppContainer
 ├─ MainActivity.kt           # single Activity → Compose + NavHost
-├─ di/AppContainer.kt        # manual DI (DB, ImageStore, Repository)
-├─ data/                     # Room: entities, DAO, Database, ImageStore, Repository
+├─ di/AppContainer.kt        # manual DI (DB, ImageStore, Repository, Settings, BackupManager)
+├─ data/                     # Room: entities, DAO, Database, ImageStore, Repository, Settings
+│  └─ backup/                # .zip export/import (RecipeBackupManager)
+├─ timer/                    # foreground-service cook timer (CookTimer + TimerService)
 ├─ navigation/               # RecipelyNavHost + Routes
 └─ ui/
    ├─ theme/                 # warm Material 3 theme — cream/forest/terracotta (Color/Type/Theme)
+   ├─ components/            # shared Compose building blocks
    ├─ list/                  # RecipeListScreen + ViewModel
    ├─ detail/                # RecipeDetailScreen + ViewModel
-   └─ edit/                  # RecipeEditScreen + ViewModel + form state/mapping
+   ├─ edit/                  # RecipeEditScreen + ViewModel + form state/mapping
+   ├─ cook/                  # Cook Mode screen + ViewModel + step-timer parser
+   └─ settings/              # SettingsScreen + ViewModel (theme, language, backup)
 ```
 
 UI strings are localized via `app/src/main/res/values/strings.xml` (English) and `values-de/strings.xml` (German).
 
 ## Out of scope (by design)
 
-Search, tags, cloud sync, export/share and serving scaling are intentionally not included — the app stays simple and focused on the essentials.
+Search, free-form tags, cloud sync and ingredient/serving scaling are intentionally not included — the app stays simple and focused on the essentials. (Local `.zip` backup/restore is supported, but there is no cloud sync or social sharing.)
