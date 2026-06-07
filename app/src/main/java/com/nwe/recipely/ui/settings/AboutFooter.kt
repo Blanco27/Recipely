@@ -3,7 +3,6 @@ package com.nwe.recipely.ui.settings
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -32,6 +31,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import com.nwe.recipely.R
 import com.nwe.recipely.ui.theme.Fraunces
 import com.nwe.recipely.ui.theme.ForestPrimary
@@ -118,7 +118,7 @@ fun AboutFooter(modifier: Modifier = Modifier) {
 /** Opens [url] in the user's browser; no-ops if no browser is installed. */
 private fun openUrl(context: Context, url: String) {
     try {
-        context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
+        context.startActivity(Intent(Intent.ACTION_VIEW, url.toUri()))
     } catch (e: ActivityNotFoundException) {
         // No browser available — ignore rather than crash.
     }
