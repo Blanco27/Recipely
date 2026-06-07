@@ -4,7 +4,7 @@ package com.nwe.recipely.ui.cook
 // before their abbreviations so alternation matches them first. \b after the unit keeps
 // "minute" from matching inside an unrelated word.
 private val TIMER_REGEX = Regex(
-    """(\d+)\s*(stunden|stunde|std|hours|hour|minuten|minutes|minute|min|h|m)\b""",
+    """(\d+)\s*(stunden|stunde|std|hours|hour|minuten|minutes|minute|min|h)\b""",
     RegexOption.IGNORE_CASE,
 )
 

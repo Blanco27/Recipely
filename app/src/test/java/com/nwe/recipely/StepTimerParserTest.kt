@@ -20,4 +20,5 @@ class StepTimerParserTest {
     @Test fun noDuration() = assertNull(parseTimerSeconds("Mix everything well"))
     @Test fun numberWithoutUnit() = assertNull(parseTimerSeconds("Add 2 eggs"))
     @Test fun blank() = assertNull(parseTimerSeconds(""))
+    @Test fun bareMeterIsNotAMinute() = assertNull(parseTimerSeconds("cut into 2 m lengths"))
 }
