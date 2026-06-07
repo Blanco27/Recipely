@@ -15,6 +15,7 @@ const val JSON_ENTRY = "recipes.json"
 /** ZIP folder (prefix) that holds image files. */
 const val IMAGES_DIR = "images/"
 
+/** Root object serialized into [JSON_ENTRY] inside the backup ZIP. */
 @Serializable
 data class BackupFile(
     val schemaVersion: Int,
@@ -22,6 +23,7 @@ data class BackupFile(
     val recipes: List<BackupRecipe>,
 )
 
+/** A single recipe in a backup. [image]/[BackupStep.image] are ZIP-relative paths (or null). */
 @Serializable
 data class BackupRecipe(
     val name: String,
@@ -32,7 +34,7 @@ data class BackupRecipe(
     val proteinGrams: Double? = null,
     val fatGrams: Double? = null,
     val category: String? = null,
-    /** ZIP-relative path (e.g. "images/x.jpg") or null. */
+    /** ZIP-relative title-image path (e.g. "images/x.jpg") or null. */
     val image: String? = null,
     val ingredients: List<BackupIngredient> = emptyList(),
     val steps: List<BackupStep> = emptyList(),
@@ -42,16 +44,15 @@ data class BackupRecipe(
 data class BackupIngredient(val text: String, val position: Int)
 
 @Serializable
-data class BackupStep(val text: String, val image: String? = null, val position: Int)
+data class BackupStep(val text: String, val position: Int, val image: String? = null)
 
 /**
- * Maps a stored recipe to its backup DTO. Children are sorted by [position]; [image] is the
- * ZIP-relative title-image path and [stepImages] are the ZIP-relative step-image paths aligned
- * to the position-sorted step order (null where a step has no image).
+ * Maps a stored recipe to its backup DTO. Children are sorted by [position]. [imageEntries] maps an
+ * absolute source image path (as stored on the entity) to its ZIP-relative entry name; an image not
+ * present in the map (or a null source path) becomes null in the DTO.
  */
-fun RecipeWithDetails.toBackupRecipe(image: String?, stepImages: List<String?>): BackupRecipe {
-    val sortedSteps = steps.sortedBy { it.position }
-    return BackupRecipe(
+fun RecipeWithDetails.toBackupRecipe(imageEntries: Map<String, String>): BackupRecipe =
+    BackupRecipe(
         name = recipe.name,
         prepTimeMinutes = recipe.prepTimeMinutes,
         servings = recipe.servings,
@@ -60,22 +61,23 @@ fun RecipeWithDetails.toBackupRecipe(image: String?, stepImages: List<String?>):
         proteinGrams = recipe.proteinGrams,
         fatGrams = recipe.fatGrams,
         category = recipe.category,
-        image = image,
+        image = recipe.imageUri?.let { imageEntries[it] },
         ingredients = ingredients.sortedBy { it.position }
             .map { BackupIngredient(it.text, it.position) },
-        steps = sortedSteps.mapIndexed { i, s -> BackupStep(s.text, stepImages.getOrNull(i), s.position) },
+        steps = steps.sortedBy { it.position }
+            .map { s -> BackupStep(s.text, s.position, s.imageUri?.let { imageEntries[it] }) },
     )
-}
 
 /**
- * Builds fresh Room entities (id == 0) from a backup DTO. [image] is the new absolute title-image
- * path and [stepImages] the new absolute step-image paths aligned to [BackupRecipe.steps] order.
+ * Builds fresh Room entities (id == 0, recipeId == 0) from a backup DTO. [imagePaths] maps a
+ * ZIP-relative entry name to the new absolute path it was copied to; a path not present in the map
+ * (or a null DTO image) yields a null image on the entity.
  */
-fun BackupRecipe.toRecipeWithDetails(image: String?, stepImages: List<String?>): RecipeWithDetails =
+fun BackupRecipe.toRecipeWithDetails(imagePaths: Map<String, String>): RecipeWithDetails =
     RecipeWithDetails(
         recipe = Recipe(
             name = name,
-            imageUri = image,
+            imageUri = image?.let { imagePaths[it] },
             prepTimeMinutes = prepTimeMinutes,
             servings = servings,
             calories = calories,
@@ -85,7 +87,7 @@ fun BackupRecipe.toRecipeWithDetails(image: String?, stepImages: List<String?>):
             category = category,
         ),
         ingredients = ingredients.map { Ingredient(recipeId = 0, text = it.text, position = it.position) },
-        steps = steps.mapIndexed { i, s ->
-            Step(recipeId = 0, text = s.text, imageUri = stepImages.getOrNull(i), position = s.position)
+        steps = steps.map { s ->
+            Step(recipeId = 0, text = s.text, imageUri = s.image?.let { imagePaths[it] }, position = s.position)
         },
     )

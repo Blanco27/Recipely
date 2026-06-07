@@ -36,17 +36,22 @@ class BackupModelsTest {
     )
 
     @Test
-    fun toBackupRecipe_sortsChildrenByPosition_andSetsImages() {
+    fun toBackupRecipe_sortsChildrenByPosition_andMapsImagesByPath() {
         val backup = sample().toBackupRecipe(
-            image = "images/title.jpg",
-            stepImages = listOf(null, "images/step.jpg"), // aligned to position-sorted steps
+            imageEntries = mapOf(
+                "/data/img_title.jpg" to "images/title.jpg",
+                "/data/img_step.jpg" to "images/step.jpg",
+            ),
         )
 
         assertEquals("Lasagne", backup.name)
         assertEquals("MAIN", backup.category)
         assertEquals("images/title.jpg", backup.image)
         assertEquals(listOf("Beef", "Sheets"), backup.ingredients.map { it.text })
+        assertEquals(listOf(0, 1), backup.ingredients.map { it.position })
         assertEquals(listOf("Brown beef", "Bake"), backup.steps.map { it.text })
+        assertEquals(listOf(0, 1), backup.steps.map { it.position })
+        // "Brown beef" (pos 0) has no image; "Bake" (pos 1) maps to its entry
         assertEquals(listOf(null, "images/step.jpg"), backup.steps.map { it.image })
     }
 
@@ -55,7 +60,7 @@ class BackupModelsTest {
         val original = BackupFile(
             schemaVersion = SCHEMA_VERSION,
             exportedAt = "2026-06-07T10:15:30Z",
-            recipes = listOf(sample().toBackupRecipe(null, listOf(null, null))),
+            recipes = listOf(sample().toBackupRecipe(emptyMap())),
         )
 
         val decoded = json.decodeFromString<BackupFile>(json.encodeToString(original))
@@ -64,19 +69,31 @@ class BackupModelsTest {
     }
 
     @Test
-    fun toRecipeWithDetails_buildsFreshEntities_withNewImagePaths() {
-        val backup = sample().toBackupRecipe(image = "images/t.jpg", stepImages = listOf(null, "images/s.jpg"))
+    fun toRecipeWithDetails_buildsFreshEntities_resolvingImagesByPath() {
+        val backup = sample().toBackupRecipe(
+            imageEntries = mapOf(
+                "/data/img_title.jpg" to "images/t.jpg",
+                "/data/img_step.jpg" to "images/s.jpg",
+            ),
+        )
 
         val rwd = backup.toRecipeWithDetails(
-            image = "/new/title.jpg",
-            stepImages = listOf("/new/a.jpg", "/new/b.jpg"),
+            imagePaths = mapOf(
+                "images/t.jpg" to "/new/title.jpg",
+                "images/s.jpg" to "/new/step.jpg",
+            ),
         )
 
         assertEquals(0L, rwd.recipe.id) // id reset for insert
         assertEquals("/new/title.jpg", rwd.recipe.imageUri)
         assertEquals(850, rwd.recipe.calories)
         assertEquals(listOf("Beef", "Sheets"), rwd.ingredients.map { it.text })
+        assertEquals(listOf(0, 1), rwd.ingredients.map { it.position })
+        assertEquals(0L, rwd.ingredients[0].recipeId)
         assertEquals(listOf("Brown beef", "Bake"), rwd.steps.map { it.text })
-        assertEquals(listOf("/new/a.jpg", "/new/b.jpg"), rwd.steps.map { it.imageUri })
+        assertEquals(listOf(0, 1), rwd.steps.map { it.position })
+        assertEquals(0L, rwd.steps[0].recipeId)
+        // "Brown beef" had no image → null; "Bake" resolves to the new absolute path
+        assertEquals(listOf(null, "/new/step.jpg"), rwd.steps.map { it.imageUri })
     }
 }
