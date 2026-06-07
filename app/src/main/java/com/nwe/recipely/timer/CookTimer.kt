@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.asStateFlow
 
 /** Snapshot of the single active cook timer. */
 data class TimerUiState(
+    val recipeId: Long,        // recipe the timer belongs to
     val stepNumber: Int,       // 1-based step the timer belongs to
     val totalSeconds: Int,
     val remainingSeconds: Int,

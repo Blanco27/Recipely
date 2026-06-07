@@ -33,6 +33,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -77,6 +78,11 @@ fun CookModeScreen(
     val recipe by vm.recipe.collectAsState()
     val recipeName = recipe?.recipe?.name ?: ""
 
+    val context = LocalContext.current
+    LaunchedEffect(finished) {
+        if (finished) TimerService.stop(context)
+    }
+
     // Keep the screen awake while cooking.
     val view = LocalView.current
     DisposableEffect(Unit) {
@@ -89,21 +95,38 @@ fun CookModeScreen(
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background),
     ) {
-        if (steps.isEmpty()) {
-            // No steps to cook (e.g. opened directly) — leave cleanly.
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(stringResource(R.string.recipe_not_found))
+        val current = recipe
+        when {
+            current == null -> {
+                // Still loading the recipe — show nothing rather than a "not found" flash.
+                Box(Modifier.fillMaxSize())
             }
-        } else if (finished) {
-            CompletionScreen(
+            steps.isEmpty() -> {
+                // Recipe loaded but has no cookable steps.
+                Box(Modifier.fillMaxSize().systemBarsPadding()) {
+                    RoundIconButton(onClick = onExit) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = stringResource(R.string.cook_close),
+                            tint = MaterialTheme.colorScheme.onSurface,
+                            modifier = Modifier.size(18.dp),
+                        )
+                    }
+                    Text(
+                        stringResource(R.string.recipe_not_found),
+                        modifier = Modifier.align(Alignment.Center),
+                    )
+                }
+            }
+            finished -> CompletionScreen(
                 recipeName = recipeName,
                 stepCount = steps.size,
                 onDone = onExit,
                 onReview = vm::restart,
             )
-        } else {
-            CookPager(
+            else -> CookPager(
                 recipeName = recipeName,
+                recipeId = recipeId,
                 steps = steps,
                 onClose = onExit,
                 onFinish = vm::finish,
@@ -115,6 +138,7 @@ fun CookModeScreen(
 @Composable
 private fun CookPager(
     recipeName: String,
+    recipeId: Long,
     steps: List<Step>,
     onClose: () -> Unit,
     onFinish: () -> Unit,
@@ -133,7 +157,7 @@ private fun CookPager(
             state = pagerState,
             modifier = Modifier.weight(1f),
         ) { page ->
-            StepCard(step = steps[page], number = page + 1, total = steps.size)
+            StepCard(step = steps[page], number = page + 1, total = steps.size, recipeId = recipeId)
         }
         NavBar(
             isFirst = pagerState.currentPage == 0,
@@ -222,7 +246,7 @@ private fun ProgressBar(current: Int, total: Int) {
 }
 
 @Composable
-private fun StepCard(step: Step, number: Int, total: Int) {
+private fun StepCard(step: Step, number: Int, total: Int, recipeId: Long) {
     Column(
         Modifier
             .fillMaxSize()
@@ -264,16 +288,16 @@ private fun StepCard(step: Step, number: Int, total: Int) {
         }
         val seconds = remember(step.text) { parseTimerSeconds(step.text) }
         if (seconds != null) {
-            TimerPill(stepNumber = number, totalSeconds = seconds, modifier = Modifier.padding(top = 18.dp))
+            TimerPill(recipeId = recipeId, stepNumber = number, totalSeconds = seconds, modifier = Modifier.padding(top = 18.dp))
         }
     }
 }
 
 @Composable
-private fun TimerPill(stepNumber: Int, totalSeconds: Int, modifier: Modifier = Modifier) {
+private fun TimerPill(recipeId: Long, stepNumber: Int, totalSeconds: Int, modifier: Modifier = Modifier) {
     val context = LocalContext.current
     val timer by CookTimer.state.collectAsState()
-    val mine = timer?.takeIf { it.stepNumber == stepNumber }
+    val mine = timer?.takeIf { it.recipeId == recipeId && it.stepNumber == stepNumber }
     val running = mine?.running == true
     val remaining = mine?.remainingSeconds ?: totalSeconds
 
@@ -286,7 +310,7 @@ private fun TimerPill(stepNumber: Int, totalSeconds: Int, modifier: Modifier = M
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 permissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             }
-            TimerService.start(context, stepNumber, totalSeconds)
+            TimerService.start(context, recipeId, stepNumber, totalSeconds)
         } else {
             TimerService.toggle(context)
         }

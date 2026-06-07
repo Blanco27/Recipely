@@ -31,6 +31,7 @@ class TimerService : Service() {
     private val scope = CoroutineScope(Dispatchers.Main.immediate)
     private var tickJob: Job? = null
 
+    private var recipeId = 0L
     private var stepNumber = 0
     private var totalSeconds = 0
     private var remaining = 0
@@ -46,6 +47,7 @@ class TimerService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
             ACTION_START -> {
+                recipeId = intent.getLongExtra(EXTRA_RECIPE, 0L)
                 stepNumber = intent.getIntExtra(EXTRA_STEP, 1)
                 totalSeconds = intent.getIntExtra(EXTRA_SECONDS, 0)
                 remaining = totalSeconds
@@ -113,7 +115,7 @@ class TimerService : Service() {
     }
 
     private fun publish() {
-        CookTimer.publish(TimerUiState(stepNumber, totalSeconds, remaining, running))
+        CookTimer.publish(TimerUiState(recipeId, stepNumber, totalSeconds, remaining, running))
     }
 
     private fun startForegroundOngoing() {
@@ -171,6 +173,7 @@ class TimerService : Service() {
         const val ACTION_START = "$PKG.START"
         const val ACTION_TOGGLE = "$PKG.TOGGLE"
         const val ACTION_STOP = "$PKG.STOP"
+        const val EXTRA_RECIPE = "recipe"
         const val EXTRA_STEP = "step"
         const val EXTRA_SECONDS = "seconds"
         private const val CHANNEL_ONGOING = "cook_timer_ongoing"
@@ -178,9 +181,10 @@ class TimerService : Service() {
         private const val NOTIF_ONGOING_ID = 4711
         private const val NOTIF_DONE_ID = 4712
 
-        fun start(context: Context, stepNumber: Int, seconds: Int) {
+        fun start(context: Context, recipeId: Long, stepNumber: Int, seconds: Int) {
             val intent = Intent(context, TimerService::class.java)
                 .setAction(ACTION_START)
+                .putExtra(EXTRA_RECIPE, recipeId)
                 .putExtra(EXTRA_STEP, stepNumber)
                 .putExtra(EXTRA_SECONDS, seconds)
             ContextCompat.startForegroundService(context, intent)
