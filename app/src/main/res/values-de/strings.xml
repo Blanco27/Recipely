@@ -125,4 +125,25 @@
     <string name="cook_notif_running">Schritt %1$d · noch %2$s</string>
     <string name="cook_notif_done">Timer für Schritt %1$d abgelaufen</string>
     <string name="cook_notif_stop">Stopp</string>
+
+    <!-- Settings: Daten / Sicherung -->
+    <string name="settings_data">Daten</string>
+    <string name="export_recipes_title">Rezepte exportieren</string>
+    <string name="export_recipes_subtitle">Alle Rezepte als .zip sichern</string>
+    <string name="import_recipes_title">Rezepte importieren</string>
+    <string name="import_recipes_subtitle">Aus einer .zip wiederherstellen</string>
+    <string name="backup_exporting">Exportiere…</string>
+    <string name="backup_importing">Importiere…</string>
+    <string name="backup_export_empty">Keine Rezepte zum Exportieren</string>
+    <string name="backup_error_invalid">Keine gültige Recipely-Sicherung</string>
+    <string name="backup_error_export">Export fehlgeschlagen</string>
+    <string name="backup_error_import">Import fehlgeschlagen</string>
+    <plurals name="backup_export_done">
+        <item quantity="one">%d Rezept exportiert</item>
+        <item quantity="other">%d Rezepte exportiert</item>
+    </plurals>
+    <plurals name="backup_import_done">
+        <item quantity="one">%d Rezept importiert</item>
+        <item quantity="other">%d Rezepte importiert</item>
+    </plurals>
 </resources>
