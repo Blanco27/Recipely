@@ -36,8 +36,10 @@ in this order:
 3. **GitHub link** — an inline row: a small GitHub glyph + text "View source on GitHub",
    in **Terracotta** = `MaterialTheme.colorScheme.secondary`, ~13.5sp, SemiBold. The
    whole row is the tap target.
-4. **OSS note** — single line "Open source · made with ❤" at ~12sp, muted; the heart in
-   Terracotta (`colorScheme.secondary`).
+4. **OSS note** — single line "Open source · made with ❤" at ~12sp, muted
+   (`onSurfaceVariant`). The heart renders as the standard red ❤ emoji glyph (per the
+   user's explicit preference, chosen over the mockup's terracotta heart during
+   verification — this is the one intentional, approved deviation from the mockup).
 
 Spacing: ~40dp of breathing room above the footer (the mockup's `padding-top:40px`).
 Dark mode uses the existing theme tokens (no new dark-specific colors); the gradient mark
