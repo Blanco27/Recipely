@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.nwe.recipely.ui.cook.CookModeScreen
 import com.nwe.recipely.ui.detail.RecipeDetailScreen
 import com.nwe.recipely.ui.edit.RecipeEditScreen
 import com.nwe.recipely.ui.list.RecipeListScreen
@@ -16,9 +17,11 @@ object Routes {
     const val DETAIL = "detail/{id}"
     const val EDIT = "edit?id={id}"
     const val SETTINGS = "settings"
+    const val COOK = "cook/{id}"
 
     fun detail(id: Long) = "detail/$id"
     fun edit(id: Long? = null) = if (id == null) "edit" else "edit?id=$id"
+    fun cook(id: Long) = "cook/$id"
 }
 
 @Composable
@@ -45,6 +48,7 @@ fun RecipelyNavHost() {
                 onBack = { navController.popBackStack() },
                 onEdit = { navController.navigate(Routes.edit(id)) },
                 onDeleted = { navController.popBackStack() },
+                onCook = { navController.navigate(Routes.cook(id)) },
             )
         }
 
@@ -64,6 +68,17 @@ fun RecipelyNavHost() {
 
         composable(Routes.SETTINGS) {
             SettingsScreen(onBack = { navController.popBackStack() })
+        }
+
+        composable(
+            route = Routes.COOK,
+            arguments = listOf(navArgument("id") { type = NavType.LongType }),
+        ) { entry ->
+            val id = entry.arguments!!.getLong("id")
+            CookModeScreen(
+                recipeId = id,
+                onExit = { navController.popBackStack() },
+            )
         }
     }
 }

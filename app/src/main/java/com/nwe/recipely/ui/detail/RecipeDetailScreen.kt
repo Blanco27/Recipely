@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.Restaurant
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExtendedFloatingActionButton
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -88,6 +90,7 @@ fun RecipeDetailScreen(
     onBack: () -> Unit,
     onEdit: () -> Unit,
     onDeleted: () -> Unit,
+    onCook: () -> Unit,
 ) {
     val container = (LocalContext.current.applicationContext as RecipelyApp).container
     val vm: RecipeDetailViewModel = viewModel(
@@ -121,6 +124,22 @@ fun RecipeDetailScreen(
                     OverlayIcon(Icons.Default.Delete, stringResource(R.string.delete)) { showDeleteDialog = true }
                 }
             }
+        }
+
+        val hasSteps = current?.steps?.any { it.text.isNotBlank() || it.imageUri != null } == true
+        if (hasSteps) {
+            ExtendedFloatingActionButton(
+                onClick = onCook,
+                icon = { Text("🍳", fontSize = 20.sp) },
+                text = { Text(stringResource(R.string.cook_start)) },
+                containerColor = MaterialTheme.colorScheme.secondary,
+                contentColor = MaterialTheme.colorScheme.onSecondary,
+                shape = RoundedCornerShape(20.dp),
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .systemBarsPadding()
+                    .padding(20.dp),
+            )
         }
     }
 
