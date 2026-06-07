@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Recipely · Settings — About Section proposals</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --cream: #F6F0E6;
+    --cream-2: #FBF7EF;
+    --paper: #FFFDF9;
+    --forest: #1E3A2B;
+    --forest-2: #2C5238;
+    --moss: #4F7A4A;
+    --terra: #C75D3C;
+    --honey: #E2A03C;
+    --ink: #21201B;
+    --ink-soft: #6B655A;
+    --line: #E6DECF;
+    --shadow: 28px 28px 60px rgba(30, 40, 30, 0.12), -2px -2px 0 rgba(255,255,255,0.6) inset;
+    font-family: 'Hanken Grotesk', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(199,93,60,0.07), transparent 42%),
+      radial-gradient(circle at 88% 8%, rgba(226,160,60,0.10), transparent 38%),
+      radial-gradient(circle at 78% 92%, rgba(30,58,43,0.07), transparent 45%);
+    min-height: 100vh;
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 999; opacity: 0.32;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+
+  header.hero { max-width: 1240px; margin: 0 auto; padding: 64px 40px 18px; }
+  .kicker {
+    display: inline-flex; align-items: center; gap: 9px;
+    font-size: 12px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--terra); margin-bottom: 20px;
+  }
+  .kicker::before { content: ""; width: 30px; height: 2px; background: var(--terra); display: inline-block; }
+  header.hero h1 {
+    font-family: 'Fraunces', serif; font-weight: 600; font-size: clamp(36px, 5vw, 64px);
+    line-height: 1.0; letter-spacing: -0.02em; color: var(--forest); max-width: 18ch;
+  }
+  header.hero h1 em { font-style: italic; color: var(--terra); font-weight: 500; }
+  header.hero p.lede { margin-top: 20px; max-width: 60ch; font-size: 17px; line-height: 1.6; color: var(--ink-soft); }
+
+  .stage {
+    max-width: 1240px; margin: 0 auto; padding: 30px 40px 110px;
+    display: flex; flex-wrap: wrap; gap: 56px 60px; justify-content: center; align-items: flex-start;
+  }
+  .frame-wrap { display: flex; flex-direction: column; align-items: center; gap: 16px; max-width: 360px; }
+  .frame-label {
+    font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; color: var(--forest);
+    display: flex; align-items: baseline; gap: 10px;
+  }
+  .frame-label .n {
+    font-family: 'Hanken Grotesk'; font-size: 12px; font-weight: 800; color: var(--paper);
+    background: var(--terra); width: 24px; height: 24px; border-radius: 50%;
+    display: grid; place-items: center; transform: translateY(-2px);
+  }
+  .frame-sub { font-size: 13px; color: var(--ink-soft); text-align: center; line-height: 1.5; }
+
+  .phone {
+    width: 340px; height: 720px; border-radius: 48px; padding: 11px;
+    background: linear-gradient(160deg, #2a2a28, #15150f); box-shadow: var(--shadow); position: relative;
+  }
+  .phone::before { content:""; position:absolute; right:-3px; top:150px; width:3px; height:64px; border-radius:2px; background:#23231f; }
+  .screen { width: 100%; height: 100%; border-radius: 38px; overflow: hidden; position: relative; background: var(--cream-2); display: flex; flex-direction: column; }
+  .screen .scroll { overflow-y: auto; height: 100%; scrollbar-width: none; }
+  .screen .scroll::-webkit-scrollbar { display: none; }
+
+  .statusbar { height: 40px; display: flex; align-items: center; justify-content: space-between; padding: 0 22px; font-size: 12px; font-weight: 700; color: var(--ink); flex-shrink: 0; }
+  .statusbar .dots { display:flex; gap:5px; align-items:center; }
+  .statusbar .dots i { font-style: normal; font-size: 11px; }
+
+  /* settings top app bar */
+  .appbar { display:flex; align-items:center; gap:12px; padding: 4px 16px 14px; }
+  .appbar .back { width:36px; height:36px; border-radius:50%; display:grid; place-items:center; font-size:20px; color:var(--ink); }
+  .appbar .ttl { font-family:'Fraunces',serif; font-weight:600; font-size:22px; color:var(--forest); }
+
+  .settings-body { padding: 0 16px 28px; }
+  .sec-label { font-size:11px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--moss); padding: 14px 4px 10px; }
+
+  /* paper panel = SettingsPanel */
+  .panel { background: var(--paper); border:1px solid var(--line); border-radius:16px; padding:6px; }
+
+  /* theme segmented (compact, illustrative) */
+  .seg { display:flex; gap:4px; background:var(--cream-2); border-radius:12px; padding:4px; }
+  .seg > div { flex:1; text-align:center; padding:9px 0 8px; border-radius:8px; font-size:12.5px; font-weight:600; color:var(--ink-soft); }
+  .seg > div .e { font-size:16px; display:block; margin-bottom:3px; }
+  .seg > div.on { background:var(--forest); color:var(--cream-2); }
+
+  /* a generic settings row (matches LanguageRow) */
+  .row { display:flex; align-items:center; gap:12px; padding:12px 10px; }
+  .row + .row { border-top:1px solid var(--line); }
+  .row .lead { font-size:20px; width:24px; text-align:center; }
+  .row .grow { flex:1; }
+  .row .label { font-size:15px; color:var(--ink); }
+  .row .cap { font-size:12px; color:var(--ink-soft); margin-top:2px; }
+  .row .chev { color:var(--ink-soft); font-size:18px; }
+  .row .val { font-size:14px; font-weight:700; color:var(--forest-2); }
+
+  /* ============ ABOUT VARIANT A — list rows (twin of Language panel) ============ */
+  .a-foot { text-align:center; font-size:12px; color:var(--ink-soft); padding:14px 4px 2px; }
+  .a-foot .heart { color:var(--terra); }
+
+  /* ============ ABOUT VARIANT B — branded hero card ============ */
+  .b-card { background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:22px 18px 18px; text-align:center; }
+  .b-mark {
+    width:64px; height:64px; border-radius:20px; margin:0 auto 14px;
+    background:linear-gradient(150deg, var(--moss), var(--forest));
+    display:grid; place-items:center; font-size:32px; box-shadow:0 10px 22px rgba(30,58,43,.28);
+  }
+  .b-name { font-family:'Fraunces',serif; font-weight:600; font-size:26px; color:var(--forest); letter-spacing:-.01em; }
+  .b-ver { font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); margin-top:5px; }
+  .b-oss { font-size:13px; color:var(--ink-soft); margin-top:12px; line-height:1.5; }
+  .b-oss .heart { color:var(--terra); }
+  .b-gh {
+    margin-top:16px; width:100%; display:flex; align-items:center; justify-content:center; gap:9px;
+    padding:13px; border-radius:14px; background:var(--forest); color:var(--cream-2);
+    font-size:14px; font-weight:700;
+  }
+  .b-gh svg { width:18px; height:18px; fill:var(--cream-2); }
+
+  /* ============ ABOUT VARIANT C — quiet centered footer ============ */
+  .c-foot { display:flex; flex-direction:column; align-items:center; gap:10px; padding:40px 10px 8px; }
+  .c-mark {
+    width:44px; height:44px; border-radius:14px;
+    background:linear-gradient(150deg, var(--moss), var(--forest));
+    display:grid; place-items:center; font-size:22px; box-shadow:0 6px 14px rgba(30,58,43,.22);
+  }
+  .c-name { font-family:'Fraunces',serif; font-weight:600; font-size:18px; color:var(--forest); }
+  .c-name .v { font-family:'Hanken Grotesk'; font-weight:600; font-size:13px; color:var(--ink-soft); margin-left:6px; }
+  .c-link { display:inline-flex; align-items:center; gap:7px; font-size:13.5px; font-weight:700; color:var(--terra); }
+  .c-link svg { width:15px; height:15px; fill:var(--terra); }
+  .c-oss { font-size:12px; color:var(--ink-soft); }
+  .c-oss .heart { color:var(--terra); }
+
+  .note { max-width:1240px; margin:0 auto; padding:0 40px 90px; }
+  .note .box { background:var(--forest); color:var(--cream-2); border-radius:24px; padding:32px 36px; display:flex; flex-wrap:wrap; gap:30px; justify-content:space-between; }
+  .note h4 { font-family:'Fraunces',serif; font-weight:600; font-size:22px; margin-bottom:12px; color:var(--paper); }
+  .note ul { list-style:none; display:flex; flex-direction:column; gap:8px; }
+  .note li { font-size:14px; color:rgba(255,255,255,.84); display:flex; gap:10px; }
+  .note li::before { content:"›"; color:var(--honey); font-weight:800; }
+  .note .col { min-width:260px; flex:1; }
+  .badge-soft { font-size:12px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:var(--honey); margin-bottom:8px; }
+
+  @media (max-width:760px){ header.hero{ padding:40px 22px 14px; } .stage{ padding:18px 14px 70px; gap:44px; } }
+</style>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="kicker">Recipely · Settings — About Section</div>
+    <h1>Three ways to say <em>“About”</em></h1>
+    <p class="lede">
+      Each proposal sits at the bottom of the existing Settings screen, below Appearance &amp; Language,
+      and keeps the warm-editorial language already in the app — Paper panels, Fraunces titles,
+      moss-green section labels. All three show version <b>1.0</b>, a link to
+      <b>github.com/Blanco27/Recipely</b>, and an open-source note. Pick one (or mix).
+    </p>
+  </header>
+
+  <main class="stage">
+
+    <!-- ============ VARIANT A ============ -->
+    <div class="frame-wrap">
+      <div class="frame-label"><span class="n">A</span> List rows</div>
+      <div class="frame-sub">Twin of the Language panel — “About” section label, a Paper panel with version + GitHub rows, quiet caption underneath. Most consistent, lowest effort.</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="statusbar"><span>9:41</span><span class="dots"><i>●●●</i><i>📶</i><i>🔋</i></span></div>
+          <div class="scroll">
+            <div class="appbar"><div class="back">‹</div><div class="ttl">Settings</div></div>
+            <div class="settings-body">
+              <div class="sec-label">Appearance</div>
+              <div class="panel"><div class="seg"><div class="on"><span class="e">🖥️</span>System</div><div><span class="e">☀️</span>Light</div><div><span class="e">🌙</span>Dark</div></div></div>
+
+              <div class="sec-label">Language</div>
+              <div class="panel">
+                <div class="row"><div class="lead">🌐</div><div class="grow"><div class="label">System default</div><div class="cap">Follows device language</div></div><div class="chev">◉</div></div>
+                <div class="row"><div class="lead">🇬🇧</div><div class="grow"><div class="label">English</div></div><div class="chev">○</div></div>
+              </div>
+
+              <div class="sec-label">About</div>
+              <div class="panel">
+                <div class="row"><div class="lead">📖</div><div class="grow"><div class="label">Recipely</div><div class="cap">Offline recipe keeper</div></div><div class="val">v1.0</div></div>
+                <div class="row"><div class="lead">🐙</div><div class="grow"><div class="label">Source code</div><div class="cap">github.com/Blanco27/Recipely</div></div><div class="chev">↗</div></div>
+              </div>
+              <div class="a-foot">Open source · made with <span class="heart">❤</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ VARIANT B ============ -->
+    <div class="frame-wrap">
+      <div class="frame-label"><span class="n">B</span> Branded card</div>
+      <div class="frame-sub">A small hero: app mark, name in Fraunces, version, OSS note, and a full-width forest GitHub button. More personality, more vertical space.</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="statusbar"><span>9:41</span><span class="dots"><i>●●●</i><i>📶</i><i>🔋</i></span></div>
+          <div class="scroll">
+            <div class="appbar"><div class="back">‹</div><div class="ttl">Settings</div></div>
+            <div class="settings-body">
+              <div class="sec-label">Appearance</div>
+              <div class="panel"><div class="seg"><div class="on"><span class="e">🖥️</span>System</div><div><span class="e">☀️</span>Light</div><div><span class="e">🌙</span>Dark</div></div></div>
+
+              <div class="sec-label">Language</div>
+              <div class="panel">
+                <div class="row"><div class="lead">🌐</div><div class="grow"><div class="label">System default</div><div class="cap">Follows device language</div></div><div class="chev">◉</div></div>
+                <div class="row"><div class="lead">🇬🇧</div><div class="grow"><div class="label">English</div></div><div class="chev">○</div></div>
+              </div>
+
+              <div class="sec-label">About</div>
+              <div class="b-card">
+                <div class="b-mark">🍲</div>
+                <div class="b-name">Recipely</div>
+                <div class="b-ver">Version 1.0</div>
+                <div class="b-oss">Free &amp; open source · made with <span class="heart">❤</span><br>for home cooks</div>
+                <div class="b-gh">
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+                  View on GitHub
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ VARIANT C ============ -->
+    <div class="frame-wrap">
+      <div class="frame-label"><span class="n">C</span> Quiet footer</div>
+      <div class="frame-sub">No section label, no panel — a calm centered footer at the very bottom: small mark, name + version, a text link, one OSS line. Lightest touch.</div>
+      <div class="phone">
+        <div class="screen">
+          <div class="statusbar"><span>9:41</span><span class="dots"><i>●●●</i><i>📶</i><i>🔋</i></span></div>
+          <div class="scroll">
+            <div class="appbar"><div class="back">‹</div><div class="ttl">Settings</div></div>
+            <div class="settings-body">
+              <div class="sec-label">Appearance</div>
+              <div class="panel"><div class="seg"><div class="on"><span class="e">🖥️</span>System</div><div><span class="e">☀️</span>Light</div><div><span class="e">🌙</span>Dark</div></div></div>
+
+              <div class="sec-label">Language</div>
+              <div class="panel">
+                <div class="row"><div class="lead">🌐</div><div class="grow"><div class="label">System default</div><div class="cap">Follows device language</div></div><div class="chev">◉</div></div>
+                <div class="row"><div class="lead">🇬🇧</div><div class="grow"><div class="label">English</div></div><div class="chev">○</div></div>
+                <div class="row"><div class="lead">🇩🇪</div><div class="grow"><div class="label">Deutsch</div></div><div class="chev">○</div></div>
+              </div>
+
+              <div class="c-foot">
+                <div class="c-mark">🍲</div>
+                <div class="c-name">Recipely<span class="v">v1.0</span></div>
+                <a class="c-link">
+                  <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
+                  View source on GitHub
+                </a>
+                <div class="c-oss">Open source · made with <span class="heart">❤</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <section class="note">
+    <div class="box">
+      <div class="col">
+        <div class="badge-soft">Shared by all three</div>
+        <ul>
+          <li>New <b style="color:#fff">“About”</b> content at the bottom of the Settings screen.</li>
+          <li>Version pulled from <b style="color:#fff">BuildConfig.VERSION_NAME</b> (currently 1.0) — no hardcoding.</li>
+          <li>GitHub row/button opens <b style="color:#fff">github.com/Blanco27/Recipely</b> via an Intent (ACTION_VIEW).</li>
+          <li>Strings localized (EN/DE) like the rest of the screen.</li>
+        </ul>
+      </div>
+      <div class="col">
+        <div class="badge-soft">Trade-offs</div>
+        <ul>
+          <li><b style="color:#fff">A — List rows:</b> most consistent &amp; cheapest; reuses the panel/row look 1:1.</li>
+          <li><b style="color:#fff">B — Branded card:</b> most character; adds an app mark &amp; CTA button; tallest.</li>
+          <li><b style="color:#fff">C — Quiet footer:</b> calmest; great if About should feel like fine print.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</body>
+</html>
