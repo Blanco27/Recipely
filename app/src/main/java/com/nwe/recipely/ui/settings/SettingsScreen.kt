@@ -2,7 +2,6 @@ package com.nwe.recipely.ui.settings
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,6 +49,7 @@ import com.nwe.recipely.R
 import com.nwe.recipely.RecipelyApp
 import com.nwe.recipely.data.ThemeMode
 import com.nwe.recipely.ui.theme.Fraunces
+import com.nwe.recipely.ui.theme.LocalDarkTheme
 import com.nwe.recipely.ui.theme.Paper
 import com.nwe.recipely.ui.theme.PaperDark
 
@@ -126,7 +126,7 @@ private fun SectionLabel(text: String) {
 @Composable
 private fun SettingsPanel(content: @Composable () -> Unit) {
     Surface(
-        color = if (isSystemInDarkTheme()) PaperDark else Paper,
+        color = if (LocalDarkTheme.current) PaperDark else Paper,
         shape = RoundedCornerShape(16.dp),
         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
         modifier = Modifier.fillMaxWidth(),

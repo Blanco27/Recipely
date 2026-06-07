@@ -3,7 +3,6 @@ package com.nwe.recipely.ui.list
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -41,6 +40,7 @@ import com.nwe.recipely.data.RecipeCategory
 import com.nwe.recipely.ui.theme.ForestPrimary
 import com.nwe.recipely.ui.theme.ForestPrimaryDark
 import com.nwe.recipely.ui.theme.Fraunces
+import com.nwe.recipely.ui.theme.LocalDarkTheme
 import com.nwe.recipely.ui.theme.Moss
 import com.nwe.recipely.ui.theme.KcalChipBgDark
 import com.nwe.recipely.ui.theme.KcalChipBgLight
@@ -67,7 +67,7 @@ fun RecipeCard(recipe: Recipe, onClick: () -> Unit, modifier: Modifier = Modifie
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(26.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSystemInDarkTheme()) PaperDark else Paper,
+            containerColor = if (LocalDarkTheme.current) PaperDark else Paper,
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
     ) {
@@ -96,7 +96,7 @@ fun RecipeCard(recipe: Recipe, onClick: () -> Unit, modifier: Modifier = Modifie
                         Icon(
                             Icons.Outlined.Restaurant,
                             contentDescription = null,
-                            tint = if (isSystemInDarkTheme()) ForestPrimaryDark else Moss,
+                            tint = if (LocalDarkTheme.current) ForestPrimaryDark else Moss,
                             modifier = Modifier.size(40.dp),
                         )
                     }
@@ -151,7 +151,7 @@ fun RecipeCard(recipe: Recipe, onClick: () -> Unit, modifier: Modifier = Modifie
  */
 @Composable
 fun MetaChip(emoji: String, text: String, kcal: Boolean = false, modifier: Modifier = Modifier) {
-    val dark = isSystemInDarkTheme()
+    val dark = LocalDarkTheme.current
     val bg = when {
         kcal && dark -> KcalChipBgDark
         kcal -> KcalChipBgLight

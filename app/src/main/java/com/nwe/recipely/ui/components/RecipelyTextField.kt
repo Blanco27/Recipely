@@ -1,6 +1,5 @@
 package com.nwe.recipely.ui.components
 
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
@@ -12,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.nwe.recipely.ui.theme.FieldBorderDark
 import com.nwe.recipely.ui.theme.FieldBorderLight
+import com.nwe.recipely.ui.theme.LocalDarkTheme
 import com.nwe.recipely.ui.theme.Paper
 import com.nwe.recipely.ui.theme.PaperDark
 
@@ -29,7 +29,7 @@ fun RecipelyTextField(
     singleLine: Boolean = false,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
 ) {
-    val dark = isSystemInDarkTheme()
+    val dark = LocalDarkTheme.current
     val paper = if (dark) PaperDark else Paper
     val border = if (dark) FieldBorderDark else FieldBorderLight
     val terra = MaterialTheme.colorScheme.secondary

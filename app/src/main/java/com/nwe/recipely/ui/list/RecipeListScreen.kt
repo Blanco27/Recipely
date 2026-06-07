@@ -2,7 +2,6 @@ package com.nwe.recipely.ui.list
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -48,6 +47,7 @@ import com.nwe.recipely.R
 import com.nwe.recipely.RecipelyApp
 import com.nwe.recipely.data.RecipeCategory
 import com.nwe.recipely.ui.theme.Fraunces
+import com.nwe.recipely.ui.theme.LocalDarkTheme
 import com.nwe.recipely.ui.theme.Paper
 import com.nwe.recipely.ui.theme.PaperDark
 
@@ -210,7 +210,7 @@ private fun FilterRow(
 
 @Composable
 private fun FilterPill(label: String, selected: Boolean, onClick: () -> Unit) {
-    val bg = if (selected) MaterialTheme.colorScheme.primary else if (isSystemInDarkTheme()) PaperDark else Paper
+    val bg = if (selected) MaterialTheme.colorScheme.primary else if (LocalDarkTheme.current) PaperDark else Paper
     val fg = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
     val border = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant
     Surface(

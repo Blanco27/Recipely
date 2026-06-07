@@ -3,7 +3,6 @@ package com.nwe.recipely.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -23,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import com.nwe.recipely.ui.theme.FieldBorderDark
 import com.nwe.recipely.ui.theme.FieldBorderLight
 import com.nwe.recipely.ui.theme.Ink
+import com.nwe.recipely.ui.theme.LocalDarkTheme
 import com.nwe.recipely.ui.theme.Paper
 import com.nwe.recipely.ui.theme.PaperDark
 
@@ -41,7 +41,7 @@ fun BoxedIconButton(
     size: Dp = 42.dp,
     tint: Color = MaterialTheme.colorScheme.secondary,
 ) {
-    val dark = isSystemInDarkTheme()
+    val dark = LocalDarkTheme.current
     val paper = if (dark) PaperDark else Paper
     val border = if (dark) FieldBorderDark else FieldBorderLight
     val shape = if (circle) CircleShape else RoundedCornerShape(13.dp)
@@ -73,7 +73,7 @@ fun FrostedIconButton(
     size: Dp = 40.dp,
     solid: Boolean = false,
 ) {
-    val dark = isSystemInDarkTheme()
+    val dark = LocalDarkTheme.current
     val bg = when {
         solid && dark -> PaperDark.copy(alpha = 0.85f)
         solid -> Paper.copy(alpha = 0.85f)

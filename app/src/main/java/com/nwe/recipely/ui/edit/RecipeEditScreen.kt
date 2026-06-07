@@ -7,7 +7,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -80,6 +79,7 @@ import com.nwe.recipely.ui.components.RecipelyTextField
 import com.nwe.recipely.ui.theme.Forest2
 import com.nwe.recipely.ui.theme.ForestPrimaryDark
 import com.nwe.recipely.ui.theme.Fraunces
+import com.nwe.recipely.ui.theme.LocalDarkTheme
 import com.nwe.recipely.ui.theme.Moss
 import com.nwe.recipely.ui.theme.Paper
 import com.nwe.recipely.ui.theme.PaperDark
@@ -340,7 +340,7 @@ private fun Modifier.dashedBorder(color: Color, cornerRadius: Dp, strokeWidth: D
 private fun AddButton(text: String, onClick: () -> Unit) {
     // Moss + dark Forest2 text read well on the cream background, but Forest2 is unreadable
     // on the dark theme — switch to the light mint primary there (the mockup is light-only).
-    val dark = isSystemInDarkTheme()
+    val dark = LocalDarkTheme.current
     val accent = if (dark) ForestPrimaryDark else Moss
     val textColor = if (dark) ForestPrimaryDark else Forest2
     Row(
@@ -424,7 +424,7 @@ private fun TitleImagePicker(imagePath: String?, onPick: () -> Unit, onRemove: (
                 Icon(
                     Icons.Outlined.AddPhotoAlternate,
                     contentDescription = null,
-                    tint = if (isSystemInDarkTheme()) ForestPrimaryDark else Moss,
+                    tint = if (LocalDarkTheme.current) ForestPrimaryDark else Moss,
                     modifier = Modifier.size(36.dp),
                 )
                 Text(
@@ -448,7 +448,7 @@ private fun StepEditor(
     onAddImage: () -> Unit,
     onRemoveImage: () -> Unit,
 ) {
-    val dark = isSystemInDarkTheme()
+    val dark = LocalDarkTheme.current
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -586,7 +586,7 @@ private fun CategoryPicker(selected: String?, onSelect: (String?) -> Unit) {
 
 @Composable
 private fun CategoryChip(emoji: String, label: String, selected: Boolean, onClick: () -> Unit) {
-    val dark = isSystemInDarkTheme()
+    val dark = LocalDarkTheme.current
     val bg = if (selected) MaterialTheme.colorScheme.primary else (if (dark) PaperDark else Paper)
     val fg = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurface
     val border = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.outlineVariant

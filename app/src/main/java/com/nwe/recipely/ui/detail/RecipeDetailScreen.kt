@@ -2,7 +2,6 @@ package com.nwe.recipely.ui.detail
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.material.icons.filled.Check
@@ -73,6 +72,7 @@ import com.nwe.recipely.ui.components.FrostedIconButton
 import com.nwe.recipely.ui.theme.Fraunces
 import com.nwe.recipely.ui.theme.ForestPrimaryDark
 import com.nwe.recipely.ui.theme.Honey
+import com.nwe.recipely.ui.theme.LocalDarkTheme
 import com.nwe.recipely.ui.theme.Moss
 import com.nwe.recipely.ui.theme.Paper
 import com.nwe.recipely.ui.theme.PaperDark
@@ -264,7 +264,7 @@ private fun Hero(name: String, imageUri: String?, categoryLabel: String?) {
                 Icon(
                     Icons.Outlined.Restaurant,
                     contentDescription = null,
-                    tint = if (isSystemInDarkTheme()) ForestPrimaryDark else Moss,
+                    tint = if (LocalDarkTheme.current) ForestPrimaryDark else Moss,
                     modifier = Modifier.size(72.dp),
                 )
             }
@@ -349,7 +349,7 @@ private fun StatGrid(prepTime: Int?, servings: Int?, calories: Int?, protein: Do
 @Composable
 private fun StatCard(stat: StatData, modifier: Modifier = Modifier) {
     val cs = MaterialTheme.colorScheme
-    val bg = if (stat.accent) cs.primary else (if (isSystemInDarkTheme()) PaperDark else Paper)
+    val bg = if (stat.accent) cs.primary else (if (LocalDarkTheme.current) PaperDark else Paper)
     val valueColor = if (stat.accent) cs.onPrimary else cs.primary
     val labelColor = if (stat.accent) cs.onPrimary.copy(alpha = 0.75f) else cs.onSurfaceVariant
     val borderColor = if (stat.accent) cs.primary else cs.outlineVariant
@@ -415,7 +415,7 @@ private fun NutritionCard(facts: NutritionFacts, servings: Int?) {
         modifier = Modifier.fillMaxWidth().padding(horizontal = SidePadding),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSystemInDarkTheme()) PaperDark else Paper,
+            containerColor = if (LocalDarkTheme.current) PaperDark else Paper,
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
@@ -501,7 +501,7 @@ private fun IngredientsCard(items: List<Pair<Long, String>>, checked: SnapshotSt
         modifier = Modifier.fillMaxWidth().padding(horizontal = SidePadding),
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSystemInDarkTheme()) PaperDark else Paper,
+            containerColor = if (LocalDarkTheme.current) PaperDark else Paper,
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
