@@ -9,11 +9,13 @@ import androidx.navigation.navArgument
 import com.nwe.recipely.ui.detail.RecipeDetailScreen
 import com.nwe.recipely.ui.edit.RecipeEditScreen
 import com.nwe.recipely.ui.list.RecipeListScreen
+import com.nwe.recipely.ui.settings.SettingsScreen
 
 object Routes {
     const val LIST = "list"
     const val DETAIL = "detail/{id}"
     const val EDIT = "edit?id={id}"
+    const val SETTINGS = "settings"
 
     fun detail(id: Long) = "detail/$id"
     fun edit(id: Long? = null) = if (id == null) "edit" else "edit?id=$id"
@@ -29,6 +31,7 @@ fun RecipelyNavHost() {
             RecipeListScreen(
                 onAdd = { navController.navigate(Routes.edit()) },
                 onOpen = { id -> navController.navigate(Routes.detail(id)) },
+                onOpenSettings = { navController.navigate(Routes.SETTINGS) },
             )
         }
 
@@ -57,6 +60,10 @@ fun RecipelyNavHost() {
                 recipeId = id,
                 onClose = { navController.popBackStack() },
             )
+        }
+
+        composable(Routes.SETTINGS) {
+            SettingsScreen(onBack = { navController.popBackStack() })
         }
     }
 }
