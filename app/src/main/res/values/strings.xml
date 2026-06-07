@@ -101,4 +101,23 @@
     <string name="language_system_caption">Follow device language</string>
     <string name="language_english">English</string>
     <string name="language_german">Deutsch</string>
+
+    <!-- Cook mode -->
+    <string name="cook_start">Cook</string>
+    <string name="cook_keep_awake">Screen stays on</string>
+    <string name="cook_step_of">Step %1$d of %2$d</string>
+    <string name="cook_next">Next</string>
+    <string name="cook_previous">Back</string>
+    <string name="cook_finish">Done</string>
+    <string name="cook_close">Close cook mode</string>
+    <string name="cook_timer_idle">Timer · %1$s</string>
+    <string name="cook_timer_pause_hint">tap to pause</string>
+    <string name="cook_done_title">Enjoy your meal!</string>
+    <string name="cook_done_subtitle">%1$s is ready. All %2$d steps done.</string>
+    <string name="cook_done_review">Review steps again</string>
+    <string name="cook_notif_channel_ongoing">Cooking timer</string>
+    <string name="cook_notif_channel_done">Timer finished</string>
+    <string name="cook_notif_running">Step %1$d · %2$s left</string>
+    <string name="cook_notif_done">Step %1$d timer finished</string>
+    <string name="cook_notif_stop">Stop</string>
 </resources>

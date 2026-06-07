@@ -99,4 +99,23 @@
     <string name="language_system_caption">Gerätesprache folgen</string>
     <string name="language_english">English</string>
     <string name="language_german">Deutsch</string>
+
+    <!-- Kochmodus -->
+    <string name="cook_start">Kochen</string>
+    <string name="cook_keep_awake">Display bleibt an</string>
+    <string name="cook_step_of">Schritt %1$d von %2$d</string>
+    <string name="cook_next">Weiter</string>
+    <string name="cook_previous">Zurück</string>
+    <string name="cook_finish">Fertig</string>
+    <string name="cook_close">Kochmodus schließen</string>
+    <string name="cook_timer_idle">Timer · %1$s</string>
+    <string name="cook_timer_pause_hint">tippen zum Pausieren</string>
+    <string name="cook_done_title">Guten Appetit!</string>
+    <string name="cook_done_subtitle">%1$s ist fertig gekocht. Alle %2$d Schritte erledigt.</string>
+    <string name="cook_done_review">Schritte noch mal ansehen</string>
+    <string name="cook_notif_channel_ongoing">Koch-Timer</string>
+    <string name="cook_notif_channel_done">Timer abgelaufen</string>
+    <string name="cook_notif_running">Schritt %1$d · noch %2$s</string>
+    <string name="cook_notif_done">Timer für Schritt %1$d abgelaufen</string>
+    <string name="cook_notif_stop">Stopp</string>
 </resources>
