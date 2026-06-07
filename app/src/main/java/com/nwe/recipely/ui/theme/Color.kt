@@ -91,3 +91,9 @@ val MetaChipBorderDark = Color(0xFF45493D)
 val KcalChipBgDark = Color(0xFF3A2C18)
 val KcalChipFgDark = Color(0xFFE9C07A)
 val KcalChipBorderDark = Color(0xFF5E4316)
+
+// --- Backup action icon tiles (Settings ▸ Data) — match mockup ---
+val ExportIconBgLight = Color(0xFFE9F0E7) // soft green
+val ExportIconBgDark = Color(0xFF22301F)
+val ImportIconBgLight = Color(0xFFFBEEDD) // soft orange
+val ImportIconBgDark = Color(0xFF3A2C18)
