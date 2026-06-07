@@ -18,11 +18,11 @@ import com.nwe.recipely.data.backup.RecipeBackupManager
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import java.io.ByteArrayInputStream
 import java.io.File
 import java.util.zip.ZipEntry
 import java.util.zip.ZipOutputStream
@@ -48,12 +48,13 @@ class RecipeBackupManagerTest {
     @After
     fun tearDown() {
         db.close()
+        File(context.filesDir, "images").deleteRecursively()
     }
 
     @Test
     fun export_then_import_roundTrips_andMerges() = runTest {
-        val titleImg = imageStore.importFromStream(ByteArrayInputStream(byteArrayOf(1, 2, 3)))!!
-        val stepImg = imageStore.importFromStream(ByteArrayInputStream(byteArrayOf(4, 5, 6)))!!
+        val titleImg = imageStore.importFromStream(byteArrayOf(1, 2, 3).inputStream())!!
+        val stepImg = imageStore.importFromStream(byteArrayOf(4, 5, 6).inputStream())!!
         dao.upsertRecipeWithChildren(
             recipe = Recipe(name = "Cake", imageUri = titleImg, calories = 500, category = "DESSERT"),
             ingredients = listOf(Ingredient(recipeId = 0, text = "Flour", position = 0)),
@@ -82,6 +83,25 @@ class RecipeBackupManagerTest {
         assertTrue(File(imported.recipe.imageUri!!).exists())
         assertTrue(File(importedStep.imageUri!!).exists())
         assertTrue(importedStep.imageUri != stepImg)
+    }
+
+    @Test
+    fun import_missingImageEntry_importsRecipeWithNullImage() = runTest {
+        val zip = File(context.cacheDir, "missing-image.zip")
+        ZipOutputStream(zip.outputStream()).use { z ->
+            z.putNextEntry(ZipEntry(JSON_ENTRY))
+            z.write(
+                """{"schemaVersion":1,"exportedAt":"x","recipes":[{"name":"Soup","image":"images/missing.jpg","ingredients":[],"steps":[]}]}"""
+                    .toByteArray(),
+            )
+            z.closeEntry()
+            // intentionally no images/ entry
+        }
+
+        assertEquals(ImportResult.Success(1), manager.import(Uri.fromFile(zip)))
+        val all = dao.getAllRecipesWithDetails()
+        assertEquals(1, all.size)
+        assertNull(all.single().recipe.imageUri) // graceful degradation
     }
 
     @Test

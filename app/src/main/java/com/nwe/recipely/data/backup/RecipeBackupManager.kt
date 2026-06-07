@@ -2,6 +2,7 @@ package com.nwe.recipely.data.backup
 
 import android.content.ContentResolver
 import android.net.Uri
+import android.util.Log
 import com.nwe.recipely.data.ImageStore
 import com.nwe.recipely.data.RecipeDao
 import com.nwe.recipely.data.RecipeWithDetails
@@ -10,8 +11,8 @@ import kotlinx.coroutines.withContext
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
-import java.io.ByteArrayInputStream
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -60,6 +61,7 @@ class RecipeBackupManager(
             }
             ExportResult.Success(recipes.size)
         } catch (e: Exception) {
+            Log.e(TAG, "Export failed", e)
             ExportResult.Error
         }
     }
@@ -67,28 +69,50 @@ class RecipeBackupManager(
     override suspend fun import(source: Uri): ImportResult = withContext(Dispatchers.IO) {
         val copied = mutableListOf<String>()
         try {
-            val contents = readZip(source) ?: return@withContext ImportResult.Error
-            val jsonText = contents.json ?: return@withContext ImportResult.Invalid
-            val file = try {
-                json.decodeFromString<BackupFile>(jsonText)
-            } catch (e: Exception) {
-                return@withContext ImportResult.Invalid
-            }
-            if (file.schemaVersion != SCHEMA_VERSION) return@withContext ImportResult.Invalid
-
+            val input = contentResolver.openInputStream(source) ?: return@withContext ImportResult.Error
+            var jsonText: String? = null
             val imagePaths = HashMap<String, String>()
-            for ((entryName, bytes) in contents.images) {
-                val path = imageStore.importFromStream(ByteArrayInputStream(bytes)) ?: continue
-                imagePaths[entryName] = path
-                copied.add(path)
+            // Single streaming pass: copy each image entry straight to internal storage (never
+            // buffering whole images in memory) and capture the JSON manifest.
+            ZipInputStream(BufferedInputStream(input)).use { zip ->
+                var entry: ZipEntry? = zip.nextEntry
+                while (entry != null) {
+                    val name = entry.name
+                    if (name == JSON_ENTRY) {
+                        jsonText = zip.readBytes().toString(Charsets.UTF_8)
+                    } else if (name.startsWith(IMAGES_DIR)) {
+                        imageStore.importFromStream(zip)?.let { path ->
+                            imagePaths[name] = path
+                            copied.add(path)
+                        }
+                    }
+                    zip.closeEntry()
+                    entry = zip.nextEntry
+                }
             }
+
+            val text = jsonText ?: return@withContext invalid(copied)
+            val file = try {
+                json.decodeFromString<BackupFile>(text)
+            } catch (e: Exception) {
+                return@withContext invalid(copied)
+            }
+            if (file.schemaVersion != SCHEMA_VERSION) return@withContext invalid(copied)
+
             val toInsert = file.recipes.map { it.toRecipeWithDetails(imagePaths) }
             dao.insertImported(toInsert)
             ImportResult.Success(toInsert.size)
         } catch (e: Exception) {
+            Log.e(TAG, "Import failed", e)
             copied.forEach(imageStore::delete)
             ImportResult.Error
         }
+    }
+
+    /** Deletes images already copied this run, then returns [ImportResult.Invalid] (orphan cleanup). */
+    private fun invalid(copied: List<String>): ImportResult {
+        copied.forEach(imageStore::delete)
+        return ImportResult.Invalid
     }
 
     /** Writes every referenced image file into the ZIP under images/, returning absolute-path -> entry-name. */
@@ -116,27 +140,13 @@ class RecipeBackupManager(
         return entries
     }
 
-    private class ZipContents(val json: String?, val images: Map<String, ByteArray>)
-
-    private fun readZip(source: Uri): ZipContents? {
-        val input = contentResolver.openInputStream(source) ?: return null
-        var jsonText: String? = null
-        val images = HashMap<String, ByteArray>()
-        ZipInputStream(input).use { zip ->
-            var entry: ZipEntry? = zip.nextEntry
-            while (entry != null) {
-                val bytes = zip.readBytes()
-                if (entry.name == JSON_ENTRY) jsonText = String(bytes) else images[entry.name] = bytes
-                zip.closeEntry()
-                entry = zip.nextEntry
-            }
-        }
-        return ZipContents(jsonText, images)
-    }
-
     private fun nowIso(): String {
         val fmt = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.US)
         fmt.timeZone = TimeZone.getTimeZone("UTC")
         return fmt.format(Date())
+    }
+
+    private companion object {
+        const val TAG = "RecipeBackupManager"
     }
 }
