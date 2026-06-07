@@ -18,7 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -137,7 +137,7 @@ fun RecipeDetailScreen(
                 shape = RoundedCornerShape(20.dp),
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
-                    .systemBarsPadding()
+                    .navigationBarsPadding()
                     .padding(20.dp),
             )
         }
@@ -257,7 +257,9 @@ private fun DetailSheet(
 
         // 26dp recovers the sheet's (-26).dp graphical offset (which doesn't shrink the
         // measured height), + 24dp design breathing room at the bottom of the scroll.
-        Spacer(Modifier.height(50.dp))
+        // Extra bottom room when the Cook FAB is shown (steps present) so the last
+        // step card doesn't scroll behind it; otherwise the original 50dp.
+        Spacer(Modifier.height(if (steps.isNotEmpty()) 110.dp else 50.dp))
     }
 }
 
