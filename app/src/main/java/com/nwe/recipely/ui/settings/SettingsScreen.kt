@@ -106,6 +106,10 @@ fun SettingsScreen(onBack: () -> Unit) {
                     it.applyNow()
                 },
             )
+
+            Spacer(Modifier.weight(1f))
+
+            AboutFooter()
         }
     }
 }
