@@ -32,8 +32,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,7 +48,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.runtime.DisposableEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -261,7 +262,7 @@ private fun StepCard(step: Step, number: Int, total: Int) {
                     .clip(RoundedCornerShape(18.dp)),
             )
         }
-        val seconds = step.text.let { parseTimerSeconds(it) }
+        val seconds = remember(step.text) { parseTimerSeconds(step.text) }
         if (seconds != null) {
             TimerPill(stepNumber = number, totalSeconds = seconds, modifier = Modifier.padding(top = 18.dp))
         }
@@ -317,8 +318,13 @@ private fun TimerPill(stepNumber: Int, totalSeconds: Int, modifier: Modifier = M
                 color = fg, fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleSmall,
             )
-            if (running) {
-                Text(stringResource(R.string.cook_timer_pause_hint), color = fg.copy(alpha = 0.8f),
+            val hint = when {
+                running -> stringResource(R.string.cook_timer_pause_hint)
+                mine != null -> stringResource(R.string.cook_timer_resume_hint)
+                else -> null
+            }
+            if (hint != null) {
+                Text(hint, color = fg.copy(alpha = 0.8f),
                     style = MaterialTheme.typography.labelSmall)
             }
         }
@@ -349,6 +355,7 @@ private fun NavBar(isFirst: Boolean, isLast: Boolean, onPrev: () -> Unit, onNext
             )
         }
         val nextBg = if (isLast) Moss else MaterialTheme.colorScheme.secondary
+        val nextFg = if (isLast) Color.White else MaterialTheme.colorScheme.onSecondary
         Box(
             Modifier
                 .weight(1f)
@@ -360,7 +367,7 @@ private fun NavBar(isFirst: Boolean, isLast: Boolean, onPrev: () -> Unit, onNext
         ) {
             Text(
                 text = if (isLast) stringResource(R.string.cook_finish) else stringResource(R.string.cook_next) + " ›",
-                color = Color.White,
+                color = nextFg,
                 fontWeight = FontWeight.Bold,
                 style = MaterialTheme.typography.titleMedium,
             )
@@ -408,7 +415,7 @@ private fun CompletionScreen(recipeName: String, stepCount: Int, onDone: () -> U
                 .clickable(onClick = onDone),
             contentAlignment = Alignment.Center,
         ) {
-            Text(stringResource(R.string.cook_finish), color = Color.White, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.cook_finish), color = MaterialTheme.colorScheme.onSecondary, fontWeight = FontWeight.Bold)
         }
         Box(
             Modifier

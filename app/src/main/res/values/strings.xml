@@ -112,6 +112,7 @@
     <string name="cook_close">Close cook mode</string>
     <string name="cook_timer_idle">Timer · %1$s</string>
     <string name="cook_timer_pause_hint">tap to pause</string>
+    <string name="cook_timer_resume_hint">tap to resume</string>
     <string name="cook_done_title">Enjoy your meal!</string>
     <string name="cook_done_subtitle">%1$s is ready. All %2$d steps done.</string>
     <string name="cook_done_review">Review steps again</string>

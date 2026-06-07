@@ -110,6 +110,7 @@
     <string name="cook_close">Kochmodus schließen</string>
     <string name="cook_timer_idle">Timer · %1$s</string>
     <string name="cook_timer_pause_hint">tippen zum Pausieren</string>
+    <string name="cook_timer_resume_hint">tippen zum Fortsetzen</string>
     <string name="cook_done_title">Guten Appetit!</string>
     <string name="cook_done_subtitle">%1$s ist fertig gekocht. Alle %2$d Schritte erledigt.</string>
     <string name="cook_done_review">Schritte noch mal ansehen</string>
