@@ -8,6 +8,8 @@ import com.nwe.recipely.data.RecipeDatabase
 import com.nwe.recipely.data.RecipeRepository
 import com.nwe.recipely.data.RoomRecipeRepository
 import com.nwe.recipely.data.SettingsRepository
+import com.nwe.recipely.data.backup.BackupManager
+import com.nwe.recipely.data.backup.RecipeBackupManager
 
 class AppContainer(context: Context) {
 
@@ -22,4 +24,7 @@ class AppContainer(context: Context) {
     val repository: RecipeRepository = RoomRecipeRepository(database.recipeDao(), imageStore)
 
     val settingsRepository: SettingsRepository = DataStoreSettingsRepository(context)
+
+    val backupManager: BackupManager =
+        RecipeBackupManager(database.recipeDao(), imageStore, context.contentResolver)
 }

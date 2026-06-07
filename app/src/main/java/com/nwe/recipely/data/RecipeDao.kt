@@ -17,6 +17,10 @@ interface RecipeDao {
     @Query("SELECT * FROM recipes WHERE id = :id")
     fun observeRecipe(id: Long): Flow<RecipeWithDetails?>
 
+    @Transaction
+    @Query("SELECT * FROM recipes")
+    suspend fun getAllRecipesWithDetails(): List<RecipeWithDetails>
+
     @Insert
     suspend fun insertRecipe(recipe: Recipe): Long
 
@@ -37,6 +41,14 @@ interface RecipeDao {
 
     @Query("DELETE FROM recipes WHERE id = :id")
     suspend fun deleteRecipe(id: Long)
+
+    /** Inserts each imported recipe as a brand-new row (merge import). All-or-nothing. */
+    @Transaction
+    suspend fun insertImported(recipes: List<RecipeWithDetails>) {
+        recipes.forEach {
+            upsertRecipeWithChildren(it.recipe.copy(id = 0), it.ingredients, it.steps)
+        }
+    }
 
     /**
      * Inserts a new recipe (id == 0) or updates an existing one, then replaces all of its
