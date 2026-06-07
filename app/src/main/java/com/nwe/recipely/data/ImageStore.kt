@@ -4,6 +4,7 @@ import android.content.Context
 import android.net.Uri
 import androidx.core.content.FileProvider
 import java.io.File
+import java.io.InputStream
 
 /**
  * Manages recipe images inside app-internal storage (filesDir/images).
@@ -23,6 +24,15 @@ class ImageStore(private val context: Context) {
             requireNotNull(input)
             target.outputStream().use { output -> input.copyTo(output) }
         }
+        target.absolutePath
+    } catch (e: Exception) {
+        null
+    }
+
+    /** Copies an arbitrary [input] stream (e.g. a ZIP entry) into internal storage. Returns the new path, or null on failure. */
+    fun importFromStream(input: InputStream): String? = try {
+        val target = newImageFile()
+        target.outputStream().use { output -> input.copyTo(output) }
         target.absolutePath
     } catch (e: Exception) {
         null
