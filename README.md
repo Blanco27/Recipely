@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="docs/icon.png" width="116" alt="Recipely app icon — crossed fork & spoon on terracotta" />
+</p>
+
 # Recipely 🍃
 
 A lean, native **Android app** for creating, viewing, editing and deleting cooking recipes — fully **offline**, with a warm, editorial Material 3 UI (cream, forest green & terracotta, serif display headings).

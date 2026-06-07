@@ -3,13 +3,14 @@ package com.nwe.recipely.ui.settings
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,7 +24,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -34,8 +34,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import com.nwe.recipely.R
 import com.nwe.recipely.ui.theme.Fraunces
-import com.nwe.recipely.ui.theme.ForestPrimary
-import com.nwe.recipely.ui.theme.Moss
 
 private const val REPO_URL = "https://github.com/Blanco27/Recipely"
 
@@ -59,11 +57,21 @@ fun AboutFooter(modifier: Modifier = Modifier) {
         Box(
             modifier = Modifier
                 .size(44.dp)
-                .clip(RoundedCornerShape(14.dp))
-                .background(Brush.linearGradient(listOf(Moss, ForestPrimary))),
+                .clip(RoundedCornerShape(14.dp)),
             contentAlignment = Alignment.Center,
         ) {
-            Text(text = "🍲", fontSize = 22.sp)
+            // Real launcher icon: terracotta background + crossed-cutlery foreground,
+            // reused from the adaptive-icon drawables so it stays in sync with the app icon.
+            Image(
+                painter = painterResource(R.drawable.ic_launcher_background),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+            )
+            Image(
+                painter = painterResource(R.drawable.ic_launcher_foreground),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+            )
         }
 
         Row(verticalAlignment = Alignment.Bottom) {

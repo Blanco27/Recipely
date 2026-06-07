@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipely — App-Icon Auswahl (10 Entwürfe)</title>
+<style>
+  :root{
+    --forest:#1E3A2B; --forest2:#2C5238; --moss:#4F7A4A;
+    --terra:#C75D3C; --terra-soft:#E08A63; --honey:#E2A03C;
+    --cream:#F6F0E6; --cream2:#FBF7EF; --paper:#FFFDF9;
+    --ink:#21201B; --ink-soft:#6B655A; --line:#E6DECF;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--cream); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.5;
+  }
+  header{
+    padding:40px 32px 24px; max-width:1180px; margin:0 auto;
+  }
+  h1{margin:0 0 6px; font-size:28px; letter-spacing:-.5px}
+  header p{margin:0; color:var(--ink-soft); max-width:680px}
+  .legend{
+    display:flex; gap:18px; flex-wrap:wrap; margin-top:18px;
+    font-size:13px; color:var(--ink-soft);
+  }
+  .legend span{display:inline-flex; align-items:center; gap:7px}
+  .swatch{width:14px; height:14px; border-radius:4px; border:1px solid rgba(0,0,0,.08)}
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+    gap:22px; max-width:1180px; margin:8px auto 64px; padding:0 32px;
+  }
+  .card{
+    background:var(--paper); border:1px solid var(--line); border-radius:20px;
+    padding:20px; display:flex; flex-direction:column; gap:14px;
+    box-shadow:0 1px 2px rgba(33,32,27,.04);
+  }
+  .previews{display:flex; align-items:center; gap:16px}
+  .squircle{
+    width:104px; height:104px; border-radius:24%; overflow:hidden; flex:none;
+    box-shadow:0 6px 16px rgba(33,32,27,.18);
+  }
+  .circle{
+    width:60px; height:60px; border-radius:50%; overflow:hidden; flex:none;
+    box-shadow:0 3px 8px rgba(33,32,27,.16);
+  }
+  .squircle svg,.circle svg{display:block; width:100%; height:100%}
+  .meta{display:flex; flex-direction:column; gap:6px}
+  .num{
+    font-size:12px; font-weight:700; color:var(--moss); letter-spacing:.5px;
+  }
+  .name{font-size:17px; font-weight:600; margin:0}
+  .desc{font-size:13px; color:var(--ink-soft); margin:0}
+  .tag{
+    align-self:flex-start; font-size:11px; font-weight:600; letter-spacing:.3px;
+    padding:3px 9px; border-radius:999px; border:1px solid var(--line);
+    background:var(--cream); color:var(--forest2);
+  }
+  footer{
+    max-width:1180px; margin:0 auto 60px; padding:0 32px;
+    color:var(--ink-soft); font-size:13px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <h1>Recipely — App-Icon · 10 Entwürfe</h1>
+  <p>Jeder Entwurf ist als Android <strong>Adaptive Icon</strong> angelegt (voller Hintergrund + zentriertes Motiv im Sicherheitsbereich). Links die Squircle-Maske (Pixel/Samsung), rechts der Kreis (Pixel-Launcher rund). Sag mir einfach die Nummer, die dir gefällt — dann setze ich sie als echte Icon-Ressourcen um.</p>
+  <div class="legend">
+    <span><span class="swatch" style="background:#1E3A2B"></span>Waldgrün</span>
+    <span><span class="swatch" style="background:#4F7A4A"></span>Moos</span>
+    <span><span class="swatch" style="background:#C75D3C"></span>Terrakotta</span>
+    <span><span class="swatch" style="background:#E2A03C"></span>Honig</span>
+    <span><span class="swatch" style="background:#F6F0E6"></span>Creme</span>
+  </div>
+</header>
+
+<div class="grid">
+
+  <!-- 1 · Monogramm R, serif -->
+  <div class="card">
+    <div class="previews">
+      <div class="squircle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="bg1" cx="38%" cy="30%" r="85%">
+            <stop offset="0" stop-color="#2C5238"/><stop offset="1" stop-color="#1E3A2B"/></radialGradient></defs>
+          <rect width="108" height="108" fill="url(#bg1)"/>
+          <path d="M40 80 Q54 88 68 80" stroke="#E2A03C" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+          <text x="54" y="72" text-anchor="middle" font-family="Georgia,'Times New Roman',serif" font-size="58" font-weight="700" fill="#F6F0E6">R</text>
+        </svg>
+      </div>
+      <div class="circle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#1E3A2B"/>
+          <text x="54" y="72" text-anchor="middle" font-family="Georgia,serif" font-size="58" font-weight="700" fill="#F6F0E6">R</text>
+        </svg>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="tag">Monogramm</span>
+      <span class="num">01</span>
+      <p class="name">Serif-Monogramm</p>
+      <p class="desc">Klassisches „R“ in Serifenschrift auf Waldgrün, mit Honig-Teller-Schwung. Edel & kulinarisch.</p>
+    </div>
+  </div>
+
+  <!-- 2 · Monogramm R, geometric disc -->
+  <div class="card">
+    <div class="previews">
+      <div class="squircle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#F6F0E6"/>
+          <circle cx="54" cy="54" r="34" fill="#4F7A4A"/>
+          <circle cx="78" cy="32" r="6.5" fill="#C75D3C"/>
+          <text x="54" y="71" text-anchor="middle" font-family="'Segoe UI',Roboto,Arial,sans-serif" font-size="46" font-weight="800" fill="#F6F0E6">R</text>
+        </svg>
+      </div>
+      <div class="circle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#F6F0E6"/>
+          <circle cx="54" cy="54" r="40" fill="#4F7A4A"/>
+          <text x="54" y="72" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="48" font-weight="800" fill="#F6F0E6">R</text>
+        </svg>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="tag">Monogramm</span>
+      <span class="num">02</span>
+      <p class="name">Disc-Monogramm</p>
+      <p class="desc">Fettes geometrisches „R“ auf Moos-Scheibe, Creme-Hintergrund, Terrakotta-Punkt als Akzent. Modern & klar.</p>
+    </div>
+  </div>
+
+  <!-- 3 · Chef toque -->
+  <div class="card">
+    <div class="previews">
+      <div class="squircle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="bg3" cx="50%" cy="28%" r="90%">
+            <stop offset="0" stop-color="#FBF7EF"/><stop offset="1" stop-color="#F0E7D6"/></radialGradient></defs>
+          <rect width="108" height="108" fill="url(#bg3)"/>
+          <g fill="#1E3A2B">
+            <rect x="37" y="68" width="34" height="16" rx="5"/>
+            <path d="M38 70 C30 70 28 58 36 54 C34 44 44 38 50 44 C52 36 64 38 64 47 C74 44 80 56 72 62 C76 66 72 72 66 70 Z"/>
+          </g>
+          <path d="M44 74 L44 80 M54 74 L54 80 M64 74 L64 80" stroke="#FBF7EF" stroke-width="2.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="circle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#F0E7D6"/>
+          <g fill="#1E3A2B">
+            <rect x="37" y="68" width="34" height="16" rx="5"/>
+            <path d="M38 70 C30 70 28 58 36 54 C34 44 44 38 50 44 C52 36 64 38 64 47 C74 44 80 56 72 62 C76 66 72 72 66 70 Z"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="tag">Koch</span>
+      <span class="num">03</span>
+      <p class="name">Kochmütze</p>
+      <p class="desc">Ikonische Toque in Waldgrün auf warmem Creme. Sofort als „Kochen“ lesbar, freundlich & vertraut.</p>
+    </div>
+  </div>
+
+  <!-- 4 · Pot with steam -->
+  <div class="card">
+    <div class="previews">
+      <div class="squircle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#1E3A2B"/>
+          <g fill="none" stroke="#F6F0E6" stroke-width="3" stroke-linecap="round">
+            <path d="M47 44 q-5 -6 0 -12 q5 -6 0 -12"/>
+            <path d="M54 44 q-5 -6 0 -12 q5 -6 0 -12"/>
+            <path d="M61 44 q-5 -6 0 -12 q5 -6 0 -12"/>
+          </g>
+          <rect x="32" y="50" width="44" height="8" rx="4" fill="#E2A03C"/>
+          <circle cx="54" cy="48" r="3.2" fill="#E2A03C"/>
+          <rect x="26" y="62" width="9" height="8" rx="4" fill="#C75D3C"/>
+          <rect x="73" y="62" width="9" height="8" rx="4" fill="#C75D3C"/>
+          <rect x="35" y="58" width="38" height="26" rx="5" fill="#C75D3C"/>
+        </svg>
+      </div>
+      <div class="circle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#1E3A2B"/>
+          <rect x="32" y="50" width="44" height="8" rx="4" fill="#E2A03C"/>
+          <rect x="26" y="62" width="9" height="8" rx="4" fill="#C75D3C"/>
+          <rect x="73" y="62" width="9" height="8" rx="4" fill="#C75D3C"/>
+          <rect x="35" y="58" width="38" height="26" rx="5" fill="#C75D3C"/>
+        </svg>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="tag">Koch</span>
+      <span class="num">04</span>
+      <p class="name">Kochtopf</p>
+      <p class="desc">Terrakotta-Topf mit Honig-Deckel und aufsteigendem Dampf auf Waldgrün. Warm, appetitlich, eindeutig.</p>
+    </div>
+  </div>
+
+  <!-- 5 · Fork & spoon crossed -->
+  <div class="card">
+    <div class="previews">
+      <div class="squircle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="bg5" cx="40%" cy="32%" r="85%">
+            <stop offset="0" stop-color="#E08A63"/><stop offset="1" stop-color="#C75D3C"/></radialGradient></defs>
+          <rect width="108" height="108" fill="url(#bg5)"/>
+          <g fill="#FBF7EF">
+            <g transform="rotate(20 54 54)">
+              <rect x="52.3" y="40" width="3.4" height="42" rx="1.7"/>
+              <ellipse cx="54" cy="36" rx="7.5" ry="10.5"/>
+            </g>
+            <g transform="rotate(-20 54 54)">
+              <rect x="52.3" y="40" width="3.4" height="42" rx="1.7"/>
+              <rect x="48.5" y="32" width="11" height="11" rx="2"/>
+              <rect x="49" y="24" width="2.6" height="11" rx="1.3"/>
+              <rect x="52.7" y="24" width="2.6" height="11" rx="1.3"/>
+              <rect x="56.4" y="24" width="2.6" height="11" rx="1.3"/>
+            </g>
+          </g>
+        </svg>
+      </div>
+      <div class="circle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#C75D3C"/>
+          <g fill="#FBF7EF">
+            <g transform="rotate(20 54 54)"><rect x="52.3" y="38" width="3.4" height="44" rx="1.7"/><ellipse cx="54" cy="34" rx="7.5" ry="10.5"/></g>
+            <g transform="rotate(-20 54 54)"><rect x="52.3" y="38" width="3.4" height="44" rx="1.7"/><rect x="48.5" y="30" width="11" height="11" rx="2"/><rect x="49" y="22" width="2.6" height="11" rx="1.3"/><rect x="52.7" y="22" width="2.6" height="11" rx="1.3"/><rect x="56.4" y="22" width="2.6" height="11" rx="1.3"/></g>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="tag">Koch</span>
+      <span class="num">05</span>
+      <p class="name">Gabel & Löffel</p>
+      <p class="desc">Gekreuztes Besteck in Creme auf Terrakotta-Verlauf. Universelles Esskultur-Symbol, kräftig & einprägsam.</p>
+    </div>
+  </div>
+
+  <!-- 6 · Whisk -->
+  <div class="card">
+    <div class="previews">
+      <div class="squircle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#F6F0E6"/>
+          <g fill="none" stroke="#1E3A2B" stroke-width="2.6" stroke-linecap="round">
+            <path d="M54 58 C40 50 40 32 54 26"/>
+            <path d="M54 58 C68 50 68 32 54 26"/>
+            <path d="M54 58 C48 50 48 33 54 26"/>
+            <path d="M54 58 C60 50 60 33 54 26"/>
+          </g>
+          <ellipse cx="54" cy="26" rx="6" ry="3" fill="#1E3A2B"/>
+          <rect x="51.5" y="58" width="5" height="6" rx="1.5" fill="#1E3A2B"/>
+          <rect x="51" y="63" width="6" height="22" rx="3" fill="#E2A03C"/>
+        </svg>
+      </div>
+      <div class="circle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#F6F0E6"/>
+          <g fill="none" stroke="#1E3A2B" stroke-width="2.6" stroke-linecap="round">
+            <path d="M54 58 C40 50 40 32 54 26"/><path d="M54 58 C68 50 68 32 54 26"/>
+            <path d="M54 58 C48 50 48 33 54 26"/><path d="M54 58 C60 50 60 33 54 26"/>
+          </g>
+          <ellipse cx="54" cy="26" rx="6" ry="3" fill="#1E3A2B"/>
+          <rect x="51" y="60" width="6" height="24" rx="3" fill="#E2A03C"/>
+        </svg>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="tag">Koch</span>
+      <span class="num">06</span>
+      <p class="name">Schneebesen</p>
+      <p class="desc">Filigraner Schneebesen, Waldgrün-Draht mit Honig-Griff auf Creme. Backen & Zubereiten, leicht & elegant.</p>
+    </div>
+  </div>
+
+  <!-- 7 · Leaf-spoon hybrid -->
+  <div class="card">
+    <div class="previews">
+      <div class="squircle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="bg7" cx="42%" cy="30%" r="85%">
+            <stop offset="0" stop-color="#2C5238"/><stop offset="1" stop-color="#1E3A2B"/></radialGradient></defs>
+          <rect width="108" height="108" fill="url(#bg7)"/>
+          <rect x="51.5" y="52" width="5" height="32" rx="2.5" fill="#E2A03C"/>
+          <path d="M54 24 C68 32 68 50 54 58 C40 50 40 32 54 24 Z" fill="#4F7A4A"/>
+          <path d="M54 28 L54 56" stroke="#F6F0E6" stroke-width="2" stroke-linecap="round"/>
+          <path d="M54 38 L62 33 M54 44 L46 39 M54 48 L61 44" stroke="#F6F0E6" stroke-width="1.6" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="circle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#1E3A2B"/>
+          <rect x="51.5" y="54" width="5" height="30" rx="2.5" fill="#E2A03C"/>
+          <path d="M54 26 C68 34 68 52 54 60 C40 52 40 34 54 26 Z" fill="#4F7A4A"/>
+          <path d="M54 30 L54 58" stroke="#F6F0E6" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="tag">Frische</span>
+      <span class="num">07</span>
+      <p class="name">Blatt-Löffel</p>
+      <p class="desc">Löffel, dessen Laffe ein Blatt ist — Honig-Griff, Moos-Blatt mit Creme-Adern. Frisch kochen, doppeldeutig clever.</p>
+    </div>
+  </div>
+
+  <!-- 8 · Herb leaf -->
+  <div class="card">
+    <div class="previews">
+      <div class="squircle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#F6F0E6"/>
+          <path d="M46 84 C44 72 46 64 54 58" stroke="#C75D3C" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+          <path d="M54 58 C36 54 34 32 58 22 C72 38 72 54 54 58 Z" fill="#4F7A4A"/>
+          <path d="M55 56 L60 27" stroke="#1E3A2B" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M55 48 L46 44 M56 41 L48 35 M57 35 L51 29 M54 50 L62 47 M56 42 L64 39" stroke="#1E3A2B" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="circle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#F6F0E6"/>
+          <path d="M48 84 C46 72 48 64 56 58" stroke="#C75D3C" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+          <path d="M56 58 C38 54 36 32 60 22 C74 38 74 54 56 58 Z" fill="#4F7A4A"/>
+          <path d="M57 56 L62 27" stroke="#1E3A2B" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="tag">Frische</span>
+      <span class="num">08</span>
+      <p class="name">Kräuterblatt</p>
+      <p class="desc">Einzelnes Blatt mit Adern und Terrakotta-Stiel auf Creme. Natürlich, frisch, betont „selbst & gesund kochen“.</p>
+    </div>
+  </div>
+
+  <!-- 9 · Plate from above -->
+  <div class="card">
+    <div class="previews">
+      <div class="squircle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#2C5238"/>
+          <g fill="#E2A03C">
+            <rect x="27" y="38" width="3.4" height="34" rx="1.7"/>
+            <rect x="25" y="36" width="2" height="9" rx="1"/><rect x="28.2" y="36" width="2" height="9" rx="1"/><rect x="31.4" y="36" width="2" height="9" rx="1"/>
+          </g>
+          <g fill="#E2A03C">
+            <rect x="78" y="38" width="3.4" height="34" rx="1.7"/>
+            <path d="M77 36 q3 0 3 8 l-3 0 Z"/>
+          </g>
+          <circle cx="54" cy="54" r="23" fill="#F6F0E6"/>
+          <circle cx="54" cy="54" r="14" fill="none" stroke="#E6DECF" stroke-width="2.4"/>
+        </svg>
+      </div>
+      <div class="circle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#2C5238"/>
+          <circle cx="54" cy="54" r="26" fill="#F6F0E6"/>
+          <circle cx="54" cy="54" r="16" fill="none" stroke="#E6DECF" stroke-width="2.6"/>
+          <rect x="30" y="42" width="3.2" height="28" rx="1.6" fill="#E2A03C"/>
+          <rect x="75" y="42" width="3.2" height="28" rx="1.6" fill="#E2A03C"/>
+        </svg>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="tag">Abstrakt</span>
+      <span class="num">09</span>
+      <p class="name">Gedeck von oben</p>
+      <p class="desc">Teller in Aufsicht, flankiert von Gabel & Messer in Honig auf Tannengrün. Ruhig, premium, „Mahlzeit“.</p>
+    </div>
+  </div>
+
+  <!-- 10 · Simmer roundel -->
+  <div class="card">
+    <div class="previews">
+      <div class="squircle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <defs><radialGradient id="bg10" cx="50%" cy="36%" r="80%">
+            <stop offset="0" stop-color="#FBF7EF"/><stop offset="1" stop-color="#EFE6D4"/></radialGradient></defs>
+          <rect width="108" height="108" fill="url(#bg10)"/>
+          <circle cx="54" cy="60" r="22" fill="#1E3A2B"/>
+          <circle cx="44" cy="56" r="3" fill="#E2A03C"/>
+          <circle cx="62" cy="63" r="2.4" fill="#C75D3C"/>
+          <circle cx="55" cy="66" r="2" fill="#F6F0E6" opacity=".5"/>
+          <g fill="none" stroke="#4F7A4A" stroke-width="3.4" stroke-linecap="round">
+            <path d="M44 32 q-5 -6 0 -12 q5 -6 0 -12"/>
+            <path d="M54 30 q-5 -6 0 -12 q5 -6 0 -12"/>
+            <path d="M64 32 q-5 -6 0 -12 q5 -6 0 -12"/>
+          </g>
+        </svg>
+      </div>
+      <div class="circle">
+        <svg viewBox="0 0 108 108" xmlns="http://www.w3.org/2000/svg">
+          <rect width="108" height="108" fill="#EFE6D4"/>
+          <circle cx="54" cy="60" r="24" fill="#1E3A2B"/>
+          <g fill="none" stroke="#4F7A4A" stroke-width="3.6" stroke-linecap="round">
+            <path d="M44 32 q-5 -6 0 -12 q5 -6 0 -12"/>
+            <path d="M54 30 q-5 -6 0 -12 q5 -6 0 -12"/>
+            <path d="M64 32 q-5 -6 0 -12 q5 -6 0 -12"/>
+          </g>
+        </svg>
+      </div>
+    </div>
+    <div class="meta">
+      <span class="tag">Abstrakt</span>
+      <span class="num">10</span>
+      <p class="name">Köchel-Roundel</p>
+      <p class="desc">Topf-Roundel mit aufsteigendem Dampf & Bläschen, abstrakt-geometrisch. Verspielt, „etwas köchelt“.</p>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  Hinweis: Final werden Hintergrund &amp; Motiv als getrennte Vektor-Drawables (<code>ic_launcher_background</code> / <code>ic_launcher_foreground</code>) plus eine Monochrom-Ebene für Android-13-Themed-Icons angelegt. Sag mir die Nummer — dann baue ich genau dieses Icon in alle benötigten Dichten ein.
+</footer>
+
+</body>
+</html>
