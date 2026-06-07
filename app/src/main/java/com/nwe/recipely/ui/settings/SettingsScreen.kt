@@ -47,6 +47,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -399,7 +400,9 @@ private fun BackupOverlay(label: String) {
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.Black.copy(alpha = 0.32f)),
+            .background(Color.Black.copy(alpha = 0.32f))
+            // Consume taps so the Export/Import rows behind the scrim can't start a second operation.
+            .pointerInput(Unit) {},
         contentAlignment = Alignment.Center,
     ) {
         Surface(
