@@ -7,6 +7,7 @@ import com.nwe.recipely.data.Ingredient
 import com.nwe.recipely.data.Recipe
 import com.nwe.recipely.data.RecipeDao
 import com.nwe.recipely.data.RecipeDatabase
+import com.nwe.recipely.data.RecipeWithDetails
 import com.nwe.recipely.data.Step
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
@@ -111,5 +112,55 @@ class RecipeDaoTest {
         ingredientCount.use { c -> c.moveToFirst(); assertEquals(0, c.getInt(0)) }
         val stepCount = db.query("SELECT COUNT(*) FROM steps", null)
         stepCount.use { c -> c.moveToFirst(); assertEquals(0, c.getInt(0)) }
+    }
+
+    @Test
+    fun getAllRecipesWithDetails_returnsAllWithChildren() = runTest {
+        dao.upsertRecipeWithChildren(
+            recipe = Recipe(name = "A"),
+            ingredients = listOf(Ingredient(recipeId = 0, text = "a1", position = 0)),
+            steps = listOf(Step(recipeId = 0, text = "s1", position = 0)),
+        )
+        dao.upsertRecipeWithChildren(
+            recipe = Recipe(name = "B"),
+            ingredients = emptyList(),
+            steps = emptyList(),
+        )
+
+        val all = dao.getAllRecipesWithDetails()
+
+        assertEquals(2, all.size)
+        val a = all.first { it.recipe.name == "A" }
+        assertEquals(1, a.ingredients.size)
+        assertEquals(1, a.steps.size)
+    }
+
+    @Test
+    fun insertImported_addsRowsWithoutTouchingExisting() = runTest {
+        val existing = dao.upsertRecipeWithChildren(
+            recipe = Recipe(name = "Existing"),
+            ingredients = emptyList(),
+            steps = emptyList(),
+        )
+
+        dao.insertImported(
+            listOf(
+                RecipeWithDetails(
+                    recipe = Recipe(id = 999, name = "Imported", category = "DESSERT"),
+                    ingredients = listOf(Ingredient(recipeId = 999, text = "Sugar", position = 0)),
+                    steps = listOf(Step(recipeId = 999, text = "Whisk", position = 0)),
+                ),
+            ),
+        )
+
+        val all = dao.getAllRecipesWithDetails()
+        assertEquals(2, all.size)
+        // existing untouched
+        assertEquals("Existing", dao.observeRecipe(existing).first()!!.recipe.name)
+        // imported got a fresh id and kept its children
+        val imported = all.first { it.recipe.name == "Imported" }
+        assert(imported.recipe.id != 999L)
+        assertEquals("Sugar", imported.ingredients.single().text)
+        assertEquals("DESSERT", imported.recipe.category)
     }
 }
