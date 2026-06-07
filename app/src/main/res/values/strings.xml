@@ -102,6 +102,12 @@
     <string name="language_english">English</string>
     <string name="language_german">Deutsch</string>
 
+    <!-- About -->
+    <string name="about_app_name">Recipely</string>
+    <string name="about_version">v%1$s</string>
+    <string name="about_github">View source on GitHub</string>
+    <string name="about_open_source">Open source · made with ❤</string>
+
     <!-- Cook mode -->
     <string name="cook_start">Cook</string>
     <string name="cook_keep_awake">Screen stays on</string>
