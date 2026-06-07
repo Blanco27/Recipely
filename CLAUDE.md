@@ -57,7 +57,7 @@ Single-Activity Jetpack Compose app, lean **MVVM**: Compose UI → ViewModel →
 - **Images:** picked/captured images are copied into **app-internal storage** (`filesDir/images/`) by `data/ImageStore`; the DB stores only the absolute **file path**, never a content `Uri`. Image acquisition (Photo Picker + camera via `FileProvider`) lives in the **Compose layer** (`RecipeEditScreen`); the ViewModel only ever handles `String?` paths, which keeps it JVM-unit-testable. Coil loads images with a `File(path)` model.
 - **Image lifecycle:** `RecipeEditViewModel` tracks `pendingNewImages` (session imports) and `originalImagePaths` (loaded). On save, orphans = `(original + pending) − referencedPaths()` are deleted; on cancel/back, `discardChanges()` deletes session images (wired to both the close button **and** a `BackHandler`). `RoomRecipeRepository.delete` removes the title image + every step image after the DB cascade.
 - **Ordering:** `@Relation` does not sort, so child lists are always sorted by `position` on every read path (list/detail/edit-load and the mapping in `ui/edit/EditUiState.kt`).
-- **Theme:** fixed **green** Material 3 scheme, light + dark, **no dynamic color / Material You** (`ui/theme/`). XML window themes use platform `android:Theme.Material*` parents (no AppCompat/Views-material).
+- **Theme:** fixed **green** Material 3 scheme, light + dark, **no dynamic color / Material You** (`ui/theme/`). User-selectable via Settings (System/Light/Dark), persisted in a Preferences DataStore and applied by recomposing `RecipelyTheme` in `MainActivity`. XML window themes use `Theme.AppCompat.DayNight.NoActionBar` and `MainActivity` is an `AppCompatActivity` — AppCompat is a deliberate dependency for the **per-app language** locale delegate (`AppCompatDelegate.setApplicationLocales`, persisted via `autoStoreLocales`); the UI itself remains Compose-only (no AppCompat views).
 
 ## Build configuration
 
@@ -67,7 +67,7 @@ Single-Activity Jetpack Compose app, lean **MVVM**: Compose UI → ViewModel →
 
 Dependency versions and plugin aliases are centralized in the **Gradle version catalog** at `gradle/libs.versions.toml`. Add/bump dependencies there (`[versions]`/`[libraries]`/`[plugins]`) and reference them in `app/build.gradle.kts` as `libs.*` — never hardcode versions in the build scripts.
 
-Wired up: Jetpack Compose (BOM `2024.09.03`) + **Material 3** + `material-icons-extended`, `activity-compose`, `lifecycle-viewmodel-compose`, `navigation-compose`, **Room** (`room-runtime`/`room-ktx` + `room-compiler` via **KSP**), **Coil** (`coil-compose`), and `core-ktx`. Tests: JUnit 4 + `kotlinx-coroutines-test` (JVM ViewModel/mapping), AndroidX test + Espresso + `compose-ui-test-junit4` (instrumented). This is a Compose-only stack — no Views/AppCompat, view-binding, or DI framework.
+Wired up: Jetpack Compose (BOM `2024.09.03`) + **Material 3** + `material-icons-extended`, `activity-compose`, `lifecycle-viewmodel-compose`, `navigation-compose`, **Room** (`room-runtime`/`room-ktx` + `room-compiler` via **KSP**), **Coil** (`coil-compose`), and `core-ktx`. Tests: JUnit 4 + `kotlinx-coroutines-test` (JVM ViewModel/mapping), AndroidX test + Espresso + `compose-ui-test-junit4` (instrumented). This is a Compose-only UI stack — no Views/AppCompat *views*, view-binding, or DI framework. (AppCompat is present solely for `AppCompatDelegate` per-app-language support; `androidx.datastore:datastore-preferences` stores the theme preference.)
 
 ## Testing conventions
 
