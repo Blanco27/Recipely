@@ -11,15 +11,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.outlined.BrightnessAuto
-import androidx.compose.material.icons.outlined.DarkMode
-import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -41,7 +37,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -143,9 +138,9 @@ private fun SettingsPanel(content: @Composable () -> Unit) {
 @Composable
 private fun ThemePanel(selected: ThemeMode, onSelect: (ThemeMode) -> Unit) {
     val options = listOf(
-        Triple(ThemeMode.SYSTEM, Icons.Outlined.BrightnessAuto, R.string.theme_system),
-        Triple(ThemeMode.LIGHT, Icons.Outlined.LightMode, R.string.theme_light),
-        Triple(ThemeMode.DARK, Icons.Outlined.DarkMode, R.string.theme_dark),
+        Triple(ThemeMode.SYSTEM, "🖥️", R.string.theme_system),
+        Triple(ThemeMode.LIGHT, "☀️", R.string.theme_light),
+        Triple(ThemeMode.DARK, "🌙", R.string.theme_dark),
     )
     SettingsPanel {
         Row(
@@ -156,10 +151,10 @@ private fun ThemePanel(selected: ThemeMode, onSelect: (ThemeMode) -> Unit) {
                 .padding(4.dp),
             horizontalArrangement = Arrangement.spacedBy(4.dp),
         ) {
-            options.forEach { (mode, icon, labelRes) ->
+            options.forEach { (mode, emoji, labelRes) ->
                 ThemeSegment(
                     selected = selected == mode,
-                    icon = icon,
+                    emoji = emoji,
                     label = stringResource(labelRes),
                     modifier = Modifier.weight(1f),
                     onClick = { onSelect(mode) },
@@ -172,7 +167,7 @@ private fun ThemePanel(selected: ThemeMode, onSelect: (ThemeMode) -> Unit) {
 @Composable
 private fun ThemeSegment(
     selected: Boolean,
-    icon: ImageVector,
+    emoji: String,
     label: String,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
@@ -188,7 +183,7 @@ private fun ThemeSegment(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
-        Icon(icon, contentDescription = null, tint = foreground, modifier = Modifier.size(20.dp))
+        Text(text = emoji, fontSize = 18.sp)
         Text(
             text = label,
             color = foreground,
