@@ -58,7 +58,11 @@ import com.nwe.recipely.ui.theme.PaperDark
 fun SettingsScreen(onBack: () -> Unit) {
     val container = (LocalContext.current.applicationContext as RecipelyApp).container
     val vm: SettingsViewModel = viewModel(
-        factory = viewModelFactory { initializer { SettingsViewModel(container.settingsRepository) } }
+        factory = viewModelFactory {
+            initializer {
+                SettingsViewModel(container.settingsRepository, container.repository, container.backupManager)
+            }
+        }
     )
     val themeMode by vm.themeMode.collectAsState()
     var language by remember { mutableStateOf(AppLanguage.current()) }
