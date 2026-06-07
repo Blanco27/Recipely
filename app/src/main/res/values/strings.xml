@@ -98,6 +98,7 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="language_system">System default</string>
+    <string name="language_system_caption">Follow device language</string>
     <string name="language_english">English</string>
     <string name="language_german">Deutsch</string>
 </resources>

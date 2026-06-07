@@ -96,6 +96,7 @@
     <string name="theme_light">Hell</string>
     <string name="theme_dark">Dunkel</string>
     <string name="language_system">Systemstandard</string>
+    <string name="language_system_caption">Gerätesprache folgen</string>
     <string name="language_english">English</string>
     <string name="language_german">Deutsch</string>
 </resources>

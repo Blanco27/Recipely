@@ -1,6 +1,8 @@
 package com.nwe.recipely.ui.settings
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,21 +11,26 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.BrightnessAuto
+import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material.icons.outlined.LightMode
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -32,6 +39,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -45,6 +55,8 @@ import com.nwe.recipely.R
 import com.nwe.recipely.RecipelyApp
 import com.nwe.recipely.data.ThemeMode
 import com.nwe.recipely.ui.theme.Fraunces
+import com.nwe.recipely.ui.theme.Paper
+import com.nwe.recipely.ui.theme.PaperDark
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -74,6 +86,9 @@ fun SettingsScreen(onBack: () -> Unit) {
                         )
                     }
                 },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.background,
+                ),
             )
         },
     ) { padding ->
@@ -82,15 +97,14 @@ fun SettingsScreen(onBack: () -> Unit) {
                 .padding(padding)
                 .fillMaxSize()
                 .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(4.dp),
         ) {
             SectionLabel(stringResource(R.string.settings_appearance))
-            ThemeSegmentedControl(selected = themeMode, onSelect = vm::setThemeMode)
+            ThemePanel(selected = themeMode, onSelect = vm::setThemeMode)
 
-            Spacer(Modifier.height(16.dp))
+            Spacer(Modifier.height(20.dp))
 
             SectionLabel(stringResource(R.string.settings_language))
-            LanguageList(
+            LanguagePanel(
                 selected = language,
                 onSelect = {
                     language = it
@@ -109,50 +123,46 @@ private fun SectionLabel(text: String) {
         fontWeight = FontWeight.Bold,
         letterSpacing = 1.5.sp,
         color = MaterialTheme.colorScheme.secondary,
-        modifier = Modifier.padding(start = 4.dp, top = 8.dp, bottom = 8.dp),
+        modifier = Modifier.padding(start = 4.dp, top = 8.dp, bottom = 10.dp),
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+/** Paper card matching the mockup's `.panel` (elevated near-white, soft warm border). */
 @Composable
-private fun ThemeSegmentedControl(selected: ThemeMode, onSelect: (ThemeMode) -> Unit) {
-    val options = listOf(
-        ThemeMode.SYSTEM to R.string.theme_system,
-        ThemeMode.LIGHT to R.string.theme_light,
-        ThemeMode.DARK to R.string.theme_dark,
-    )
-    SingleChoiceSegmentedButtonRow(modifier = Modifier.fillMaxWidth()) {
-        options.forEachIndexed { index, (mode, labelRes) ->
-            SegmentedButton(
-                selected = selected == mode,
-                onClick = { onSelect(mode) },
-                shape = SegmentedButtonDefaults.itemShape(index, options.size),
-            ) {
-                Text(stringResource(labelRes))
-            }
-        }
+private fun SettingsPanel(content: @Composable () -> Unit) {
+    Surface(
+        color = if (isSystemInDarkTheme()) PaperDark else Paper,
+        shape = RoundedCornerShape(16.dp),
+        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
+        modifier = Modifier.fillMaxWidth(),
+    ) {
+        Column(Modifier.padding(6.dp)) { content() }
     }
 }
 
 @Composable
-private fun LanguageList(selected: AppLanguage, onSelect: (AppLanguage) -> Unit) {
+private fun ThemePanel(selected: ThemeMode, onSelect: (ThemeMode) -> Unit) {
     val options = listOf(
-        AppLanguage.SYSTEM to R.string.language_system,
-        AppLanguage.ENGLISH to R.string.language_english,
-        AppLanguage.GERMAN to R.string.language_german,
+        Triple(ThemeMode.SYSTEM, Icons.Outlined.BrightnessAuto, R.string.theme_system),
+        Triple(ThemeMode.LIGHT, Icons.Outlined.LightMode, R.string.theme_light),
+        Triple(ThemeMode.DARK, Icons.Outlined.DarkMode, R.string.theme_dark),
     )
-    Surface(
-        shape = MaterialTheme.shapes.medium,
-        color = MaterialTheme.colorScheme.surface,
-        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant),
-        modifier = Modifier.fillMaxWidth(),
-    ) {
-        Column {
-            options.forEach { (lang, labelRes) ->
-                LanguageRow(
-                    selected = selected == lang,
+    SettingsPanel {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(12.dp))
+                .background(MaterialTheme.colorScheme.background)
+                .padding(4.dp),
+            horizontalArrangement = Arrangement.spacedBy(4.dp),
+        ) {
+            options.forEach { (mode, icon, labelRes) ->
+                ThemeSegment(
+                    selected = selected == mode,
+                    icon = icon,
                     label = stringResource(labelRes),
-                    onClick = { onSelect(lang) },
+                    modifier = Modifier.weight(1f),
+                    onClick = { onSelect(mode) },
                 )
             }
         }
@@ -160,19 +170,94 @@ private fun LanguageList(selected: AppLanguage, onSelect: (AppLanguage) -> Unit)
 }
 
 @Composable
-private fun LanguageRow(selected: Boolean, label: String, onClick: () -> Unit) {
+private fun ThemeSegment(
+    selected: Boolean,
+    icon: ImageVector,
+    label: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    val background = if (selected) MaterialTheme.colorScheme.primary else Color.Transparent
+    val foreground = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant
+    Column(
+        modifier = modifier
+            .clip(RoundedCornerShape(8.dp))
+            .background(background)
+            .selectable(selected = selected, role = Role.RadioButton, onClick = onClick)
+            .padding(vertical = 10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(4.dp),
+    ) {
+        Icon(icon, contentDescription = null, tint = foreground, modifier = Modifier.size(20.dp))
+        Text(
+            text = label,
+            color = foreground,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
+        )
+    }
+}
+
+private data class LanguageOption(
+    val lang: AppLanguage,
+    val flag: String,
+    val labelRes: Int,
+    val captionRes: Int?,
+)
+
+@Composable
+private fun LanguagePanel(selected: AppLanguage, onSelect: (AppLanguage) -> Unit) {
+    val options = listOf(
+        LanguageOption(AppLanguage.SYSTEM, "🌐", R.string.language_system, R.string.language_system_caption),
+        LanguageOption(AppLanguage.ENGLISH, "🇬🇧", R.string.language_english, null),
+        LanguageOption(AppLanguage.GERMAN, "🇩🇪", R.string.language_german, null),
+    )
+    SettingsPanel {
+        options.forEachIndexed { index, option ->
+            if (index > 0) {
+                HorizontalDivider(
+                    color = MaterialTheme.colorScheme.outlineVariant,
+                    thickness = 1.dp,
+                )
+            }
+            LanguageRow(
+                flag = option.flag,
+                label = stringResource(option.labelRes),
+                caption = option.captionRes?.let { stringResource(it) },
+                selected = selected == option.lang,
+                onClick = { onSelect(option.lang) },
+            )
+        }
+    }
+}
+
+@Composable
+private fun LanguageRow(
+    flag: String,
+    label: String,
+    caption: String?,
+    selected: Boolean,
+    onClick: () -> Unit,
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .selectable(selected = selected, role = Role.RadioButton, onClick = onClick)
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = 10.dp, vertical = 12.dp),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.weight(1f),
-        )
+        Text(text = flag, fontSize = 20.sp)
+        Spacer(Modifier.width(12.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(text = label, style = MaterialTheme.typography.bodyLarge)
+            if (caption != null) {
+                Text(
+                    text = caption,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
+        }
         RadioButton(selected = selected, onClick = null)
     }
 }
