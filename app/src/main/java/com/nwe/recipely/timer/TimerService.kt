@@ -1,11 +1,13 @@
 package com.nwe.recipely.timer
 
+import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
@@ -85,17 +87,19 @@ class TimerService : Service() {
     private fun onFinished() {
         running = false
         CookTimer.publish(null)
-        val nm = NotificationManagerCompat.from(this)
-        nm.notify(
-            NOTIF_DONE_ID,
-            NotificationCompat.Builder(this, CHANNEL_DONE)
-                .setSmallIcon(R.drawable.ic_timer_notif)
-                .setContentTitle(getString(R.string.cook_notif_done, stepNumber))
-                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setCategory(NotificationCompat.CATEGORY_ALARM)
-                .setAutoCancel(true)
-                .build(),
-        )
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            NotificationManagerCompat.from(this).notify(
+                NOTIF_DONE_ID,
+                NotificationCompat.Builder(this, CHANNEL_DONE)
+                    .setSmallIcon(R.drawable.ic_timer_notif)
+                    .setContentTitle(getString(R.string.cook_notif_done, stepNumber))
+                    .setPriority(NotificationCompat.PRIORITY_HIGH)
+                    .setCategory(NotificationCompat.CATEGORY_ALARM)
+                    .setAutoCancel(true)
+                    .build(),
+            )
+        }
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
         stopSelf()
     }
@@ -121,6 +125,8 @@ class TimerService : Service() {
 
     private fun updateOngoingNotification() {
         if (!running && remaining <= 0) return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) return
         NotificationManagerCompat.from(this).notify(NOTIF_ONGOING_ID, buildOngoingNotification())
     }
 
