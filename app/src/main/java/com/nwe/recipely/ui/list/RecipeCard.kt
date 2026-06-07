@@ -37,6 +37,8 @@ import coil.compose.AsyncImage
 import com.nwe.recipely.R
 import com.nwe.recipely.data.Recipe
 import com.nwe.recipely.data.RecipeCategory
+import com.nwe.recipely.ui.detail.nutritionFacts
+import com.nwe.recipely.ui.detail.perPortion
 import com.nwe.recipely.ui.theme.ForestPrimary
 import com.nwe.recipely.ui.theme.ForestPrimaryDark
 import com.nwe.recipely.ui.theme.Fraunces
@@ -136,7 +138,8 @@ fun RecipeCard(recipe: Recipe, onClick: () -> Unit, modifier: Modifier = Modifie
                             MetaChip("🍽", stringResource(R.string.chip_portions, it))
                         }
                         recipe.calories?.let {
-                            MetaChip("🔥", stringResource(R.string.nutrition_value_kcal, it), kcal = true)
+                            val kcal = recipe.nutritionFacts().perPortion(recipe.servings)?.calories ?: it
+                            MetaChip("🔥", stringResource(R.string.nutrition_value_kcal, kcal), kcal = true)
                         }
                     }
                 }

@@ -204,14 +204,16 @@ private fun DetailSheet(
                 .background(MaterialTheme.colorScheme.outlineVariant),
         )
 
+        val facts = details.recipe.nutritionFacts()
+        // kcal/protein stat tiles show per-portion values (fall back to totals when servings unknown).
+        val statFacts = facts.perPortion(details.recipe.servings)
         StatGrid(
             prepTime = details.recipe.prepTimeMinutes,
             servings = details.recipe.servings,
-            calories = details.recipe.calories,
-            protein = details.recipe.proteinGrams,
+            calories = statFacts?.calories ?: details.recipe.calories,
+            protein = statFacts?.proteinGrams ?: details.recipe.proteinGrams,
         )
 
-        val facts = details.recipe.nutritionFacts()
         if (facts.hasAny) {
             SectionHeader(stringResource(R.string.section_nutrition))
             NutritionCard(facts = facts, servings = details.recipe.servings)
