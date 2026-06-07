@@ -41,6 +41,18 @@ class CookModeViewModelTest {
     }
 
     @Test
+    fun recipe_exposesLoadedRecipeFromRepository() = runTest {
+        val repo = FakeRecipeRepository()
+        val vm = CookModeViewModel(repo, recipeId = 1)
+        backgroundScope.launch { vm.recipe.collect {} }
+        repo.detail.value = details(
+            Step(id = 1, recipeId = 1, text = "First", position = 0),
+        )
+        advanceUntilIdle()
+        assertEquals("Bolognese", vm.recipe.value?.recipe?.name)
+    }
+
+    @Test
     fun finished_defaultsFalse_finishSetsTrue_restartClears() = runTest {
         val repo = FakeRecipeRepository()
         val vm = CookModeViewModel(repo, recipeId = 1)
