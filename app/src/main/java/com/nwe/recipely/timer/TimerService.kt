@@ -26,7 +26,7 @@ import java.util.Locale
 
 class TimerService : Service() {
 
-    private val scope = CoroutineScope(Dispatchers.Default)
+    private val scope = CoroutineScope(Dispatchers.Main.immediate)
     private var tickJob: Job? = null
 
     private var stepNumber = 0
@@ -78,7 +78,7 @@ class TimerService : Service() {
                 publish()
                 updateOngoingNotification()
             }
-            if (remaining <= 0) onFinished()
+            if (isActive && remaining <= 0) onFinished()
         }
     }
 
@@ -89,7 +89,7 @@ class TimerService : Service() {
         nm.notify(
             NOTIF_DONE_ID,
             NotificationCompat.Builder(this, CHANNEL_DONE)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.ic_timer_notif)
                 .setContentTitle(getString(R.string.cook_notif_done, stepNumber))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setCategory(NotificationCompat.CATEGORY_ALARM)
@@ -134,7 +134,7 @@ class TimerService : Service() {
             PendingIntent.FLAG_IMMUTABLE,
         )
         return NotificationCompat.Builder(this, CHANNEL_ONGOING)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_timer_notif)
             .setContentTitle(getString(R.string.cook_notif_running, stepNumber, formatTime(remaining)))
             .setOngoing(true)
             .setSilent(true)
