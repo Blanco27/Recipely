@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -42,7 +43,7 @@ private const val REPO_URL = "https://github.com/Blanco27/Recipely"
 @Composable
 fun AboutFooter(modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    val versionName = remember {
+    val versionName = remember(context) {
         runCatching {
             context.packageManager.getPackageInfo(context.packageName, 0).versionName
         }.getOrNull()
@@ -87,7 +88,7 @@ fun AboutFooter(modifier: Modifier = Modifier) {
         Row(
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
-                .clickable(onClickLabel = linkLabel) { openUrl(context, REPO_URL) }
+                .clickable(role = Role.Button, onClickLabel = linkLabel) { openUrl(context, REPO_URL) }
                 .padding(horizontal = 8.dp, vertical = 4.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(7.dp),
